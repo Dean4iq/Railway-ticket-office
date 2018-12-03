@@ -17,7 +17,7 @@ public class Route {
         this.train = train;
     }
 
-    public int getPositionId() {
+    public int getPosition() {
         return positionId;
     }
 
