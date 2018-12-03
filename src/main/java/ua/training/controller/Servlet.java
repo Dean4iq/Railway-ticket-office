@@ -31,12 +31,13 @@ public class Servlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            processRequest(httpServletRequest, httpServletResponse);
+            processRequest(request, response);
         } catch (Exception ex) {
-            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/exception");
-            httpServletRequest.getRequestDispatcher("/error,jsp").forward(httpServletRequest, httpServletResponse);
+            response.sendRedirect(request.getContextPath() + "/exception");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 
@@ -46,14 +47,14 @@ public class Servlet extends HttpServlet {
             processRequest(httpServletRequest, httpServletResponse);
         } catch (Exception ex) {
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/exception");
-            httpServletRequest.getRequestDispatcher("/error,jsp").forward(httpServletRequest, httpServletResponse);
+            httpServletRequest.getRequestDispatcher("/error.jsp").forward(httpServletRequest, httpServletResponse);
         }
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        path = path.replaceAll(".*/coffee/", "");
+        path = path.replaceAll(".*/zhdUA/", "");
         Service service = commands.getOrDefault(path,
                 r -> "/index.jsp");
         System.out.println(service.getClass().getName());
