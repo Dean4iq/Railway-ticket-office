@@ -5,6 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 public class SearchService implements Service{
     @Override
     public String execute(HttpServletRequest request) {
-        return null;
+        return "/search.jsp";
     }
 }

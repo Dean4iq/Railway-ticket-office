@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Servlet extends HttpServlet {
-    private Map<String, Service> commands = new HashMap<>();
+    private final Map<String, Service> commands = new HashMap<>();
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -37,17 +37,16 @@ public class Servlet extends HttpServlet {
             processRequest(request, response);
         } catch (Exception ex) {
             response.sendRedirect(request.getContextPath() + "/exception");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            processRequest(httpServletRequest, httpServletResponse);
+            processRequest(request, response);
         } catch (Exception ex) {
-            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/exception");
-            httpServletRequest.getRequestDispatcher("/error.jsp").forward(httpServletRequest, httpServletResponse);
+            response.sendRedirect(request.getContextPath() + "/exception");
         }
     }
 
@@ -57,8 +56,11 @@ public class Servlet extends HttpServlet {
         path = path.replaceAll(".*/zhdUA/", "");
         Service service = commands.getOrDefault(path,
                 r -> "/index.jsp");
-        System.out.println(service.getClass().getName());
         String page = service.execute(request);
-        request.getRequestDispatcher(page).forward(request, response);
+        if (page.contains("redirect: ")) {
+            response.sendRedirect(request.getContextPath() + page.replaceAll("redirect: ", ""));
+        } else {
+            request.getRequestDispatcher(page).forward(request,response);
+        }
     }
 }

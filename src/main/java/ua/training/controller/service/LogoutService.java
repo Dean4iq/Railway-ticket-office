@@ -5,6 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 public class LogoutService implements Service {
     @Override
     public String execute(HttpServletRequest request) {
-        return null;
+        return "/index.jsp";
     }
 }

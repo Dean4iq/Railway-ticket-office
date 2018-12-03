@@ -5,6 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 public class ExceptionService implements Service {
     @Override
     public String execute(HttpServletRequest request) {
-        return null;
+        return "/error.jsp";
     }
 }
