@@ -1,7 +1,6 @@
 package ua.training.model.entity;
 
 import java.util.List;
-
 public class Train {
     private int id;
     private List<Wagon> wagons;
