@@ -4,8 +4,8 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Main</title>
-        <link href="${pageContext.request.contextPath}/head.css" rel="stylesheet" type="text/css"/>
+        <title>Register</title>
+        <link href="/head.css" rel="stylesheet" type="text/css"/>
         <style>
             .nav a{
                 text-decoration:none;
@@ -52,6 +52,28 @@
             </ul>
         </div>
 
-        <h1>Main page</h1>
+        <h1>Register page</h1>
+        <form method="post">
+            <table>
+                <tr>
+                    <td>name:</td>
+                    <td><input type="text" placeholder="name" name="name"/></td>
+                </tr>
+                <tr>
+                    <td>last name:</td>
+                    <td><input type="text" placeholder="last name" name="lastName"/></td>
+                </tr>
+                <tr>
+                    <td>login:</td>
+                    <td><input type="text" placeholder="login" name="login"/></td>
+                </tr>
+                <tr>
+                    <td>password:</td>
+                    <td><input type="password" placeholder="password" name="login"/></td>
+                </tr>
+            </table>
+            <br>
+            <p align="center"><input type="submit" value="Register" name="register"/></p>
+        </form>
     </body>
 </html>
