@@ -21,17 +21,27 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="ua.training.util.DBConnector" additivity="false">
+        <Logger name="ua.training.controller.Servlet" additivity="false">
             <AppenderRef ref="errorLog" />
             <AppenderRef ref="Console"  />
         </Logger>
 
-        <Logger name="ua.training.service.ContactFormServlet" additivity="false">
+        <Logger name="ua.training.filter.LoginFilter" additivity="false">
             <AppenderRef ref="errorLog" />
             <AppenderRef ref="Console"  />
         </Logger>
 
-        <Logger name="ua.training.service.UnitingService" additivity="false">
+        <Logger name="ua.training.filter.AdminFilter" additivity="false">
+            <AppenderRef ref="errorLog" />
+            <AppenderRef ref="Console"  />
+        </Logger>
+
+        <Logger name="ua.training.filter.MenuBarFilter" additivity="false">
+            <AppenderRef ref="errorLog" />
+            <AppenderRef ref="Console"  />
+        </Logger>
+
+        <Logger name="ua.training.filter.UserFilter" additivity="false">
             <AppenderRef ref="errorLog" />
             <AppenderRef ref="Console"  />
         </Logger>
