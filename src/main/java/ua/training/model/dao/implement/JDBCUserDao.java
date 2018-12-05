@@ -40,7 +40,11 @@ public class JDBCUserDao implements UserDao {
                      = connection.prepareStatement("SELECT * FROM User WHERE login=?")) {
             preparedStatement.setString(1, id);
 
-            user = extractFromResultSet(preparedStatement.executeQuery());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                user = extractFromResultSet(resultSet);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

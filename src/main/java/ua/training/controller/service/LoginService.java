@@ -13,30 +13,33 @@ public class LoginService implements Service {
         String username = request.getParameter("login");
         String password = request.getParameter("pass");
 
-        //DaoFactory daoFactory = new JDBCDaoFactory();
+        if (username != null && !username.equals("")) {
+            DaoFactory daoFactory = new JDBCDaoFactory();
 
-        try /*(UserDao userDao = daoFactory.createUserDao())*/ {
-            //User user = userDao.findById(username);
-            //if (user != null && user.getPassword().equals(password)) {
-            if (username != null && password != null && username.equals(password)) {
+            try (UserDao userDao = daoFactory.createUserDao()) {
+                User user = userDao.findById(username);
 
-                request.getSession().removeAttribute("Error");
+                if (user != null && user.getPassword() != null
+                        && user.getPassword().equals(password)) {
 
-                //if (user.isAdmin()) {
-                if (!username.equals("") && username.equals("Admin")) {
-                    //request.getSession(true).setAttribute("Admin", user.getLogin());
-                    request.getSession(true).setAttribute("Admin", username);
-                    return "redirect: /admin";
-                } else if(!username.equals("") && username.equals("User")){
-                    //request.getSession(true).setAttribute("User", user.getLogin());
-                    request.getSession(true).setAttribute("User", username);
-                    return "redirect: /user";
+                    request.getSession().removeAttribute("Error");
+
+                    if (user.isAdmin()) {
+                        request.getSession(true).setAttribute("Admin", user.getLogin());
+                        return "redirect: /admin";
+                    } else {
+                        request.getSession(true).setAttribute("User", user.getLogin());
+                        return "redirect: /user";
+                    }
+                } else if (username != null && user != null
+                        && (user.getPassword() == null || !user.getPassword().equals(password))) {
+                    request.getSession().setAttribute("Error", "Invalid login and/or password");
                 }
-            } else if (username!= null && password != null && !username.equals(password)){
-                request.getSession().setAttribute("Error", "Invalid login and/or password");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "redirect: /exception";
             }
-        } catch (Exception e) {
-            return "redirect: /exception";
         }
 
         return "/login.jsp";

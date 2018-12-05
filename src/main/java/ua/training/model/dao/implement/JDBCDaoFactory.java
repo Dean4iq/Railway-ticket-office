@@ -57,7 +57,7 @@ public class JDBCDaoFactory extends DaoFactory {
             return DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/finalproject",
                     "user" ,
-                    "password" );
+                    "pass" );
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
