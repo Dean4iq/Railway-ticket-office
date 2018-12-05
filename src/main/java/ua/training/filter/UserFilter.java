@@ -20,7 +20,7 @@ public class UserFilter implements Filter {
         HttpSession session = httpRequest.getSession(true);
 
         if (session.getAttribute("User") == null) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/exception");
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
         } else {
             filterChain.doFilter(httpRequest, httpResponse);
         }
