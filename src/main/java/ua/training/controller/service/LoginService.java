@@ -13,7 +13,7 @@ public class LoginService implements Service {
         String username = request.getParameter("login");
         String password = request.getParameter("pass");
 
-        DaoFactory daoFactory = new JDBCDaoFactory();
+        //DaoFactory daoFactory = new JDBCDaoFactory();
 
         try /*(UserDao userDao = daoFactory.createUserDao())*/ {
             //User user = userDao.findById(username);

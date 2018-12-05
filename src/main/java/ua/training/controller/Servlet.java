@@ -36,6 +36,11 @@ public class Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            response.setHeader("Cache-Control","no-cache");
+            response.setHeader("Cache-Control","no-store");
+            response.setDateHeader("Expires", 0);
+            response.setHeader("Pragma","no-cache");
+
             processRequest(request, response);
         } catch (Exception ex) {
             response.sendRedirect(request.getContextPath() + "/exception");

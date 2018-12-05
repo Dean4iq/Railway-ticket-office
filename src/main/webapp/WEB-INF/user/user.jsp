@@ -54,5 +54,6 @@
         </div>
 
         <h1>Hi, User</h1>
+        <a href="${pageContext.request.contextPath}/user/purchase.jsp">Пошук поїзда</a>
     </body>
 </html>
