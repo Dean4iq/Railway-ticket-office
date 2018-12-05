@@ -19,7 +19,7 @@ public class JDBCTravelInfoDao implements TravelInfoDao {
     }
 
     @Override
-    public TravelInfo findById(int id) {
+    public TravelInfo findById(Integer id) {
         return null;
     }
 
@@ -34,7 +34,7 @@ public class JDBCTravelInfoDao implements TravelInfoDao {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
 
     }
 

@@ -2,10 +2,14 @@ package ua.training.model.dao;
 
 import java.util.List;
 
-public interface GenericDao<T> extends AutoCloseable{
+public interface GenericDao<K, T> extends AutoCloseable {
     void create(T entity);
-    T findById(int id);
+
+    T findById(K id);
+
     List<T> findAll();
+
     void update(T entity);
-    void delete(int id);
+
+    void delete(K id);
 }

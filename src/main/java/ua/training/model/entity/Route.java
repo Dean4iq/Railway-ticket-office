@@ -3,26 +3,25 @@ package ua.training.model.entity;
 import java.sql.Time;
 
 public class Route {
-    private Train train;
-    private int positionId;
+    private int trainId;
+    private int stationId;
     private Time arrivalTime;
     private Time departureTime;
-    private Station station;
 
-    public Train getTrain() {
-        return train;
+    public int getTrainId() {
+        return trainId;
     }
 
-    public void setTrain(Train train) {
-        this.train = train;
+    public void setTrainId(int trainId) {
+        this.trainId = trainId;
     }
 
-    public int getPosition() {
-        return positionId;
+    public int getStationId() {
+        return stationId;
     }
 
-    public void setPositionId(int positionId) {
-        this.positionId = positionId;
+    public void setStationId(int stationId) {
+        this.stationId = stationId;
     }
 
     public Time getArrivalTime() {
@@ -41,22 +40,13 @@ public class Route {
         this.departureTime = departureTime;
     }
 
-    public Station getStation() {
-        return station;
-    }
-
-    public void setStation(Station station) {
-        this.station = station;
-    }
-
     @Override
     public String toString() {
         return "Route{" +
-                "train=" + train +
-                ", positionId=" + positionId +
+                "trainId=" + trainId +
+                ", stationId=" + stationId +
                 ", arrivalTime=" + arrivalTime +
                 ", departureTime=" + departureTime +
-                ", station=" + station +
                 '}';
     }
 }

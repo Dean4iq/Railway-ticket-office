@@ -1,16 +1,13 @@
 package ua.training.model.entity;
 
-import java.util.List;
-
 public class User {
     private String login;
     private String password;
     private String name;
     private String lastName;
+    private String nameUA;
+    private String lastNameUA;
     private boolean admin;
-
-    private List<Ticket> tickets;
-
 
     public String getLogin() {
         return login;
@@ -44,20 +41,28 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getNameUA() {
+        return nameUA;
+    }
+
+    public void setNameUA(String nameUA) {
+        this.nameUA = nameUA;
+    }
+
+    public String getLastNameUA() {
+        return lastNameUA;
+    }
+
+    public void setLastNameUA(String lastNameUA) {
+        this.lastNameUA = lastNameUA;
+    }
+
     public boolean isAdmin() {
         return admin;
     }
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
-    }
-
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
     }
 
     @Override
@@ -67,6 +72,9 @@ public class User {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", admin=" + admin;
+                ", nameUA='" + nameUA + '\'' +
+                ", lastNameUA='" + lastNameUA + '\'' +
+                ", admin=" + admin +
+                '}';
     }
 }

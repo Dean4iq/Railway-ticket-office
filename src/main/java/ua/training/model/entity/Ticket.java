@@ -4,12 +4,13 @@ import java.util.Date;
 
 public class Ticket {
     private int id;
+    private int userId;
     private Date travelDate;
-    private Wagon wagonNumber;
-    private Seat seatNumber;
-
-    private User user;
-    private TravelInfo travelInfo;
+    private int seatId;
+    private int tripInfoId;
+    private int cost;
+    private int departureStationId;
+    private int arrivalStationId;
 
     public int getId() {
         return id;
@@ -17,6 +18,14 @@ public class Ticket {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public Date getTravelDate() {
@@ -27,47 +36,57 @@ public class Ticket {
         this.travelDate = travelDate;
     }
 
-    public Wagon getWagonNumber() {
-        return wagonNumber;
+    public int getSeatId() {
+        return seatId;
     }
 
-    public void setWagonNumber(Wagon wagonNumber) {
-        this.wagonNumber = wagonNumber;
+    public void setSeatId(int seatId) {
+        this.seatId = seatId;
     }
 
-    public Seat getSeatNumber() {
-        return seatNumber;
+    public int getTripInfoId() {
+        return tripInfoId;
     }
 
-    public void setSeatNumber(Seat seatNumber) {
-        this.seatNumber = seatNumber;
+    public void setTripInfoId(int tripInfoId) {
+        this.tripInfoId = tripInfoId;
     }
 
-    public User getUser() {
-        return user;
+    public int getCost() {
+        return cost;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
-    public TravelInfo getTravelInfo() {
-        return travelInfo;
+    public int getDepartureStationId() {
+        return departureStationId;
     }
 
-    public void setTravelInfo(TravelInfo travelInfo) {
-        this.travelInfo = travelInfo;
+    public void setDepartureStationId(int departureStationId) {
+        this.departureStationId = departureStationId;
+    }
+
+    public int getArrivalStationId() {
+        return arrivalStationId;
+    }
+
+    public void setArrivalStationId(int arrivalStationId) {
+        this.arrivalStationId = arrivalStationId;
     }
 
     @Override
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
+                ", userId=" + userId +
                 ", travelDate=" + travelDate +
-                ", wagonNumber=" + wagonNumber +
-                ", seatNumber=" + seatNumber +
-                ", user=" + user +
-                ", travelInfo=" + travelInfo +
+                ", seatId=" + seatId +
+                ", tripInfoId=" + tripInfoId +
+                ", cost=" + cost +
+                ", departureStationId=" + departureStationId +
+                ", arrivalStationId=" + arrivalStationId +
                 '}';
     }
 }

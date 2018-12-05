@@ -2,7 +2,7 @@ package ua.training.model.entity;
 
 public class Seat {
     private int id;
-    private Wagon wagon;
+    private int wagonId;
     private boolean occupied;
 
     public int getId() {
@@ -13,12 +13,12 @@ public class Seat {
         this.id = id;
     }
 
-    public Wagon getWagon() {
-        return wagon;
+    public int getWagonId() {
+        return wagonId;
     }
 
-    public void setWagon(Wagon wagon) {
-        this.wagon = wagon;
+    public void setWagonId(int wagonId) {
+        this.wagonId = wagonId;
     }
 
     public boolean isOccupied() {
@@ -33,7 +33,7 @@ public class Seat {
     public String toString() {
         return "Seat{" +
                 "id=" + id +
-                ", wagon=" + wagon +
+                ", wagonId=" + wagonId +
                 ", occupied=" + occupied +
                 '}';
     }

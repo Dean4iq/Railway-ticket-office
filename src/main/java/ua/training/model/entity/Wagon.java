@@ -4,10 +4,8 @@ import java.util.List;
 
 public class Wagon {
     private int id;
-    private Train train;
+    private int trainId;
     private String type;
-
-    private List<Seat> seats;
 
     public int getId() {
         return id;
@@ -17,12 +15,12 @@ public class Wagon {
         this.id = id;
     }
 
-    public Train getTrain() {
-        return train;
+    public int getTrainId() {
+        return trainId;
     }
 
-    public void setTrain(Train train) {
-        this.train = train;
+    public void setTrainId(int trainId) {
+        this.trainId = trainId;
     }
 
     public String getType() {
@@ -33,21 +31,12 @@ public class Wagon {
         this.type = type;
     }
 
-    public List<Seat> getSeats() {
-        return seats;
-    }
-
-    public void setSeats(List<Seat> seats) {
-        this.seats = seats;
-    }
-
     @Override
     public String toString() {
         return "Wagon{" +
                 "id=" + id +
-                ", train=" + train +
+                ", trainId=" + trainId +
                 ", type='" + type + '\'' +
-                ", seats=" + seats +
                 '}';
     }
 }

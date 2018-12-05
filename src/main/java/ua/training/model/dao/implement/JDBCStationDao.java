@@ -30,7 +30,7 @@ public class JDBCStationDao implements StationDao {
     }
 
     @Override
-    public Station findById(int id) {
+    public Station findById(Integer id) {
         Station station = new Station();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
@@ -85,7 +85,7 @@ public class JDBCStationDao implements StationDao {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 ("DELETE FROM station WHERE st_id = ?")) {
             preparedStatement.setInt(1, id);

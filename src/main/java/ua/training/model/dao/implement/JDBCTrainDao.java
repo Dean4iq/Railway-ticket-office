@@ -31,7 +31,7 @@ public class JDBCTrainDao implements TrainDao {
     }
 
     @Override
-    public Train findById(int id) {
+    public Train findById(Integer id) {
         Train train = new Train();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
@@ -65,7 +65,7 @@ public class JDBCTrainDao implements TrainDao {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
 
     }
 

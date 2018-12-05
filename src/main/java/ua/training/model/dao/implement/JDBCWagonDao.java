@@ -19,7 +19,7 @@ public class JDBCWagonDao implements WagonDao {
     }
 
     @Override
-    public Wagon findById(int id) {
+    public Wagon findById(Integer id) {
         return null;
     }
 
@@ -34,7 +34,7 @@ public class JDBCWagonDao implements WagonDao {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
 
     }
 
