@@ -40,6 +40,6 @@ public class JDBCSeatDao implements SeatDao {
 
     @Override
     public void close() throws Exception {
-
+        connection.close();
     }
 }

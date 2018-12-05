@@ -2,9 +2,9 @@ package ua.training.controller.service;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class SearchService implements Service{
+public class UserService implements Service {
     @Override
     public String execute(HttpServletRequest request) {
-        return "/search.jsp";
+        return "/WEB-INF/user/user.jsp";
     }
 }

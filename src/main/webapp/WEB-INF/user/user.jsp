@@ -53,6 +53,7 @@
             </ul>
         </div>
 
-        <h1>Main page</h1>
+        <h1>Hi, User</h1>
+        <a href="${pageContext.request.contextPath}/user/purchase.jsp">Пошук поїзда</a>
     </body>
 </html>

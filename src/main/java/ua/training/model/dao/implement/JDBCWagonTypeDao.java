@@ -40,6 +40,6 @@ public class JDBCWagonTypeDao implements WagonTypeDao {
 
     @Override
     public void close() throws Exception {
-
+        connection.close();
     }
 }

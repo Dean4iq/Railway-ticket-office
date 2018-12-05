@@ -40,6 +40,6 @@ public class JDBCTravelInfoDao implements TravelInfoDao {
 
     @Override
     public void close() throws Exception {
-
+        connection.close();
     }
 }

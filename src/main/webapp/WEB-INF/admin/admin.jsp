@@ -53,6 +53,6 @@
             </ul>
         </div>
 
-        <h1>Main page</h1>
+        <h1>Admin</h1>
     </body>
 </html>

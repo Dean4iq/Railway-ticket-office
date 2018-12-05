@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Servlet extends HttpServlet {
-    private Map<String, Service> commands = new HashMap<>();
+    private final Map<String, Service> commands = new HashMap<>();
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -21,6 +21,8 @@ public class Servlet extends HttpServlet {
 
         commands.put("exception", new ExceptionService());
         commands.put("login", new LoginService());
+        commands.put("user", new UserService());
+        commands.put("admin", new AdminService());
         commands.put("logout", new LogoutService());
         commands.put("purchase", new PurchaseService());
         commands.put("register", new RegisterService());
@@ -31,33 +33,41 @@ public class Servlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            processRequest(httpServletRequest, httpServletResponse);
+            response.setHeader("Cache-Control","no-cache");
+            response.setHeader("Cache-Control","no-store");
+            response.setDateHeader("Expires", 0);
+            response.setHeader("Pragma","no-cache");
+
+            processRequest(request, response);
         } catch (Exception ex) {
-            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/exception");
-            httpServletRequest.getRequestDispatcher("/error,jsp").forward(httpServletRequest, httpServletResponse);
+            response.sendRedirect(request.getContextPath() + "/exception");
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            processRequest(httpServletRequest, httpServletResponse);
+            processRequest(request, response);
         } catch (Exception ex) {
-            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/exception");
-            httpServletRequest.getRequestDispatcher("/error,jsp").forward(httpServletRequest, httpServletResponse);
+            response.sendRedirect(request.getContextPath() + "/exception");
         }
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        path = path.replaceAll(".*/coffee/", "");
+        path = path.replaceAll(".*/zhdUA/", "");
         Service service = commands.getOrDefault(path,
                 r -> "/index.jsp");
-        System.out.println(service.getClass().getName());
         String page = service.execute(request);
-        request.getRequestDispatcher(page).forward(request, response);
+        if (page.contains("redirect: ")) {
+            response.sendRedirect(request.getContextPath() + page.replaceAll("redirect: ", ""));
+        } else {
+            request.getRequestDispatcher(page).forward(request,response);
+        }
     }
 }

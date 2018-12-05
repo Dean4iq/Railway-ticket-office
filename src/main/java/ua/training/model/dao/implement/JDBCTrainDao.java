@@ -71,6 +71,6 @@ public class JDBCTrainDao implements TrainDao {
 
     @Override
     public void close() throws Exception {
-
+        connection.close();
     }
 }

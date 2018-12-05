@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title> Login </title>
+        <title>Search</title>
         <link href="/head.css" rel="stylesheet" type="text/css"/>
         <style>
             .nav a{
@@ -42,6 +42,7 @@
         </style>
     </head>
 
+
     <body>
         <div class="nav">
             <ul>
@@ -53,22 +54,44 @@
             </ul>
         </div>
 
-        <h1>Login page</h1>
-
-        <div style="color:red">${Error}</div>
+        <h1>Search page</h1>
         <form method="post">
-            <table>
+            <table align="center">
+                <caption><h3>Пошук за № поїзда</h3></caption>
                 <tr>
-                    <td>login:</td>
-                    <td><input type="text" placeholder="login" name="login"/></td>
-                </tr>
-                <tr>
-                    <td>password:</td>
-                    <td><input type="password" placeholder="password" name="pass"/></td>
+                    <td>№ поїзда:</td>
+                    <td><input type="text" placeholder="№ поїзда" name="trainNumber"/></td>
                 </tr>
             </table>
             <br>
-            <p align="center"><input type="submit" value="Log in" name="login"/></p>
+            <p align="center"><input type="submit" value="Search" name="trainNumberSubmit"/></p>
+        </form>
+        <p style="border-bottom:1px solid;"></p>
+        <form method="post">
+            <table align="center">
+                <caption><h3>Пошук за напрямом поїзда</h3></caption>
+                <tr>
+                    <th>Станція відправлення</th>
+                    <th></th>
+                    <th>Станція прибуття</th>
+                </tr>
+                <tr>
+                    <td><input type="text" placeholder="departure" name="departure"/></td>
+                    <td style="padding-left: 30px; padding-right: 30px;">
+                        ←<input type="submit" value="Switch" name="SwitchDirections"/>→
+                    </td>
+                    <td><input type="text" placeholder="destination" name="destination"/></td>
+                </tr>
+            </table>
+            <br>
+            <p align="center"><input type="submit" value="Search" name="trainDestinationSubmit"/></p>
+        </form>
+        <p style="border-bottom:1px solid;"></p>
+        <form method="post">
+            <h3 align="center">Вивести всі поїзда</h3>
+            <p align="center">
+                <input type="submit" value="Search" name="allTrainSubmit"/>
+            </p>
         </form>
     </body>
 </html>

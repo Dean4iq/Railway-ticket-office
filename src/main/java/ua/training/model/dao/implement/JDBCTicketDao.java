@@ -99,6 +99,6 @@ public class JDBCTicketDao implements TicketDao {
 
     @Override
     public void close() throws Exception {
-
+        connection.close();
     }
 }
