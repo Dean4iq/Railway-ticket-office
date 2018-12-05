@@ -5,6 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 public class UserService implements Service {
     @Override
     public String execute(HttpServletRequest request) {
-        return "/user.jsp";
+        return "/WEB-INF/user/user.jsp";
     }
 }

@@ -48,8 +48,9 @@
             <ul>
                 <li><a href="${pageContext.request.contextPath}">Головна сторінка</a></li>
                 <li><a href="search">Пошук поїзда</a></li>
-                <li><a href="login">Login</a></li>
-                <li><a href="register">Реєстрація</a></li>
+                <c:forEach items="${userbar}" var="keyValue">
+                    <li><a href="${keyValue.value}">${keyValue.key}</a></li>
+                </c:forEach>
             </ul>
         </div>
 
@@ -84,6 +85,13 @@
             </table>
             <br>
             <p align="center"><input type="submit" value="Search" name="trainDestinationSubmit"/></p>
+        </form>
+        <p style="border-bottom:1px solid;"></p>
+        <form method="post">
+            <h3 align="center">Вивести всі поїзда</h3>
+            <p align="center">
+                <input type="submit" value="Search" name="allTrainSubmit"/>
+            </p>
         </form>
     </body>
 </html>

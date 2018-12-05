@@ -28,7 +28,6 @@ public class LoginFilter implements Filter {
         boolean loginRequest = req.getRequestURI().equals(loginURI);
 
         if (loggedIn && loginRequest) {
-            System.out.println("chillout");
             res.sendRedirect(req.getContextPath() + "/exception");
         } else {
             filterChain.doFilter(request, response);

@@ -47,10 +47,12 @@
             <ul>
                 <li><a href="${pageContext.request.contextPath}">Головна сторінка</a></li>
                 <li><a href="search">Пошук поїзда</a></li>
-                <li><a href="logout">Logout</a></li>
+                <c:forEach items="${userbar}" var="keyValue">
+                    <li><a href="${keyValue.value}">${keyValue.key}</a></li>
+                </c:forEach>
             </ul>
         </div>
 
-        <h1>User</h1>
+        <h1>Hi, User</h1>
     </body>
 </html>

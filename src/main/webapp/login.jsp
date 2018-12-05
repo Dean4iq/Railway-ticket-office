@@ -47,13 +47,15 @@
             <ul>
                 <li><a href="${pageContext.request.contextPath}">Головна сторінка</a></li>
                 <li><a href="search">Пошук поїзда</a></li>
-                <li><a href="login">Login</a></li>
-                <li><a href="register">Реєстрація</a></li>
+                <c:forEach items="${userbar}" var="keyValue">
+                    <li><a href="${keyValue.value}">${keyValue.key}</a></li>
+                </c:forEach>
             </ul>
         </div>
 
         <h1>Login page</h1>
 
+        <div style="color:red">${Error}</div>
         <form method="post">
             <table>
                 <tr>

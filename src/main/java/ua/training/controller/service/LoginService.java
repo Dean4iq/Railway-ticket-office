@@ -19,23 +19,23 @@ public class LoginService implements Service {
             //User user = userDao.findById(username);
             //if (user != null && user.getPassword().equals(password)) {
             if (username != null && password != null && username.equals(password)) {
-                request.removeAttribute("Error");
+
+                request.getSession().removeAttribute("Error");
 
                 //if (user.isAdmin()) {
-                if (username.equals("Admin")) {
+                if (!username.equals("") && username.equals("Admin")) {
                     //request.getSession(true).setAttribute("Admin", user.getLogin());
                     request.getSession(true).setAttribute("Admin", username);
                     return "redirect: /admin";
-                } else {
+                } else if(!username.equals("") && username.equals("User")){
                     //request.getSession(true).setAttribute("User", user.getLogin());
                     request.getSession(true).setAttribute("User", username);
                     return "redirect: /user";
                 }
-            } else {
-                request.setAttribute("Error", "Invalid login and/or password");
+            } else if (username!= null && password != null && !username.equals(password)){
+                request.getSession().setAttribute("Error", "Invalid login and/or password");
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return "redirect: /exception";
         }
 
