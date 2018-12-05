@@ -19,7 +19,7 @@ public class JDBCSeatDao implements SeatDao {
     }
 
     @Override
-    public Seat findById(int id) {
+    public Seat findById(Object id) {
         return null;
     }
 

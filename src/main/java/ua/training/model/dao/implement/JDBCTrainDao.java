@@ -19,7 +19,7 @@ public class JDBCTrainDao implements TrainDao {
     }
 
     @Override
-    public Train findById(int id) {
+    public Train findById(Object id) {
         return null;
     }
 

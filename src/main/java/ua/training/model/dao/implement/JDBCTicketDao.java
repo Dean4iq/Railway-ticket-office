@@ -19,7 +19,7 @@ public class JDBCTicketDao implements TicketDao {
     }
 
     @Override
-    public Ticket findById(int id) {
+    public Ticket findById(Object id) {
         return null;
     }
 

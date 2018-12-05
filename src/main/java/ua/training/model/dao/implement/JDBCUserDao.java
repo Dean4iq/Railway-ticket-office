@@ -19,7 +19,7 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public User findById(int id) {
+    public User findById(Object id) {
         return null;
     }
 

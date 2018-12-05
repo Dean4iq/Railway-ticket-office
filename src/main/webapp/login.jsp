@@ -62,7 +62,7 @@
                 </tr>
                 <tr>
                     <td>password:</td>
-                    <td><input type="password" placeholder="password" name="login"/></td>
+                    <td><input type="password" placeholder="password" name="pass"/></td>
                 </tr>
             </table>
             <br>

@@ -77,7 +77,7 @@
                 <tr>
                     <td><input type="text" placeholder="departure" name="departure"/></td>
                     <td style="padding-left: 30px; padding-right: 30px;">
-                        <input type="submit" value="Switch" name="SwitchDirections"/>
+                        ←<input type="submit" value="Switch" name="SwitchDirections"/>→
                     </td>
                     <td><input type="text" placeholder="destination" name="destination"/></td>
                 </tr>

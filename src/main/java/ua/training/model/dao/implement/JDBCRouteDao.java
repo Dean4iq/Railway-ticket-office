@@ -19,7 +19,7 @@ public class JDBCRouteDao implements RouteDao {
     }
 
     @Override
-    public Route findById(int id) {
+    public Route findById(Object id) {
         return null;
     }
 

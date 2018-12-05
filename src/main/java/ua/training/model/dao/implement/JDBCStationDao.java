@@ -19,7 +19,7 @@ public class JDBCStationDao implements StationDao {
     }
 
     @Override
-    public Station findById(int id) {
+    public Station findById(Object id) {
         return null;
     }
 
