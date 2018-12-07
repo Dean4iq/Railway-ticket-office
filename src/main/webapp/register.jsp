@@ -58,19 +58,27 @@
             <table>
                 <tr>
                     <td>name:</td>
-                    <td><input type="text" placeholder="name" name="name"/></td>
+                    <td><input type="text" required placeholder="name" name="name"/></td>
                 </tr>
                 <tr>
                     <td>last name:</td>
-                    <td><input type="text" placeholder="last name" name="lastName"/></td>
+                    <td><input type="text" required placeholder="last name" name="lastName"/></td>
+                </tr>
+                <tr>
+                    <td>ім&rsquo;я:</td>
+                    <td><input type="text" required placeholder="ім'я" name="nameUA"/></td>
+                </tr>
+                <tr>
+                    <td>Прізвище:</td>
+                    <td><input type="text" required placeholder="Прізвище" name="lastNameUA"/></td>
                 </tr>
                 <tr>
                     <td>login:</td>
-                    <td><input type="text" placeholder="login" name="login"/></td>
+                    <td><input type="text" required placeholder="login" name="login"/></td>
                 </tr>
                 <tr>
                     <td>password:</td>
-                    <td><input type="password" placeholder="password" name="login"/></td>
+                    <td><input type="password" required placeholder="password" name="password"/></td>
                 </tr>
             </table>
             <br>

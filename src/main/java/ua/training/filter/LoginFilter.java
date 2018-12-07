@@ -1,5 +1,8 @@
 package ua.training.filter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -7,6 +10,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LoginFilter implements Filter {
+    private final Logger log = LogManager.getLogger(LoginFilter.class);
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -23,11 +28,26 @@ public class LoginFilter implements Filter {
 
         String loginURI = req.getContextPath() + "/login";
 
-        boolean loggedIn = session != null &&
-                (session.getAttribute("User") != null || session.getAttribute("Admin") != null);
+        boolean loggedIn = (session != null &&
+                (session.getAttribute("User") != null
+                        || session.getAttribute("Admin") != null));
         boolean loginRequest = req.getRequestURI().equals(loginURI);
 
         if (loggedIn && loginRequest) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            if (session.getAttribute("User") != null) {
+                stringBuilder.append("Authorized user '")
+                        .append(session.getAttribute("User"))
+                        .append("' tried to log in");
+            } else {
+
+                stringBuilder.append("Authorized user '")
+                        .append(session.getAttribute("Admin"))
+                        .append("' tried to log in");
+            }
+            log.warn(stringBuilder.toString());
+
             res.sendRedirect(req.getContextPath() + "/exception");
         } else {
             filterChain.doFilter(request, response);

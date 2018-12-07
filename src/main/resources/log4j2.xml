@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+# %F - file name (example Main.java)avoided unless execution speed is not an issue.
+# %M – method (avoided unless execution speed is not an issue.)
+# %L - line number in file (avoided unless execution speed is not an issue.)
+# %C – class name (avoided unless execution speed is not an issue.)
+# %p - priority name
+# %c - category name i.e. stdout, console, logfile and etc
+# %d - date write record
+# %d{} - date write record , options {hh:mm:ss} or {HH:MM:SS} or combination
+# %m - message
+# %n - end line \n working in any way
+# OFF< TRACE< DEBUG< INFO< WARN< ERROR< FATAL< ALL
+-->
+
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
@@ -10,11 +25,31 @@
         </Console>
 
         <RollingFile name="errorLog" fileName="application-error.log"
-                     filePattern="${sys:APP_LOG_ROOT}/application-error-%d{yyyy-MM-dd}-%i.log" >
-            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+                     filePattern="${sys:APP_LOG_ROOT}/application-error-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="FATAL" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="19500KB" />
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="warnLog" fileName="application-warning.log"
+                     filePattern="${sys:APP_LOG_ROOT}/application-warning-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="infoLog" fileName="application-info.log"
+                     filePattern="${sys:APP_LOG_ROOT}/application-info-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
@@ -22,31 +57,26 @@
 
     <Loggers>
         <Logger name="ua.training.controller.Servlet" additivity="false">
-            <AppenderRef ref="errorLog" />
-            <AppenderRef ref="Console"  />
+            <AppenderRef ref="errorLog"/>
+            <AppenderRef ref="warnLog"/>
+            <AppenderRef ref="infoLog"/>
+            <AppenderRef ref="Console"/>
         </Logger>
 
         <Logger name="ua.training.filter.LoginFilter" additivity="false">
-            <AppenderRef ref="errorLog" />
-            <AppenderRef ref="Console"  />
+            <AppenderRef ref="warnLog"/>
         </Logger>
 
-        <Logger name="ua.training.filter.AdminFilter" additivity="false">
-            <AppenderRef ref="errorLog" />
-            <AppenderRef ref="Console"  />
+        <Logger name="ua.training.filter.LoginService" additivity="false">
+            <AppenderRef ref="errorLog"/>
+            <AppenderRef ref="warnLog"/>
+            <AppenderRef ref="infoLog"/>
         </Logger>
 
-        <Logger name="ua.training.filter.MenuBarFilter" additivity="false">
-            <AppenderRef ref="errorLog" />
-            <AppenderRef ref="Console"  />
-        </Logger>
-
-        <Logger name="ua.training.filter.UserFilter" additivity="false">
-            <AppenderRef ref="errorLog" />
-            <AppenderRef ref="Console"  />
-        </Logger>
-
-        <Root level="all">
+        <Root level="FATAL">
+            <AppenderRef ref="errorLog"/>
+            <AppenderRef ref="warnLog"/>
+            <AppenderRef ref="infoLog"/>
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>

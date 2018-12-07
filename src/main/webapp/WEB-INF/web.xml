@@ -35,12 +35,22 @@
   </filter-mapping>
 
   <filter>
+    <filter-name>RegisterFilter</filter-name>
+    <filter-class>ua.training.filter.RegisterFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>RegisterFilter</filter-name>
+    <url-pattern>/register/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
     <filter-name>UserFilter</filter-name>
     <filter-class>ua.training.filter.UserFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>UserFilter</filter-name>
     <url-pattern>/user/*</url-pattern>
+    <url-pattern>/purchase</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -50,6 +60,8 @@
   <filter-mapping>
     <filter-name>AdminFilter</filter-name>
     <url-pattern>/admin/*</url-pattern>
+    <url-pattern>/trainList</url-pattern>
+    <url-pattern>/userList</url-pattern>
   </filter-mapping>
 
   <filter>

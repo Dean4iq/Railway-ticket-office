@@ -27,8 +27,8 @@ public class Servlet extends HttpServlet {
         commands.put("purchase", new PurchaseService());
         commands.put("register", new RegisterService());
         commands.put("search", new SearchService());
-        commands.put("trainsManaging", new TrainListManagingService());
-        commands.put("usersManaging", new UserListManagingService());
+        commands.put("trainList", new TrainListManagingService());
+        commands.put("userList", new UserListManagingService());
         commands.put("wagonReviewing", new WagonReviewingService());
     }
 

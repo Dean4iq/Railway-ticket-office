@@ -29,6 +29,8 @@ public class MenuBarFilter implements Filter {
         } else if (session.getAttribute("User") != null) {
             menuItems.put("Logout", "logout");
         } else {
+            menuItems.put("Train list", "trainList");
+            menuItems.put("User list", "userList");
             menuItems.put("Logout", "logout");
         }
 

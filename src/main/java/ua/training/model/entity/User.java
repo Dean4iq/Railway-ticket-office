@@ -7,7 +7,7 @@ public class User {
     private String lastName;
     private String nameUA;
     private String lastNameUA;
-    private boolean admin;
+    private boolean admin = false;
 
     public String getLogin() {
         return login;
