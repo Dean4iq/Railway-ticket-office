@@ -57,16 +57,16 @@
         <form method="post">
             <table>
                 <tr>
-                    <td>name:</td>
-                    <td><input type="text" required placeholder="name" name="name"/></td>
+                    <td>Name:</td>
+                    <td><input type="text" required placeholder="Name" name="name"/></td>
                 </tr>
                 <tr>
-                    <td>last name:</td>
-                    <td><input type="text" required placeholder="last name" name="lastName"/></td>
+                    <td>Last name:</td>
+                    <td><input type="text" required placeholder="Last name" name="lastName"/></td>
                 </tr>
                 <tr>
-                    <td>ім&rsquo;я:</td>
-                    <td><input type="text" required placeholder="ім'я" name="nameUA"/></td>
+                    <td>Ім&rsquo;я:</td>
+                    <td><input type="text" required placeholder="Ім'я" name="nameUA"/></td>
                 </tr>
                 <tr>
                     <td>Прізвище:</td>

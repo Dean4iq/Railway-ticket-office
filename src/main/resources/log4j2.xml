@@ -73,11 +73,10 @@
             <AppenderRef ref="infoLog"/>
         </Logger>
 
-        <Root level="FATAL">
+        <Root level="ALL">
             <AppenderRef ref="errorLog"/>
             <AppenderRef ref="warnLog"/>
             <AppenderRef ref="infoLog"/>
-            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>
