@@ -5,6 +5,13 @@
          version="3.1">
   <display-name>Archetype Created Web Application</display-name>
 
+  <jsp-config>
+    <jsp-property-group>
+      <url-pattern>*.jsp</url-pattern>
+      <scripting-invalid>true</scripting-invalid>
+    </jsp-property-group>
+  </jsp-config>
+
   <servlet>
     <servlet-name>GlobalServlet</servlet-name>
     <servlet-class>ua.training.controller.Servlet</servlet-class>

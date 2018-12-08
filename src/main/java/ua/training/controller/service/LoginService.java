@@ -8,12 +8,15 @@ import ua.training.model.dao.implement.JDBCDaoFactory;
 import ua.training.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 public class LoginService implements Service {
-    private final Logger log = LogManager.getLogger(LoginService.class);
+    private static final Logger log = LogManager.getLogger(LoginService.class);
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.debug("LoginService class execute()");
+
         String username = request.getParameter("login");
         String password = request.getParameter("pass");
 
@@ -35,15 +38,18 @@ public class LoginService implements Service {
                                 .append("Admin '")
                                 .append(user.getLogin())
                                 .append("' has successfully logged in"));
+                        log.debug("Admin in LoginService class execute()");
 
                         return "redirect: /admin";
                     } else {
                         request.getSession(true).setAttribute("User", user.getLogin());
 
+
                         log.info(new StringBuilder()
                                 .append("User '")
                                 .append(user.getLogin())
                                 .append("' has successfully logged in"));
+                        log.debug("User in LoginService class execute()");
 
                         return "redirect: /user";
                     }
@@ -53,16 +59,18 @@ public class LoginService implements Service {
                             .append("Someone tried to log in using username '")
                             .append(username)
                             .append("'"));
+                    log.debug("Failed to login while LoginService class execute()");
 
                     request.getSession().setAttribute("Error", "Invalid login and/or password");
                 }
 
             } catch (Exception e) {
-                log.error(e.toString());
+                log.error(Arrays.toString(e.getStackTrace()));
                 return "redirect: /exception";
             }
         }
 
+        log.debug("New round LoginService class execute()");
         return "/login.jsp";
     }
 }

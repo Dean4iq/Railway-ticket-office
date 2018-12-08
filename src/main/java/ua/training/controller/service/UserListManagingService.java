@@ -8,10 +8,11 @@ import ua.training.model.dao.implement.JDBCDaoFactory;
 import ua.training.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserListManagingService implements Service {
-    private final Logger log = LogManager.getLogger(UserListManagingService.class);
+    private static final Logger log = LogManager.getLogger(UserListManagingService.class);
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -23,9 +24,11 @@ public class UserListManagingService implements Service {
 
             request.setAttribute("userList", users);
         } catch (Exception e) {
-            log.error(e.toString());
+            log.debug("Exception in TrainListManagingService execute()");
+            log.error(Arrays.toString(e.getStackTrace()));
         }
 
+        log.debug("TrainListManagingService execute()");
         return "/WEB-INF/admin/userList.jsp";
     }
 }

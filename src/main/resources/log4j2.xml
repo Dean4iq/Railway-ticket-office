@@ -24,8 +24,8 @@
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
 
-        <RollingFile name="errorLog" fileName="application-error.log"
-                     filePattern="${sys:APP_LOG_ROOT}/application-error-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="errorLog" fileName="logs/errors/application-error.log"
+                     filePattern="logs/archive/application-error-%d{yyyy-MM-dd}-%i.log.gz">
             <LevelRangeFilter minLevel="ERROR" maxLevel="FATAL" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
@@ -34,8 +34,8 @@
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
-        <RollingFile name="warnLog" fileName="application-warning.log"
-                     filePattern="${sys:APP_LOG_ROOT}/application-warning-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="warnLog" fileName="logs/warnings/application-warning.log"
+                     filePattern="logs/archive/application-warning-%d{yyyy-MM-dd}-%i.log.gz">
             <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
@@ -44,9 +44,19 @@
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
-        <RollingFile name="infoLog" fileName="application-info.log"
-                     filePattern="${sys:APP_LOG_ROOT}/application-info-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="infoLog" fileName="logs/info/application-info.log"
+                     filePattern="logs/archive/application-info-%d{yyyy-MM-dd}-%i.log.gz">
             <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="debugLog" fileName="logs/debug/application-debug.log"
+                     filePattern="logs/archive/application-debug-%d{yyyy-MM-dd}-%i.log.gz">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="19500KB"/>
@@ -60,23 +70,26 @@
             <AppenderRef ref="errorLog"/>
             <AppenderRef ref="warnLog"/>
             <AppenderRef ref="infoLog"/>
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="debugLog"/>
         </Logger>
 
         <Logger name="ua.training.filter.LoginFilter" additivity="false">
             <AppenderRef ref="warnLog"/>
+            <AppenderRef ref="debugLog"/>
         </Logger>
 
         <Logger name="ua.training.filter.LoginService" additivity="false">
             <AppenderRef ref="errorLog"/>
             <AppenderRef ref="warnLog"/>
             <AppenderRef ref="infoLog"/>
+            <AppenderRef ref="debugLog"/>
         </Logger>
 
         <Root level="ALL">
             <AppenderRef ref="errorLog"/>
             <AppenderRef ref="warnLog"/>
             <AppenderRef ref="infoLog"/>
+            <AppenderRef ref="debugLog"/>
         </Root>
     </Loggers>
 </Configuration>

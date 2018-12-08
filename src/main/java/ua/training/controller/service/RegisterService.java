@@ -8,15 +8,17 @@ import ua.training.model.dao.implement.JDBCDaoFactory;
 import ua.training.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterService implements Service {
-    private final Logger log = LogManager.getLogger(RegisterService.class);
+    private static final Logger log = LogManager.getLogger(RegisterService.class);
 
     @Override
     public String execute(HttpServletRequest request) {
         Map<String, String> userAttributes = new HashMap<>();
+
         userAttributes.put("name", request.getParameter("name"));
         userAttributes.put("lastName", request.getParameter("lastName"));
         userAttributes.put("nameUA", request.getParameter("nameUA"));
@@ -46,11 +48,16 @@ public class RegisterService implements Service {
                         .append("'"));
 
                 request.getSession().setAttribute("User", user.getLogin());
+
+                log.debug("New user in RegisterService execute()");
                 return "redirect: /user";
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.debug("Exception in RegisterService execute()");
+                log.error(Arrays.toString(e.getStackTrace()));
             }
         }
+
+        log.debug("New round RegisterService execute()");
         return "/register.jsp";
     }
 }

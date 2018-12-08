@@ -10,11 +10,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LoginFilter implements Filter {
-    private final Logger log = LogManager.getLogger(LoginFilter.class);
+    private static final Logger log = LogManager.getLogger(LoginFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        log.debug("LoginFilter init()");
     }
 
     @Override
@@ -48,14 +48,16 @@ public class LoginFilter implements Filter {
             }
             log.warn(stringBuilder.toString());
 
-            res.sendRedirect(req.getContextPath() + "/exception");
+            log.debug("LoginFilter doFilter() access denied");
+            res.sendRedirect(req.getContextPath() + "/");
         } else {
+            log.debug("LoginFilter doFilter() doFilter");
             filterChain.doFilter(request, response);
         }
     }
 
     @Override
     public void destroy() {
-
+        log.debug("LoginFilter destroy()");
     }
 }

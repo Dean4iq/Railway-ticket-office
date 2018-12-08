@@ -10,11 +10,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class RegisterFilter implements Filter {
-    private final Logger log = LogManager.getLogger(RegisterFilter.class);
+    private static final Logger log = LogManager.getLogger(RegisterFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        log.debug("RegisterFilter init()");
     }
 
     @Override
@@ -40,21 +40,22 @@ public class RegisterFilter implements Filter {
                         .append(session.getAttribute("User"))
                         .append("' tried to register");
             } else {
-
                 stringBuilder.append("Authorized user '")
                         .append(session.getAttribute("Admin"))
                         .append("' tried to register");
             }
+            log.debug("RegisterFilter doFilter() access denied");
             log.warn(stringBuilder.toString());
 
             res.sendRedirect(httpRequest.getContextPath() + "/");
         } else {
+            log.debug("RegisterFilter doFilter()");
             filterChain.doFilter(request, response);
         }
     }
 
     @Override
     public void destroy() {
-
+        log.debug("RegisterFilter destroy()");
     }
 }

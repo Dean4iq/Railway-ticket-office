@@ -1,5 +1,8 @@
 package ua.training.filter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,9 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MenuBarFilter implements Filter {
+    private static final Logger log = LogManager.getLogger(MenuBarFilter.class);
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        log.debug("MenuBarFilter init()");
     }
 
     @Override
@@ -35,11 +40,13 @@ public class MenuBarFilter implements Filter {
         }
 
         req.setAttribute("userbar", menuItems);
+
+        log.debug("MenuBarFilter doFilter()");
         filterChain.doFilter(req, res);
     }
 
     @Override
     public void destroy() {
-
+        log.debug("MenuBarFilter destroy()");
     }
 }
