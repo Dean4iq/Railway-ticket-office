@@ -1,21 +1,23 @@
 package ua.training.model.dao.implement;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.RouteDao;
 import ua.training.model.entity.Route;
 import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JDBCRouteDao implements RouteDao {
+    private static final Logger log = LogManager.getLogger(JDBCRouteDao.class);
+
     private Connection connection;
 
     public JDBCRouteDao(Connection connection) {
         this.connection = connection;
+        log.debug("JDBCRouteDao constructor()");
     }
 
     @Override
@@ -30,7 +32,12 @@ public class JDBCRouteDao implements RouteDao {
             ps.setTime(3, route.getArrivalTime());
             ps.setTime(4, route.getDepartureTime());
             ps.execute();
+
+            connection.commit();
+            log.debug("JDBCRouteDao create()");
         } catch (SQLException e) {
+            log.debug("JDBCRouteDao create() failed");
+            log.error(Arrays.toString(e.getStackTrace()));
             throw new RuntimeException(e);
         }
     }
@@ -44,8 +51,10 @@ public class JDBCRouteDao implements RouteDao {
             preparedStatement.setInt(1, trainId);
 
             route = extractFromResultSet(preparedStatement.executeQuery());
+            log.debug("JDBCRouteDao findById()");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.debug("JDBCRouteDao findById() failed");
+            log.error(Arrays.toString(e.getStackTrace()));
         }
 
         return route;
@@ -58,6 +67,8 @@ public class JDBCRouteDao implements RouteDao {
         route.setStationId(resultSet.getInt("Station_st_id"));
         route.setArrivalTime(resultSet.getTime("arrival"));
         route.setDepartureTime(resultSet.getTime("departure"));
+
+        log.debug("JDBCRouteDao extractFromResultSet()");
 
         return route;
     }
@@ -82,8 +93,11 @@ public class JDBCRouteDao implements RouteDao {
 
                 resultList.add(route);
             }
+
+            log.debug("JDBCRouteDao findAll()");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.debug("JDBCRouteDao findAll() failed");
+            log.error(Arrays.toString(e.getStackTrace()));
         }
 
         return resultList;
@@ -91,11 +105,15 @@ public class JDBCRouteDao implements RouteDao {
 
     private Train makeUniqueTrain(Map<Integer, Train> trains, Train train) {
         trains.putIfAbsent(train.getId(), train);
+
+        log.debug("JDBCRouteDao makeUniqueTrain()");
         return trains.get(train.getId());
     }
 
     private Station makeUniqueStation(Map<Integer, Station> stations, Station station) {
         stations.putIfAbsent(station.getId(), station);
+
+        log.debug("JDBCRouteDao makeUniqueStation()");
         return stations.get(station.getId());
     }
 
@@ -106,8 +124,10 @@ public class JDBCRouteDao implements RouteDao {
                         "WHERE tr_id = ? AND position=?")) {
 
             preparedStatement.executeUpdate();
+            log.debug("JDBCRouteDao update()");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.debug("JDBCRouteDao update() failed");
+            log.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
@@ -118,13 +138,16 @@ public class JDBCRouteDao implements RouteDao {
             preparedStatement.setInt(1, id);
 
             preparedStatement.execute();
+            log.debug("JDBCRouteDao delete()");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.debug("JDBCRouteDao delete() failed");
+            log.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
     @Override
     public void close() throws Exception {
+        log.debug("JDBCRouteDao close()");
         connection.close();
     }
 }
