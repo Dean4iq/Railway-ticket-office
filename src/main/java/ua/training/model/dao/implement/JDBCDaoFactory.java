@@ -33,11 +33,6 @@ public class JDBCDaoFactory extends DaoFactory {
     }
 
     @Override
-    public TravelInfoDao createTravelInfoDao() {
-        return new JDBCTravelInfoDao(getConnection());
-    }
-
-    @Override
     public UserDao createUserDao() {
         return new JDBCUserDao(getConnection());
     }
@@ -45,11 +40,6 @@ public class JDBCDaoFactory extends DaoFactory {
     @Override
     public WagonDao createWagonDao() {
         return new JDBCWagonDao(getConnection());
-    }
-
-    @Override
-    public WagonTypeDao createWagonTypeDao() {
-        return new JDBCWagonTypeDao(getConnection());
     }
 
     private Connection getConnection(){

@@ -11,5 +11,5 @@ public interface GenericDao<K, T> extends AutoCloseable {
 
     void update(T entity);
 
-    void delete(K id);
+    void delete(T id);
 }

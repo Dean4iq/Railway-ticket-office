@@ -1,13 +1,13 @@
 package ua.training.model.entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Ticket {
     private int id;
-    private int userId;
+    private String userLogin;
     private Date travelDate;
     private int seatId;
-    private int tripInfoId;
+    private int trainId;
     private int cost;
     private int departureStationId;
     private int arrivalStationId;
@@ -20,12 +20,12 @@ public class Ticket {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserLogin() {
+        return userLogin;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
     }
 
     public Date getTravelDate() {
@@ -44,12 +44,12 @@ public class Ticket {
         this.seatId = seatId;
     }
 
-    public int getTripInfoId() {
-        return tripInfoId;
+    public int getTrainId() {
+        return trainId;
     }
 
-    public void setTripInfoId(int tripInfoId) {
-        this.tripInfoId = tripInfoId;
+    public void setTrainId(int trainId) {
+        this.trainId = trainId;
     }
 
     public int getCost() {
@@ -80,10 +80,10 @@ public class Ticket {
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
-                ", userId=" + userId +
+                ", userLogin=" + userLogin +
                 ", travelDate=" + travelDate +
                 ", seatId=" + seatId +
-                ", tripInfoId=" + tripInfoId +
+                ", trainId=" + trainId +
                 ", cost=" + cost +
                 ", departureStationId=" + departureStationId +
                 ", arrivalStationId=" + arrivalStationId +
