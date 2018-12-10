@@ -6,12 +6,16 @@ import ua.training.model.dao.RouteDao;
 import ua.training.model.entity.Route;
 import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
+import ua.training.util.QueryStringGetter;
+import ua.training.util.QueryType;
+import ua.training.util.TableName;
 
 import java.sql.*;
 import java.util.*;
 
 public class JDBCRouteDao implements RouteDao {
     private static final Logger log = LogManager.getLogger(JDBCRouteDao.class);
+    private static final TableName tableName = TableName.ROUTE;
 
     private Connection connection;
 
@@ -23,9 +27,7 @@ public class JDBCRouteDao implements RouteDao {
     @Override
     public void create(Route route) {
         try (PreparedStatement ps = connection.prepareStatement
-                ("INSERT INTO route (Train_t_id, Station_st_id, arrival, departure)" +
-                        " VALUES (?, ?, ?, ?)")) {
-            connection.setAutoCommit(false);
+                (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
 
             ps.setInt(1, route.getTrainId());
             ps.setInt(2, route.getStationId());
@@ -33,10 +35,9 @@ public class JDBCRouteDao implements RouteDao {
             ps.setTime(4, route.getDepartureTime());
             ps.execute();
 
-            connection.commit();
             log.debug("JDBCRouteDao create()");
         } catch (SQLException e) {
-            log.debug("JDBCRouteDao create() failed");
+            log.debug("JDBCRouteDao create() failed: " + route.toString());
             log.error(Arrays.toString(e.getStackTrace()));
             throw new RuntimeException(e);
         }
@@ -47,10 +48,14 @@ public class JDBCRouteDao implements RouteDao {
         Route route = new Route();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                ("SELECT * FROM Route WHERE Train_t_id = ?")) {
+                (QueryStringGetter.getQuery(QueryType.FIND, tableName))) {
             preparedStatement.setInt(1, trainId);
 
-            route = extractFromResultSet(preparedStatement.executeQuery());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                route = extractFromResultSet(resultSet);
+            }
+
             log.debug("JDBCRouteDao findById()");
         } catch (SQLException e) {
             log.debug("JDBCRouteDao findById() failed");
@@ -68,22 +73,23 @@ public class JDBCRouteDao implements RouteDao {
         route.setArrivalTime(resultSet.getTime("arrival"));
         route.setDepartureTime(resultSet.getTime("departure"));
 
-        log.debug("JDBCRouteDao extractFromResultSet()");
+        log.debug("JDBCRouteDao extractFromResultSet(): " + route.toString());
 
         return route;
     }
 
     @Override
     public List<Route> findAll() {
-        List<Route> resultList = new ArrayList<>();
-        Map<Integer, Train> trains = new HashMap<>();
-        Map<Integer, Station> stations = new HashMap<>();
+        List<Route> routeList = new ArrayList<>();
+        //Map<Integer, Train> trains = new HashMap<>();
+        //Map<Integer, Station> stations = new HashMap<>();
 
-        try (Statement ps = connection.createStatement()) {
-            ResultSet rs = ps.executeQuery("SELECT * FROM route r LEFT JOIN train t ON r.tr_id=t.tr_id LEFT JOIN station s ON r.st_id=s.st_id");
+        try (PreparedStatement preparedStatement = connection.prepareStatement
+                (QueryStringGetter.getQuery(QueryType.SELECT, tableName));
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            while (rs.next()) {
-                Route route = extractFromResultSet(rs);
+            while (resultSet.next()) {
+                Route route = extractFromResultSet(resultSet);
 
                 /*Train train = makeUniqueTrain(trains, route.getTrain());
                 Station station = makeUniqueStation(stations, route.getStation());
@@ -91,7 +97,7 @@ public class JDBCRouteDao implements RouteDao {
                 route.setTrain(train);
                 route.setStation(station);*/
 
-                resultList.add(route);
+                routeList.add(route);
             }
 
             log.debug("JDBCRouteDao findAll()");
@@ -100,7 +106,7 @@ public class JDBCRouteDao implements RouteDao {
             log.error(Arrays.toString(e.getStackTrace()));
         }
 
-        return resultList;
+        return routeList;
     }
 
     private Train makeUniqueTrain(Map<Integer, Train> trains, Train train) {
@@ -120,8 +126,12 @@ public class JDBCRouteDao implements RouteDao {
     @Override
     public void update(Route route) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                ("UPDATE route SET st_id=?, arrival=?, departure=? " +
-                        "WHERE tr_id = ? AND position=?")) {
+                (QueryStringGetter.getQuery(QueryType.UPDATE, tableName))) {
+
+            preparedStatement.setTime(1, route.getArrivalTime());
+            preparedStatement.setTime(2, route.getDepartureTime());
+            preparedStatement.setInt(3, route.getTrainId());
+            preparedStatement.setInt(4, route.getStationId());
 
             preparedStatement.executeUpdate();
             log.debug("JDBCRouteDao update()");
@@ -132,10 +142,11 @@ public class JDBCRouteDao implements RouteDao {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Route route) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                ("DELETE FROM station WHERE st_id = ?")) {
-            preparedStatement.setInt(1, id);
+                (QueryStringGetter.getQuery(QueryType.DELETE, tableName))) {
+            preparedStatement.setInt(1, route.getTrainId());
+            preparedStatement.setInt(2, route.getStationId());
 
             preparedStatement.execute();
             log.debug("JDBCRouteDao delete()");

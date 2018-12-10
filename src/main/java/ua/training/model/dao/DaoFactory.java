@@ -15,13 +15,9 @@ public abstract class DaoFactory {
 
     public abstract TrainDao createTrainDao();
 
-    public abstract TravelInfoDao createTravelInfoDao();
-
     public abstract UserDao createUserDao();
 
     public abstract WagonDao createWagonDao();
-
-    public abstract WagonTypeDao createWagonTypeDao();
 
     public static DaoFactory getInstance() {
         if (daoFactory == null) {

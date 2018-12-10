@@ -4,6 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.SeatDao;
 import ua.training.model.entity.Seat;
+import ua.training.util.QueryStringGetter;
+import ua.training.util.QueryType;
+import ua.training.util.TableName;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +18,7 @@ import java.util.List;
 
 public class JDBCSeatDao implements SeatDao {
     private static final Logger log = LogManager.getLogger(JDBCRouteDao.class);
+    private static final TableName tableName = TableName.SEAT;
 
     private Connection connection;
 
@@ -26,31 +30,29 @@ public class JDBCSeatDao implements SeatDao {
     @Override
     public void create(Seat seat) {
         try (PreparedStatement ps = connection.prepareStatement
-                ("INSERT INTO seat (s_id, Wagon_w_id, occupied)" +
-                        " VALUES (?, ?, ?)")) {
-            connection.setAutoCommit(false);
-
-            ps.setInt(1, seat.getId());
-            ps.setInt(2, seat.getWagonId());
-            ps.setBoolean(3, seat.isOccupied());
+                (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
+            ps.setInt(1, seat.getWagonId());
+            ps.setBoolean(2, seat.isOccupied());
             ps.execute();
 
-            connection.commit();
             log.debug("JDBCSeatDao create()");
         } catch (SQLException e) {
-            log.debug("JDBCSeatDao create() failed");
+            log.debug("JDBCSeatDao create() failed: " + seat.toString());
             log.error(Arrays.toString(e.getStackTrace()));
             throw new RuntimeException(e);
         }
     }
 
-    public boolean bookSeat(Integer id) {
+    public boolean bookSeat(Seat seat) {
         try (PreparedStatement preparedStatement
-                     = connection.prepareStatement("UPDATE seat SET occupied = true WHERE s_id=?")) {
+                     = connection.prepareStatement(QueryStringGetter.getQuery(QueryType.UPDATE, tableName))) {
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-            preparedStatement.setInt(1, id);
-            preparedStatement.execute();
+
+            preparedStatement.setInt(1, seat.getWagonId());
+            preparedStatement.setBoolean(2, seat.isOccupied());
+            preparedStatement.setInt(3, seat.getId());
+            preparedStatement.executeUpdate();
 
             Thread.sleep(1000000);
 
@@ -75,13 +77,11 @@ public class JDBCSeatDao implements SeatDao {
         Seat seat = new Seat();
 
         try (PreparedStatement preparedStatement
-                     = connection.prepareStatement("SELECT * FROM seat WHERE s_id=?")) {
-            connection.setAutoCommit(false);
+                     = connection.prepareStatement(QueryStringGetter.getQuery(QueryType.FIND, tableName))) {
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            connection.commit();
 
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 seat = extractFromResultSet(resultSet);
             }
@@ -94,33 +94,28 @@ public class JDBCSeatDao implements SeatDao {
         return seat;
     }
 
-    static Seat extractFromResultSet(ResultSet resultSet) {
+    static Seat extractFromResultSet(ResultSet resultSet) throws SQLException {
         Seat seat = new Seat();
-        try {
-            seat.setId(resultSet.getInt("s_id"));
-            seat.setWagonId(resultSet.getInt("Wagon_w_id"));
-            seat.setOccupied(resultSet.getBoolean("occupied"));
-        } catch (SQLException e) {
-            log.debug("JDBCSeatDao extractFromResultSet() error");
-            log.error(Arrays.toString(e.getStackTrace()));
-        }
 
-        log.debug("JDBCSeatDao extractFromResultSet()");
+        seat.setId(resultSet.getInt("s_id"));
+        seat.setWagonId(resultSet.getInt("Wagon_w_id"));
+        seat.setOccupied(resultSet.getBoolean("occupied"));
+
+        log.debug("JDBCSeatDao extractFromResultSet(): " + seat.toString());
         return seat;
     }
 
     @Override
     public List<Seat> findAll() {
-        List<Seat> seats = new ArrayList<>();
+        List<Seat> seatList = new ArrayList<>();
 
-        try (PreparedStatement preparedStatement
-                     = connection.prepareStatement("SELECT * FROM seat")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement
+                (QueryStringGetter.getQuery(QueryType.SELECT, tableName))) {
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Seat seat = extractFromResultSet(resultSet);
-
-                seats.add(seat);
+                seatList.add(extractFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             log.debug("JDBCSeatDao findAll() error");
@@ -128,19 +123,19 @@ public class JDBCSeatDao implements SeatDao {
         }
 
         log.debug("JDBCSeatDao findAll()");
-        return seats;
+        return seatList;
     }
 
     @Override
     public void update(Seat seat) {
         try (PreparedStatement preparedStatement
-                     = connection.prepareStatement("UPDATE seat SET Wagon_w_id=?, occupied = ? WHERE s_id=?")) {
+                     = connection.prepareStatement(QueryStringGetter.getQuery(QueryType.UPDATE, tableName))) {
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             preparedStatement.setInt(1, seat.getWagonId());
             preparedStatement.setBoolean(2, seat.isOccupied());
             preparedStatement.setInt(3, seat.getId());
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             connection.commit();
             log.debug("JDBCSeatDao update()");
         } catch (SQLException e) {
@@ -150,13 +145,11 @@ public class JDBCSeatDao implements SeatDao {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Seat seat) {
         try (PreparedStatement preparedStatement
-                     = connection.prepareStatement("DELETE seat WHERE s_id=?")) {
-            connection.setAutoCommit(false);
-            preparedStatement.setInt(1, id);
+                     = connection.prepareStatement(QueryStringGetter.getQuery(QueryType.DELETE, tableName))) {
+            preparedStatement.setInt(1, seat.getId());
             preparedStatement.execute();
-            connection.commit();
             log.debug("JDBCSeatDao delete()");
         } catch (SQLException e) {
             log.debug("JDBCSeatDao delete() error");
