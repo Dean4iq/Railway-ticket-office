@@ -66,7 +66,7 @@ public class JDBCTrainDao implements TrainDao {
     static Train extractFromResultSet(ResultSet resultSet) throws SQLException {
         Train train = new Train();
 
-        train.setId(resultSet.getInt("tr_id"));
+        train.setId(resultSet.getInt("t_id"));
         train.setCost(resultSet.getInt("cost"));
 
         log.debug("JDBCTrainDao extractFromResultSet(): " + train.toString());

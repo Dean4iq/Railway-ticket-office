@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JDBCUserDao implements UserDao {
+    private static final Logger log = LogManager.getLogger(JDBCUserDao.class);
     private static final TableName tableName = TableName.USER;
-    private static final Logger log = LogManager.getLogger(User.class);
 
     private Connection connection;
 
@@ -58,8 +58,8 @@ public class JDBCUserDao implements UserDao {
                 user = extractFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            log.debug("JDBCUserDao findById() error");
             log.error(Arrays.toString(e.getStackTrace()));
+            log.debug("JDBCUserDao findById() error");
         }
 
         log.debug("JDBCUserDao findById()");

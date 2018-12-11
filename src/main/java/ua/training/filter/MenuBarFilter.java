@@ -32,6 +32,7 @@ public class MenuBarFilter implements Filter {
             menuItems.put("Login", "login");
             menuItems.put("Register", "register");
         } else if (session.getAttribute("User") != null) {
+            menuItems.put("Придбати квитки", "searchToPurchase");
             menuItems.put("Logout", "logout");
         } else {
             menuItems.put("Train list", "trainList");

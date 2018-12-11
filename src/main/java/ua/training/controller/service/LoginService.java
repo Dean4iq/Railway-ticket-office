@@ -44,7 +44,6 @@ public class LoginService implements Service {
                     } else {
                         request.getSession(true).setAttribute("User", user.getLogin());
 
-
                         log.info(new StringBuilder()
                                 .append("User '")
                                 .append(user.getLogin())
@@ -65,7 +64,8 @@ public class LoginService implements Service {
                 }
 
             } catch (Exception e) {
-                log.error(Arrays.toString(e.getStackTrace()));
+                log.debug("LoginService exception");
+                log.error(e.getStackTrace());
                 return "redirect: /exception";
             }
         }

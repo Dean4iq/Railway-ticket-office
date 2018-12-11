@@ -31,7 +31,8 @@ public class Servlet extends HttpServlet {
         commands.put("logout", new LogoutService());
         commands.put("purchase", new PurchaseService());
         commands.put("register", new RegisterService());
-        commands.put("search", new SearchService());
+        commands.put("search", new SearchTrainService());
+        commands.put("searchToPurchase", new SearchTicketService());
         commands.put("trainList", new TrainListManagingService());
         commands.put("userList", new UserListManagingService());
         commands.put("wagonReviewing", new WagonReviewingService());
@@ -43,10 +44,10 @@ public class Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            response.setHeader("Cache-Control","no-cache");
-            response.setHeader("Cache-Control","no-store");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setHeader("Cache-Control", "no-store");
             response.setDateHeader("Expires", 0);
-            response.setHeader("Pragma","no-cache");
+            response.setHeader("Pragma", "no-cache");
 
             log.debug("Servlet doGet");
             processRequest(request, response);
@@ -81,7 +82,7 @@ public class Servlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + page.replaceAll("redirect: ", ""));
         } else {
             log.debug("Servlet forward to " + page);
-            request.getRequestDispatcher(page).forward(request,response);
+            request.getRequestDispatcher(page).forward(request, response);
         }
     }
 }
