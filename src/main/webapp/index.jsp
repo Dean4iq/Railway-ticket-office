@@ -45,8 +45,8 @@
     <body>
         <div class="nav">
             <ul>
-                <li><a href="${pageContext.request.contextPath}">Головна сторінка</a></li>
-                <li><a href="search">Пошук поїзда</a></li>
+                <li><a href="${pageContext.request.contextPath}"><c:out value="${localeValues['btn.main']}"/></a></li>
+                <li><a href="search"><c:out value="${localeValues['btn.search']}"/></a></li>
                 <c:forEach items="${userbar}" var="keyValue">
                     <li><a href="${keyValue.value}">${keyValue.key}</a></li>
                 </c:forEach>

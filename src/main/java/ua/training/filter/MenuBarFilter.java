@@ -27,17 +27,18 @@ public class MenuBarFilter implements Filter {
         final HttpServletResponse res = (HttpServletResponse) response;
 
         HttpSession session = req.getSession(true);
+        Map<String, String> localizationStrings = (Map<String, String>) session.getAttribute("mapValues");
 
         if (session.getAttribute("User") == null && session.getAttribute("Admin") == null) {
-            menuItems.put("Login", "login");
-            menuItems.put("Register", "register");
+            menuItems.put(localizationStrings.get("btn.login"), "login");
+            menuItems.put(localizationStrings.get("btn.register"), "register");
         } else if (session.getAttribute("User") != null) {
-            menuItems.put("Придбати квитки", "searchToPurchase");
-            menuItems.put("Logout", "logout");
+            menuItems.put(localizationStrings.get("btn.purchaseTicket"), "searchToPurchase");
+            menuItems.put(localizationStrings.get("btn.logout"), "logout");
         } else {
-            menuItems.put("Train list", "trainList");
-            menuItems.put("User list", "userList");
-            menuItems.put("Logout", "logout");
+            menuItems.put(localizationStrings.get("btn.trainlistAdm"), "trainList");
+            menuItems.put(localizationStrings.get("btn.userList"), "userList");
+            menuItems.put(localizationStrings.get("btn.logout"), "logout");
         }
 
         req.setAttribute("userbar", menuItems);
