@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Main</title>
+        <title>${localeValues['head.purchase']}</title>
         <style>
             .nav a{
                 text-decoration:none;
@@ -58,11 +58,11 @@
             </ul>
         </div>
 
-        <h1>Your ticket</h1>
+        <h1>${localeValues['head.purchase']}</h1>
         Ticket info
         <form method="POST">
-            <input type="submit" name="pay" value="Pay"/>
-            <input type="submit" name="decline" value="Decline"/>
+            <input type="submit" name="pay" value="${localeValues['btn.acceptPurchase']}"/>
+            <input type="submit" name="decline" value="${localeValues['btn.declinePurchase']}"/>
         </post>
     </body>
 </html>

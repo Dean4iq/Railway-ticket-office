@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title> Login </title>
+        <title>${localeValues['head.login']}</title>
         <link href="style/head.css" rel="stylesheet" type="text/css"/>
     </head>
 
@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <h1>Login page</h1>
+        <h1>${localeValues['head.login']}</h1>
 
         <div style="color:red">${Error}</div>
         <form method="post">
@@ -40,7 +40,7 @@
                 </tr>
             </table>
             <br>
-            <p align="center"><input type="submit" value="Log in" name="login"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.login']}" name="login"/></p>
         </form>
     </body>
 </html>

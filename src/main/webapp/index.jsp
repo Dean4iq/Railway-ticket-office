@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Main</title>
+        <title>${localeValues['head.main']}</title>
         <style>
             .nav a{
                 text-decoration:none;
@@ -50,7 +50,7 @@
         </form>
         <div class="nav">
             <ul>
-                <li><a href="${pageContext.request.contextPath}"><c:out value="${localeValues['btn.main']}"/></a></li>
+                <li><a href="${pageContext.request.contextPath}">${localeValues['btn.main']}</a></li>
                 <li><a href="search">${localeValues['btn.search']}</a></li>
                 <c:forEach items="${userbar}" var="keyValue">
                     <li><a href="${keyValue.value}">${keyValue.key}</a></li>
@@ -58,6 +58,6 @@
             </ul>
         </div>
 
-        <h1>Main page</h1>
+        <h1>${localeValues['head.main']}</h1>
     </body>
 </html>

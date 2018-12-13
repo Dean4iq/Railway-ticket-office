@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Search</title>
+        <title>${localeValues['head.trainlist']}</title>
         <style>
             .nav a{
                 text-decoration:none;
@@ -59,7 +59,7 @@
             </ul>
         </div>
 
-        <h1>Train list</h1>
+        <h1>${localeValues['head.trainlist']}</h1>
         <table border="1">
             <c:forEach items="${trainList}" var="train">
               <tr>

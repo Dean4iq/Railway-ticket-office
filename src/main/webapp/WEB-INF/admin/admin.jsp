@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Main</title>
+        <title>${localeValues['head.admin']}</title>
         <style>
             .nav a{
                 text-decoration:none;
@@ -58,6 +58,6 @@
             </ul>
         </div>
 
-        <h1>Admin</h1>
+        <h1>${localeValues['head.admin']}</h1>
     </body>
 </html>

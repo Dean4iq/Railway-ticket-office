@@ -1,5 +1,10 @@
+<%@ page pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
+        <title>Train list</title>
         <style>
             .nav a{
                 text-decoration:none;

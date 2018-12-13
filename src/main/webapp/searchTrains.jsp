@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Search</title>
+        <title>${localeValues['head.search']}</title>
         <link href="style/head.css" rel="stylesheet" type="text/css"/>
     </head>
 
@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <h1>Search page</h1>
+        <h1>${localeValues['head.search']}</h1>
         <form method="post">
             <table align="center">
                 <caption><h3>Пошук за № поїзда</h3></caption>
@@ -35,7 +35,7 @@
                 </tr>
             </table>
             <br>
-            <p align="center"><input type="submit" value="Search" name="trainNumberSubmit"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.find']}" name="trainNumberSubmit"/></p>
         </form>
         <p style="border-bottom:1px solid;"></p>
         <form method="post">
@@ -55,17 +55,17 @@
                 </tr>
             </table>
             <br>
-            <p align="center"><input type="submit" value="Search" name="trainDestinationSubmit"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.find']}" name="trainDestinationSubmit"/></p>
         </form>
         <p style="border-bottom:1px solid;"></p>
         <form method="post">
             <h3 align="center">Вивести всі поїзда</h3>
             <p align="center">
-                <input type="submit" value="Search" name="allTrainSubmit"/>
+                <input type="submit" value="${localeValues['btn.find']}" name="allTrainSubmit"/>
             </p>
         </form>
 
-        <h1 align="center">Train LIST</h1>
+        <h3 align="center">Train LIST</h3>
         <c:forEach var="train" items="${trainList}">
             ${train.id}
             ${train.cost}

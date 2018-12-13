@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>User list</title>
+        <title>${localeValues['head.userlist']}</title>
         <style>
             .nav a{
                 text-decoration:none;
@@ -58,7 +58,7 @@
             </ul>
         </div>
 
-        <h1>User list management</h1>
+        <h1>${localeValues['head.userlist']}</h1>
         <table border="1" width="100%">
             <tr align="center">
                 <th>Login</th>

@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Register</title>
+        <title>${localeValues['head.register']}</title>
         <link href="style/head.css" rel="stylesheet" type="text/css"/>
     </head>
 
@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <h1>Register page</h1>
+        <h1>${localeValues['head.register']}</h1>
         <form method="post">
             <table>
                 <tr>
@@ -54,7 +54,7 @@
                 </tr>
             </table>
             <br>
-            <p align="center"><input type="submit" value="Register" name="register"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.register']}" name="register"/></p>
         </form>
     </body>
 </html>

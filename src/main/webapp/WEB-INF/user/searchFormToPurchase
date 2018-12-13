@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Search</title>
+        <title>${localeValues['head.search']}</title>
         <style>
             .nav a{
                 text-decoration:none;
@@ -59,7 +59,7 @@
             </ul>
         </div>
 
-        <h1>Search page</h1>
+        <h1>${localeValues['head.search']}</h1>
         <form method="post">
             <table align="center">
                 <caption><h3>Пошук за напрямом поїзда</h3></caption>
@@ -71,7 +71,7 @@
                 <tr>
                     <td><input type="text" placeholder="departure" required name="departureStation"/></td>
                     <td style="padding-left: 30px; padding-right: 30px;">
-                        ←<input type="submit" value="Switch" name="SwitchDirections"/>→
+                        ←<input type="submit" value="${localeValues['btn.switch']}" name="SwitchDirections"/>→
                     </td>
                     <td><input type="text" placeholder="destination" required name="destinationStation"/></td>
                 </tr>
@@ -81,7 +81,7 @@
                 <input type="date" name="tripStart" min="${minDate}" required max="${maxDate}">
             </div>
             <br>
-            <p align="center"><input type="submit" value="Search" name="ticketSearchSubmit"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.find']}" name="ticketSearchSubmit"/></p>
         </form>
         <p style="border-bottom:1px solid;"></p>
     </body>

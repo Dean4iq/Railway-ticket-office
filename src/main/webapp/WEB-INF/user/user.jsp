@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>Main</title>
+        <title>${localeValues['head.user']}</title>
         <link href="style/head.css" rel="stylesheet" type="text/css"/>
     </head>
 
@@ -26,6 +26,5 @@
         </div>
 
         <h1>Hi, ${userName}</h1>
-        <a href="${pageContext.request.contextPath}/user/purchase.jsp">Пошук поїзда</a>
     </body>
 </html>
