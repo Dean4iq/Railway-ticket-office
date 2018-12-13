@@ -6,6 +6,7 @@ import ua.training.util.LocalizationGetter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
@@ -22,17 +23,18 @@ public class LocalizationFilter implements Filter {
             throws IOException, ServletException {
         Map<String, String> localizationStrings;
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpSession session = httpRequest.getSession();
 
         String selectedLangParameter = httpRequest.getParameter("langSelect");
-        String sessionLanguage = (String) httpRequest.getSession().getAttribute("language");
+        String sessionLanguage = (String) session.getAttribute("language");
 
-        if (selectedLangParameter != null) {
+        if (selectedLangParameter != null && !selectedLangParameter.equals(sessionLanguage)) {
             httpRequest.setAttribute("langVariable", selectedLangParameter);
             localizationStrings = getLocalizationStrings(selectedLangParameter);
-            httpRequest.getSession().setAttribute("language", selectedLangParameter);
+            session.setAttribute("language", selectedLangParameter);
         } else if (sessionLanguage == null) {
             httpRequest.setAttribute("langVariable", "ua");
-            httpRequest.getSession().setAttribute("language", "ua");
+            session.setAttribute("language", "ua");
             localizationStrings = getLocalizationStrings("ua");
         } else {
             httpRequest.setAttribute("langVariable", sessionLanguage);

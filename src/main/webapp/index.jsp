@@ -5,7 +5,6 @@
 <html>
     <head>
         <title>Main</title>
-        <link href="${pageContext.request.contextPath}/head.css" rel="stylesheet" type="text/css"/>
         <style>
             .nav a{
                 text-decoration:none;
@@ -43,10 +42,16 @@
     </head>
 
     <body>
+        <form name="langForm" method="post">
+            <select name="langSelect" onchange="document.langForm.submit();">
+                <option value="en" ${langVariable=="en"?"selected":""}>English</option>
+                <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
+            </select>
+        </form>
         <div class="nav">
             <ul>
                 <li><a href="${pageContext.request.contextPath}"><c:out value="${localeValues['btn.main']}"/></a></li>
-                <li><a href="search"><c:out value="${localeValues['btn.search']}"/></a></li>
+                <li><a href="search">${localeValues['btn.search']}</a></li>
                 <c:forEach items="${userbar}" var="keyValue">
                     <li><a href="${keyValue.value}">${keyValue.key}</a></li>
                 </c:forEach>

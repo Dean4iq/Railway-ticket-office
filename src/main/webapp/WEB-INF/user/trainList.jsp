@@ -5,7 +5,6 @@
 <html>
     <head>
         <title>Search</title>
-        <link href="/head.css" rel="stylesheet" type="text/css"/>
         <style>
             .nav a{
                 text-decoration:none;
@@ -44,6 +43,12 @@
 
 
     <body>
+        <form name="langForm" method="post">
+            <select name="langSelect" onchange="document.langForm.submit();">
+                <option value="en" ${langVariable=="en"?"selected":""}>English</option>
+                <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
+            </select>
+        </form>
         <div class="nav">
             <ul>
                 <li><a href="${pageContext.request.contextPath}">Головна сторінка</a></li>
