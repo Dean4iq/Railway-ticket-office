@@ -1,10 +1,8 @@
-package ua.training.controller.service;
+package ua.training.model.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.implement.JDBCDaoFactory;
 import ua.training.model.dao.implement.JDBCSeatDao;
 

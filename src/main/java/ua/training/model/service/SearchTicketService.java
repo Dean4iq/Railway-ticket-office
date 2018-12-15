@@ -1,4 +1,4 @@
-package ua.training.controller.service;
+package ua.training.model.service;
 
 import javax.servlet.http.HttpServletRequest;
 

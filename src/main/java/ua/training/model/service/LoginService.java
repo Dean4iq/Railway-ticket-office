@@ -1,4 +1,4 @@
-package ua.training.controller.service;
+package ua.training.model.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,7 +8,6 @@ import ua.training.model.dao.implement.JDBCDaoFactory;
 import ua.training.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 
 public class LoginService implements Service {
     private static final Logger log = LogManager.getLogger(LoginService.class);
@@ -21,7 +20,7 @@ public class LoginService implements Service {
         String password = request.getParameter("pass");
 
         if (username != null && !username.equals("")) {
-            DaoFactory daoFactory = new JDBCDaoFactory();
+            DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
             try (UserDao userDao = daoFactory.createUserDao()) {
                 User user = userDao.findById(username);

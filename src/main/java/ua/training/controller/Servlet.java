@@ -2,7 +2,7 @@ package ua.training.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.training.controller.service.*;
+import ua.training.controller.command.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,24 +18,24 @@ import java.util.Map;
 public class Servlet extends HttpServlet {
     private static final Logger log = LogManager.getLogger(Servlet.class);
 
-    private final Map<String, Service> commands = new HashMap<>();
+    private final Map<String, Command> commands = new HashMap<>();
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         servletConfig.getServletContext().setAttribute("loggedUsers", new HashSet<String>());
 
-        commands.put("exception", new ExceptionService());
-        commands.put("login", new LoginService());
-        commands.put("user", new UserService());
-        commands.put("admin", new AdminService());
-        commands.put("logout", new LogoutService());
-        commands.put("purchase", new PurchaseService());
-        commands.put("register", new RegisterService());
-        commands.put("search", new SearchTrainService());
-        commands.put("searchToPurchase", new SearchTicketService());
-        commands.put("trainList", new TrainListManagingService());
-        commands.put("userList", new UserListManagingService());
-        commands.put("wagonReviewing", new WagonReviewingService());
+        commands.put("exception", new ExceptionCommand());
+        commands.put("login", new LoginCommand());
+        commands.put("user", new UserCommand());
+        commands.put("admin", new AdminCommand());
+        commands.put("logout", new LogoutCommand());
+        commands.put("purchase", new PurchaseCommand());
+        commands.put("register", new RegisterCommand());
+        commands.put("search", new SearchCommand());
+        commands.put("searchToPurchase", new SearchTicketCommand());
+        commands.put("trainList", new TrainListCommand());
+        commands.put("userList", new UserListCommand());
+        commands.put("wagonReviewing", new WagonReviewingCommand());
 
         log.debug("Servlet initialized");
     }
@@ -73,9 +73,9 @@ public class Servlet extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getRequestURI();
         path = path.replaceAll(".*/zhdUA/", "");
-        Service service = commands.getOrDefault(path,
+        Command command = commands.getOrDefault(path,
                 r -> "/index.jsp");
-        String page = service.execute(request);
+        String page = command.execute(request);
 
         if (page.contains("redirect: ")) {
             log.debug("Servlet redirect to " + page);
