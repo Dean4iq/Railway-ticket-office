@@ -78,11 +78,38 @@
             </table>
             <br>
             <div align="center">
-                <input type="date" name="tripStart" min="${minDate}" required max="${maxDate}">
+                <input type="date" name="tripStartDate" min="${minCalendarDate}" required max="${maxCalendarDate}">
             </div>
             <br>
             <p align="center"><input type="submit" value="${localeValues['btn.find']}" name="ticketSearchSubmit"/></p>
         </form>
         <p style="border-bottom:1px solid;"></p>
+        <h3 align="center">Train LIST</h3>
+        <table border="1">
+            <tr>
+                <th>№ поїзду</th>
+                <th>Сполучення</th>
+                <th>Дата відправлення/прибуття</th>
+                <th>Час відправлення/прибуття</th>
+                <th>Місця</th>
+            </tr>
+            <c:forEach var="train" items="${trainList}">
+                <tr>
+                    <td>${train.id}</td>
+                    <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
+                    <td>
+                        Відправлення:${train.departureRoute.formattedDepartureDate}
+                        <br>
+                        Прибуття:${train.arrivalRoute.formattedArrivalDate}
+                    </td>
+                    <td>
+                        Відправлення: ${train.departureRoute.formattedDepartureTime}
+                        <br>
+                        Прибуття: ${train.arrivalRoute.formattedArrivalTime}
+                    </td>
+                    <td>Переглянути</td>
+                </tr>
+            </c:forEach>
+        </table>
     </body>
 </html>

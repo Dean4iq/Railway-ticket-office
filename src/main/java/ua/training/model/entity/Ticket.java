@@ -12,6 +12,9 @@ public class Ticket {
     private int departureStationId;
     private int arrivalStationId;
 
+    private Seat seat;
+    private Train train;
+
     public int getId() {
         return id;
     }
@@ -74,6 +77,22 @@ public class Ticket {
 
     public void setArrivalStationId(int arrivalStationId) {
         this.arrivalStationId = arrivalStationId;
+    }
+
+    public void setSeat(Seat seat){
+        this.seat = seat;
+    }
+
+    public Seat getSeat() {
+        return seat;
+    }
+
+    public Train getTrain() {
+        return train;
+    }
+
+    public void setTrain(Train train) {
+        this.train = train;
     }
 
     @Override

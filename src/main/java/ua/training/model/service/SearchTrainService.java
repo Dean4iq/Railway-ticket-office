@@ -22,7 +22,7 @@ public class SearchTrainService implements Service {
         } else if (request.getParameter("trainDestinationSubmit") != null) {
 
         } else if (request.getParameter("allTrainSubmit") != null) {
-            DaoFactory daoFactory = new JDBCDaoFactory();
+            DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
             try (TrainDao trainDao = daoFactory.createTrainDao()) {
                 List<Train> trainList = trainDao.findAll();

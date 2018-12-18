@@ -3,6 +3,8 @@ package ua.training.model.dao.implement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.TrainDao;
+import ua.training.model.entity.Route;
+import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
 import ua.training.util.QueryStringGetter;
 import ua.training.util.QueryType;
@@ -12,9 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class JDBCTrainDao implements TrainDao {
     private static final Logger log = LogManager.getLogger(JDBCTrainDao.class);
@@ -45,6 +45,8 @@ public class JDBCTrainDao implements TrainDao {
     @Override
     public Train findById(Integer id) {
         Train train = new Train();
+        Map<Integer, Train> trainMap = new HashMap<>();
+        Map<Integer, Station> stationMap = new HashMap<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.FIND, tableName))) {
@@ -53,6 +55,14 @@ public class JDBCTrainDao implements TrainDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 train = extractFromResultSet(resultSet);
+                Route route = JDBCRouteDao.extractFromResultSet(resultSet);
+                Station station = JDBCStationDao.extractFromResultSet(resultSet);
+
+                train = makeUniqueTrain(trainMap, train);
+                station = makeUniqueStation(stationMap, station);
+                route.setStation(station);
+
+                train.addRoute(route);
             }
         } catch (SQLException e) {
             log.debug("JDBCTrainDao findById() error");
@@ -73,16 +83,45 @@ public class JDBCTrainDao implements TrainDao {
         return train;
     }
 
+    private Train makeUniqueTrain(Map<Integer, Train> trains, Train train) {
+        trains.putIfAbsent(train.getId(), train);
+
+        log.debug("JDBCRouteDao makeUniqueTrain()");
+        return trains.get(train.getId());
+    }
+
+    private Station makeUniqueStation(Map<Integer, Station> stations, Station station) {
+        stations.putIfAbsent(station.getId(), station);
+
+        log.debug("JDBCRouteDao makeUniqueStation()");
+        return stations.get(station.getId());
+    }
+
     @Override
     public List<Train> findAll() {
         List<Train> trainList = new ArrayList<>();
+        Map<Integer, Train> trainMap = new HashMap<>();
+        Map<Integer, Station> stationMap = new HashMap<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.SELECT, tableName));
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                trainList.add(extractFromResultSet(resultSet));
+                Train train = extractFromResultSet(resultSet);
+                train = makeUniqueTrain(trainMap, train);
+
+                Route route= JDBCRouteDao.extractFromResultSet(resultSet);
+                Station station = JDBCStationDao.extractFromResultSet(resultSet);
+
+                station = makeUniqueStation(stationMap, station);
+                route.setStation(station);
+
+                train.addRoute(route);
+
+                if (!trainList.contains(train)) {
+                    trainList.add(train);
+                }
             }
         } catch (SQLException e) {
             log.debug("JDBCTrainDao findAll() error");

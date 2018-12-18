@@ -3,6 +3,8 @@ package ua.training.model.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ua.training.model.dao.DaoFactory;
+import ua.training.model.dao.SeatDao;
 import ua.training.model.dao.implement.JDBCDaoFactory;
 import ua.training.model.dao.implement.JDBCSeatDao;
 
@@ -16,7 +18,8 @@ public class PurchaseService implements Service {
 
     @Override
     public String execute(HttpServletRequest request) {
-        try (JDBCSeatDao seatDao = (JDBCSeatDao) new JDBCDaoFactory().createSeatDao();
+        DaoFactory daoFactory = JDBCDaoFactory.getInstance();
+        try (JDBCSeatDao seatDao = (JDBCSeatDao)daoFactory.createSeatDao();
              Connection connection = seatDao.getConnection()) {
 
             new Thread(() -> {

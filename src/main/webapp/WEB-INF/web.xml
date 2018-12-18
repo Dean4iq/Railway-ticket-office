@@ -17,6 +17,11 @@
     <servlet-class>ua.training.controller.Servlet</servlet-class>
   </servlet>
 
+  <session-config>
+    <session-timeout>10</session-timeout>
+  </session-config>
+
+
   <servlet-mapping>
     <servlet-name>GlobalServlet</servlet-name>
     <url-pattern>/</url-pattern>

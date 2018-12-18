@@ -81,7 +81,7 @@
           <version>2.2</version>
           <configuration>
             <port>19999</port>
-            <path>/zhdUA</path>
+            <path>/zhd.ua</path>
           </configuration>
         </plugin>
         <plugin>

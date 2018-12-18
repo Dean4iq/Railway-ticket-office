@@ -44,11 +44,6 @@ public class Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            response.setHeader("Cache-Control", "no-cache");
-            response.setHeader("Cache-Control", "no-store");
-            response.setDateHeader("Expires", 0);
-            response.setHeader("Pragma", "no-cache");
-
             log.debug("Servlet doGet");
             processRequest(request, response);
         } catch (Exception ex) {
@@ -72,7 +67,7 @@ public class Servlet extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        path = path.replaceAll(".*/zhdUA/", "");
+        path = path.replaceAll(".*/zhd.ua/", "");
         Command command = commands.getOrDefault(path,
                 r -> "/index.jsp");
         String page = command.execute(request);

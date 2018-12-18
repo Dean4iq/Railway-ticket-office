@@ -29,7 +29,7 @@ public class RegisterService implements Service {
         if (userAttributes.entrySet().stream()
                 .noneMatch(elem -> elem.getValue() == null
                         || elem.getValue().equals(""))) {
-            DaoFactory daoFactory = new JDBCDaoFactory();
+            DaoFactory daoFactory = JDBCDaoFactory.getInstance();
             User user = new User();
 
             try (UserDao userDao = daoFactory.createUserDao()) {

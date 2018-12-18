@@ -31,8 +31,8 @@ public class JDBCRouteDao implements RouteDao {
 
             ps.setInt(1, route.getTrainId());
             ps.setInt(2, route.getStationId());
-            ps.setTime(3, route.getArrivalTime());
-            ps.setTime(4, route.getDepartureTime());
+            ps.setTimestamp(3, route.getArrivalTime());
+            ps.setTimestamp(4, route.getDepartureTime());
             ps.execute();
 
             log.debug("JDBCRouteDao create()");
@@ -70,8 +70,8 @@ public class JDBCRouteDao implements RouteDao {
 
         route.setTrainId(resultSet.getInt("Train_t_id"));
         route.setStationId(resultSet.getInt("Station_st_id"));
-        route.setArrivalTime(resultSet.getTime("arrival"));
-        route.setDepartureTime(resultSet.getTime("departure"));
+        route.setArrivalTime(resultSet.getTimestamp("arrival"));
+        route.setDepartureTime(resultSet.getTimestamp("departure"));
 
         log.debug("JDBCRouteDao extractFromResultSet(): " + route.toString());
 
@@ -81,8 +81,8 @@ public class JDBCRouteDao implements RouteDao {
     @Override
     public List<Route> findAll() {
         List<Route> routeList = new ArrayList<>();
-        //Map<Integer, Train> trains = new HashMap<>();
-        //Map<Integer, Station> stations = new HashMap<>();
+        Map<Integer, Train> trains = new HashMap<>();
+        Map<Integer, Station> stations = new HashMap<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.SELECT, tableName));
@@ -91,11 +91,11 @@ public class JDBCRouteDao implements RouteDao {
             while (resultSet.next()) {
                 Route route = extractFromResultSet(resultSet);
 
-                /*Train train = makeUniqueTrain(trains, route.getTrain());
-                Station station = makeUniqueStation(stations, route.getStation());
+                Train train = makeUniqueTrain(trains, JDBCTrainDao.extractFromResultSet(resultSet));
+                Station station = makeUniqueStation(stations, JDBCStationDao.extractFromResultSet(resultSet));
+                route.setStation(station);
 
-                route.setTrain(train);
-                route.setStation(station);*/
+                train.addRoute(route);
 
                 routeList.add(route);
             }
@@ -128,8 +128,8 @@ public class JDBCRouteDao implements RouteDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.UPDATE, tableName))) {
 
-            preparedStatement.setTime(1, route.getArrivalTime());
-            preparedStatement.setTime(2, route.getDepartureTime());
+            preparedStatement.setTimestamp(1, route.getArrivalTime());
+            preparedStatement.setTimestamp(2, route.getDepartureTime());
             preparedStatement.setInt(3, route.getTrainId());
             preparedStatement.setInt(4, route.getStationId());
 

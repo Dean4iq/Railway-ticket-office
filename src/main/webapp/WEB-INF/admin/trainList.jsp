@@ -56,6 +56,22 @@
                 </c:forEach>
             </ul>
         </div>
-        <h1>Trains</h1>
+        <h1>${localeValues['head.trainlist']}</h1>
+        <table border="1">
+            <tr>
+                <th># train</th>
+                <th>Route</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+            </tr>
+            <c:forEach items="${trainList}" var="train">
+              <tr>
+                <td><c:out value="${train.id}"/></td>
+                <td><c:out value="${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}"/></td>
+                <td><c:out value="${train.departureRoute.formattedDepartureTime}"/></td>
+                <td><c:out value="${train.arrivalRoute.formattedArrivalTime}"/></td>
+              </tr>
+            </c:forEach>
+        </table>
     </body>
 </html>

@@ -60,11 +60,20 @@
         </div>
 
         <h1>${localeValues['head.trainlist']}</h1>
+
         <table border="1">
+            <tr>
+                <th># train</th>
+                <th>Route</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+            </tr>
             <c:forEach items="${trainList}" var="train">
               <tr>
                 <td>train.id</td>
-                <td>train.cost</td>
+                <td>train.routeList[0].station.name</td>
+                <td></td>
+                <td></td>
               </tr>
             </c:forEach>
         </table>

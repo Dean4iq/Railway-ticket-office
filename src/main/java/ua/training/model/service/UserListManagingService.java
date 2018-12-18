@@ -17,7 +17,7 @@ public class UserListManagingService implements Service {
     @Override
     public String execute(HttpServletRequest request) {
 
-        DaoFactory daoFactory = new JDBCDaoFactory();
+        DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
         try (UserDao userDao = daoFactory.createUserDao()) {
             List<User> users = userDao.findAll();
