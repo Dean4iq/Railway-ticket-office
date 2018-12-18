@@ -46,7 +46,7 @@
         <form name="langForm" method="post">
             <select name="langSelect" onChange="document.langForm.submit();" style="margin-bottom:10px;">
                 <option value="en" ${langVariable=="en"?"selected":""}>English</option>
-                <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
+                <option value="uk" ${langVariable=="uk"?"selected":""}>Українська</option>
             </select>
         </form>
         <div class="nav">

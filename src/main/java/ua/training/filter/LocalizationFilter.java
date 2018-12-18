@@ -2,6 +2,7 @@ package ua.training.filter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.training.util.LanguageISO;
 import ua.training.util.LocalizationGetter;
 
 import javax.servlet.*;
@@ -26,8 +27,8 @@ public class LocalizationFilter implements Filter {
         String selectedLangParameter = httpRequest.getParameter("langSelect");
 
         if (selectedLangParameter == null) {
-            httpRequest.setAttribute("langVariable", "ua");
-            localizationStrings = getLocalizationStrings("ua");
+            httpRequest.setAttribute("langVariable", LanguageISO.UKRAINIAN.getCode());
+            localizationStrings = getLocalizationStrings(LanguageISO.UKRAINIAN.getCode());
         } else {
             httpRequest.setAttribute("langVariable", selectedLangParameter);
             localizationStrings = getLocalizationStrings(selectedLangParameter);
