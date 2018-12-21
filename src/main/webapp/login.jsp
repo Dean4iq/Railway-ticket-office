@@ -65,11 +65,11 @@
         <form method="post">
             <table>
                 <tr>
-                    <td>login:</td>
+                    <td>${localeValues['text.login']}:</td>
                     <td><input type="text" placeholder="login" name="login"/></td>
                 </tr>
                 <tr>
-                    <td>password:</td>
+                    <td>${localeValues['text.password']}:</td>
                     <td><input type="password" placeholder="password" name="pass"/></td>
                 </tr>
             </table>

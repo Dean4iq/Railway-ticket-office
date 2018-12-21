@@ -62,5 +62,7 @@
         </div>
 
         <h1>${localeValues['head.main']}</h1>
+        <div style="border-bottom:1px solid;"/>
+        <h2 align="center">${localeValues['main.news']}</h2>
     </body>
 </html>

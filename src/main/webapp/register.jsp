@@ -65,18 +65,22 @@
                 <tr>
                     <td>Name:</td>
                     <td><input type="text" required placeholder="Name" name="name"/></td>
+                    <td title="${localeValues['hint.register.name']}">?</td>
                 </tr>
                 <tr>
                     <td>Last name:</td>
                     <td><input type="text" required placeholder="Last name" name="lastName"/></td>
+                    <td title="${localeValues['hint.register.lastName']}">?</td>
                 </tr>
                 <tr>
                     <td>Ім&rsquo;я:</td>
                     <td><input type="text" required placeholder="Ім'я" name="nameUA"/></td>
+                    <td title="${localeValues['hint.register.nameUA']}">?</td>
                 </tr>
                 <tr>
                     <td>Прізвище:</td>
                     <td><input type="text" required placeholder="Прізвище" name="lastNameUA"/></td>
+                    <td title="${localeValues['hint.register.lastNameUA']}">?</td>
                 </tr>
                 <tr>
                     <td>login:</td>
@@ -84,7 +88,7 @@
                 </tr>
                 <tr>
                     <td>password:</td>
-                    <td><input type="password" required placeholder="password" name="password"/></td>
+                    <td><input type="password" required placeholder="${localeValues['text.password']}" name="password"/></td>
                 </tr>
             </table>
             <br>

@@ -8,8 +8,6 @@ import ua.training.model.dao.implement.JDBCDaoFactory;
 import ua.training.model.entity.Train;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class SearchTrainService implements Service {
@@ -33,27 +31,7 @@ public class SearchTrainService implements Service {
                 log.error(e.getStackTrace());
             }
         }
-
-        Calendar calendar = Calendar.getInstance();
-        String minDate = getFormattedDate(calendar);
-
-        calendar.setTimeInMillis(new Date().getTime() + 1_296_000_000);
-
-        String maxDate = getFormattedDate(calendar);
-
-        request.setAttribute("minDate", minDate);
-        request.setAttribute("maxDate", maxDate);
         log.debug("SearchTrainService execute()");
         return "/searchTrains.jsp";
-    }
-
-
-    private String getFormattedDate(Calendar calendar) {
-        return new StringBuilder()
-                .append(calendar.get(Calendar.YEAR))
-                .append('-')
-                .append(calendar.get(Calendar.MONTH) + 1)
-                .append('-')
-                .append(calendar.get(Calendar.DATE)).toString();
     }
 }

@@ -4,6 +4,6 @@
 <html>
     <body>
         <h1>Oops, something went wrong...</h1>
-        <a href="${pageContext.request.contextPath}">Повернутись на головну</a>
+        <a href="${pageContext.request.contextPath}">${localeValues['link.returnOnMain']}</a>
     </body>
 </html>

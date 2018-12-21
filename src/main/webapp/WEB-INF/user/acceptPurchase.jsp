@@ -57,14 +57,14 @@
             </ul>
         </div>
 
-        <h1>Підтвердження покупки</h1>
+        <h1>${localeValues['head.purchase']}</h1>
         <table border="1">
-            <caption>Ticket</caption>
+            <caption>${localeValues['text.ticket']}</caption>
             <tr>
-                <th>Train #</th>
-                <th>Route</th>
-                <th>Departure</th>
-                <th>Arrival</th>
+                <th>${localeValues['table.column.trainNumber']}</th>
+                <th>${localeValues['table.column.route']}</th>
+                <th>${localeValues['table.column.departure']}</th>
+                <th>${localeValues['table.column.arrival']}</th>
             </tr>
             <c:forEach items="${trainList}" var="train">
               <tr>
@@ -77,8 +77,8 @@
         </table>
 
         <form method="post">
-            <input type="submit" name="accept" value="Accept"/>
-            <input type="submit" name="decline" value="Decline"/>
+            <input type="submit" name="accept" value="${localeValues['btn.acceptPurchase']}"/>
+            <input type="submit" name="decline" value="${localeValues['btn.declinePurchase']}"/>
         </form>
     </body>
 </html>

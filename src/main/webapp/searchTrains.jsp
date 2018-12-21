@@ -62,10 +62,10 @@
         <h1>${localeValues['head.search']}</h1>
         <form method="post">
             <table align="center">
-                <caption><h3>Пошук за № поїзда</h3></caption>
+                <caption><h3>${localeValues['text.train.searchByNumber']}</h3></caption>
                 <tr>
-                    <td>№ поїзда:</td>
-                    <td><input type="text" placeholder="№ поїзда" name="trainNumber"/></td>
+                    <td>${localeValues['text.train.number']}:</td>
+                    <td><input type="text" placeholder="${localeValues['text.train.number']}" name="trainNumber"/></td>
                 </tr>
             </table>
             <br>
@@ -74,18 +74,18 @@
         <p style="border-bottom:1px solid;"></p>
         <form method="post">
             <table align="center">
-                <caption><h3>Пошук за напрямом поїзда</h3></caption>
+                <caption><h3>${localeValues['text.train.searchByRoute']}</h3></caption>
                 <tr>
-                    <th>Станція відправлення</th>
+                    <th>${localeValues['text.station.from']}</th>
                     <th></th>
-                    <th>Станція прибуття</th>
+                    <th>${localeValues['text.station.to']}</th>
                 </tr>
                 <tr>
-                    <td><input type="text" placeholder="departure" required name="departureStation"/></td>
+                    <td><input type="text" placeholder="${localeValues['text.station.from']}" required name="departureStation"/></td>
                     <td style="padding-left: 30px; padding-right: 30px;">
                         ←<input type="submit" value="Switch" name="SwitchDirections"/>→
                     </td>
-                    <td><input type="text" placeholder="destination" required name="destinationStation"/></td>
+                    <td><input type="text" placeholder="${localeValues['text.station.to']}" required name="destinationStation"/></td>
                 </tr>
             </table>
             <br>
@@ -93,36 +93,38 @@
         </form>
         <p style="border-bottom:1px solid;"></p>
         <form method="post">
-            <h3 align="center">Вивести всі поїзда</h3>
+            <h3 align="center">${localeValues['text.train.searchAll']}</h3>
             <p align="center">
                 <input type="submit" value="${localeValues['btn.searchSubmit']}" name="allTrainSubmit"/>
             </p>
         </form>
 
-        <h3 align="center">Train LIST</h3>
-        <table align="center" border="1">
-            <tr>
-                <th># train</th>
-                <th>Route</th>
-                <th>Departure</th>
-                <th>Arrival</th>
-            </tr>
-            <c:forEach items="${trainList}" var="train">
+        <c:if test="not empty ${trainList}">
+            <h3 align="center">Train LIST</h3>
+            <table align="center" border="1">
                 <tr>
-                    <td>${train.id}</td>
-                    <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
-                    <td>
-                        Відправлення:${train.departureRoute.formattedDepartureDate}
-                        <br>
-                        Прибуття:${train.arrivalRoute.formattedArrivalDate}
-                    </td>
-                    <td>
-                        Відправлення: ${train.departureRoute.formattedDepartureTime}
-                        <br>
-                        Прибуття: ${train.arrivalRoute.formattedArrivalTime}
-                    </td>
+                    <th># train</th>
+                    <th>Route</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
                 </tr>
-            </c:forEach>
-        </table>
+                <c:forEach items="${trainList}" var="train">
+                    <tr>
+                        <td>${train.id}</td>
+                        <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
+                        <td>
+                            Відправлення:${train.departureRoute.formattedDepartureDate}
+                            <br>
+                            Прибуття:${train.arrivalRoute.formattedArrivalDate}
+                        </td>
+                        <td>
+                            Відправлення: ${train.departureRoute.formattedDepartureTime}
+                            <br>
+                            Прибуття: ${train.arrivalRoute.formattedArrivalTime}
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </c:if>
     </body>
 </html>
