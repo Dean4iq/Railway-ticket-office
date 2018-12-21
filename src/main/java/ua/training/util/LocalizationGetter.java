@@ -3,6 +3,7 @@ package ua.training.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class LocalizationGetter {
@@ -20,9 +21,13 @@ public class LocalizationGetter {
 
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
-            localeKeys.put(key, resourceBundle.getString(key));
+            localeKeys.put(key, formatString(resourceBundle.getString(key)));
         }
 
         return localeKeys;
+    }
+
+    private String formatString(String value) {
+        return new String(StandardCharsets.ISO_8859_1.encode(value).array());
     }
 }

@@ -4,8 +4,7 @@
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
     <head>
-        <title>${localeValues['head.register']}</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/head_style.css" type="text/css">
+        <title>Train list</title>
         <style>
             .nav a{
                 text-decoration:none;
@@ -41,7 +40,6 @@
             }
         </style>
     </head>
-
     <body>
         <form name="langForm" method="post">
             <select name="langSelect" onchange="document.langForm.submit();">
@@ -59,36 +57,28 @@
             </ul>
         </div>
 
-        <h1>${localeValues['head.register']}</h1>
+        <h1>Підтвердження покупки</h1>
+        <table border="1">
+            <caption>Ticket</caption>
+            <tr>
+                <th>Train #</th>
+                <th>Route</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+            </tr>
+            <c:forEach items="${trainList}" var="train">
+              <tr>
+                <td><c:out value="${train.id}"/></td>
+                <td><c:out value="${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}"/></td>
+                <td><c:out value="${train.departureRoute.formattedDepartureTime}"/></td>
+                <td><c:out value="${train.arrivalRoute.formattedArrivalTime}"/></td>
+              </tr>
+            </c:forEach>
+        </table>
+
         <form method="post">
-            <table>
-                <tr>
-                    <td>Name:</td>
-                    <td><input type="text" required placeholder="Name" name="name"/></td>
-                </tr>
-                <tr>
-                    <td>Last name:</td>
-                    <td><input type="text" required placeholder="Last name" name="lastName"/></td>
-                </tr>
-                <tr>
-                    <td>Ім&rsquo;я:</td>
-                    <td><input type="text" required placeholder="Ім'я" name="nameUA"/></td>
-                </tr>
-                <tr>
-                    <td>Прізвище:</td>
-                    <td><input type="text" required placeholder="Прізвище" name="lastNameUA"/></td>
-                </tr>
-                <tr>
-                    <td>login:</td>
-                    <td><input type="text" required placeholder="login" name="login"/></td>
-                </tr>
-                <tr>
-                    <td>password:</td>
-                    <td><input type="password" required placeholder="password" name="password"/></td>
-                </tr>
-            </table>
-            <br>
-            <p align="center"><input type="submit" value="${localeValues['btn.register']}" name="register"/></p>
+            <input type="submit" name="accept" value="Accept"/>
+            <input type="submit" name="decline" value="Decline"/>
         </form>
     </body>
 </html>

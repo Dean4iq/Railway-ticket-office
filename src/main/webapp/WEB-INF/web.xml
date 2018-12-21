@@ -27,9 +27,14 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
+  <listener>
+    <listener-class>ua.training.controller.listener.ContextListener</listener-class>
+    <listener-class>ua.training.controller.listener.SessionListener</listener-class>
+  </listener>
+
   <filter>
     <filter-name>EncodingFilter</filter-name>
-    <filter-class>ua.training.filter.EncodingFilter</filter-class>
+    <filter-class>ua.training.controller.filter.EncodingFilter</filter-class>
   </filter>
 
   <filter-mapping>
@@ -39,7 +44,7 @@
 
   <filter>
     <filter-name>LocalizationFilter</filter-name>
-    <filter-class>ua.training.filter.LocalizationFilter</filter-class>
+    <filter-class>ua.training.controller.filter.LocalizationFilter</filter-class>
   </filter>
 
   <filter-mapping>
@@ -49,7 +54,7 @@
 
   <filter>
     <filter-name>AuthFilter</filter-name>
-    <filter-class>ua.training.filter.LoginFilter</filter-class>
+    <filter-class>ua.training.controller.filter.LoginFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>AuthFilter</filter-name>
@@ -58,7 +63,7 @@
 
   <filter>
     <filter-name>RegisterFilter</filter-name>
-    <filter-class>ua.training.filter.RegisterFilter</filter-class>
+    <filter-class>ua.training.controller.filter.RegisterFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>RegisterFilter</filter-name>
@@ -67,7 +72,7 @@
 
   <filter>
     <filter-name>UserFilter</filter-name>
-    <filter-class>ua.training.filter.UserFilter</filter-class>
+    <filter-class>ua.training.controller.filter.UserFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>UserFilter</filter-name>
@@ -78,7 +83,7 @@
 
   <filter>
     <filter-name>AdminFilter</filter-name>
-    <filter-class>ua.training.filter.AdminFilter</filter-class>
+    <filter-class>ua.training.controller.filter.AdminFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>AdminFilter</filter-name>
@@ -89,7 +94,7 @@
 
   <filter>
     <filter-name>MenuFilter</filter-name>
-    <filter-class>ua.training.filter.MenuBarFilter</filter-class>
+    <filter-class>ua.training.controller.filter.MenuBarFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>MenuFilter</filter-name>
@@ -97,7 +102,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class>ua.training.listener.SessionListener</listener-class>
+    <listener-class>ua.training.controller.listener.SessionListener</listener-class>
   </listener>
 
   <welcome-file-list>

@@ -46,7 +46,7 @@
         <form name="langForm" method="post">
             <select name="langSelect" onchange="document.langForm.submit();">
                 <option value="en" ${langVariable=="en"?"selected":""}>English</option>
-                <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
+                <option value="uk" ${langVariable=="uk"?"selected":""}>Українська</option>
             </select>
         </form>
         <div class="nav">
@@ -61,7 +61,7 @@
 
         <h1>${localeValues['head.trainlist']}</h1>
 
-        <table border="1">
+        <table align="center" border="1">
             <tr>
                 <th># train</th>
                 <th>Route</th>

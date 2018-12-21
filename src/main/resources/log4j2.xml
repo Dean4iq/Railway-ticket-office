@@ -73,14 +73,14 @@
             <AppenderRef ref="debugLog"/>
         </Logger>
 
-        <Logger name="ua.training.filter.LoginFilter" additivity="false">
+        <Logger name="ua.training.controller.filter.LoginFilter" additivity="false">
             <AppenderRef ref="errorLog"/>
             <AppenderRef ref="warnLog"/>
             <AppenderRef ref="infoLog"/>
             <AppenderRef ref="debugLog"/>
         </Logger>
 
-        <Logger name="ua.training.filter.LoginService" additivity="false">
+        <Logger name="ua.training.controller.filter.LoginService" additivity="false">
             <AppenderRef ref="errorLog"/>
             <AppenderRef ref="warnLog"/>
             <AppenderRef ref="infoLog"/>

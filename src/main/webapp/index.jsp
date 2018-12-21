@@ -2,9 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<html>
+<html lang="en">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>${localeValues['head.main']}</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}styles/css/head_style.css" type="text/css">
+
         <style>
             .nav a{
                 text-decoration:none;
@@ -45,7 +48,7 @@
         <form name="langForm" method="post">
             <select name="langSelect" onchange="document.langForm.submit();">
                 <option value="en" ${langVariable=="en"?"selected":""}>English</option>
-                <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
+                <option value="uk" ${langVariable=="uk"?"selected":""}>Українська</option>
             </select>
         </form>
         <div class="nav">

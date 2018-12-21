@@ -46,7 +46,7 @@
         <form name="langForm" method="post">
             <select name="langSelect" onchange="document.langForm.submit();">
                 <option value="en" ${langVariable=="en"?"selected":""}>English</option>
-                <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
+                <option value="uk" ${langVariable=="uk"?"selected":""}>Українська</option>
             </select>
         </form>
         <div class="nav">
@@ -81,7 +81,7 @@
                 <input type="date" name="tripStartDate" min="${minCalendarDate}" required max="${maxCalendarDate}">
             </div>
             <br>
-            <p align="center"><input type="submit" value="${localeValues['btn.find']}" name="ticketSearchSubmit"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.searchSubmit']}" name="ticketSearchSubmit"/></p>
         </form>
         <p style="border-bottom:1px solid;"></p>
         <h3 align="center">Train LIST</h3>

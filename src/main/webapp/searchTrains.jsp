@@ -5,14 +5,48 @@
 <html>
     <head>
         <title>${localeValues['head.search']}</title>
-        <link href="style/head.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/head_style.css" type="text/css">
+        <style>
+            .nav a{
+                text-decoration:none;
+            }
+            .nav{
+                height:70px;
+                background:#025E10;
+                position:relative;
+            }
+            .nav>ul{
+                position:relative;
+                list-style:none;
+                padding:0;
+                margin:0;
+            }
+            .nav>ul>li{
+                float:left;
+                position:relative;
+            }
+
+            .nav>ul>li>a{
+                padding:0 20px;
+                color:#fff;
+                display:block;
+                line-height:70px !important;
+                font:400 15px 'PT Sans', sans-serif;
+                text-transform:uppercase;
+                text-decoration:none;
+            }
+
+            .nav a:hover{
+                background: black;
+            }
+        </style>
     </head>
 
     <body>
         <form name="langForm" method="post">
             <select name="langSelect" onchange="document.langForm.submit();">
                 <option value="en" ${langVariable=="en"?"selected":""}>English</option>
-                <option value="ua" ${langVariable=="ua"?"selected":""}>Українська</option>
+                <option value="uk" ${langVariable=="uk"?"selected":""}>Українська</option>
             </select>
         </form>
         <div class="nav">
@@ -35,7 +69,7 @@
                 </tr>
             </table>
             <br>
-            <p align="center"><input type="submit" value="${localeValues['btn.find']}" name="trainNumberSubmit"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.searchSubmit']}" name="trainNumberSubmit"/></p>
         </form>
         <p style="border-bottom:1px solid;"></p>
         <form method="post">
@@ -55,20 +89,40 @@
                 </tr>
             </table>
             <br>
-            <p align="center"><input type="submit" value="${localeValues['btn.find']}" name="trainDestinationSubmit"/></p>
+            <p align="center"><input type="submit" value="${localeValues['btn.searchSubmit']}" name="trainDestinationSubmit"/></p>
         </form>
         <p style="border-bottom:1px solid;"></p>
         <form method="post">
             <h3 align="center">Вивести всі поїзда</h3>
             <p align="center">
-                <input type="submit" value="${localeValues['btn.find']}" name="allTrainSubmit"/>
+                <input type="submit" value="${localeValues['btn.searchSubmit']}" name="allTrainSubmit"/>
             </p>
         </form>
 
         <h3 align="center">Train LIST</h3>
-        <c:forEach var="train" items="${trainList}">
-            ${train.id}
-            ${train.cost}
-        </c:forEach>
+        <table align="center" border="1">
+            <tr>
+                <th># train</th>
+                <th>Route</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+            </tr>
+            <c:forEach items="${trainList}" var="train">
+                <tr>
+                    <td>${train.id}</td>
+                    <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
+                    <td>
+                        Відправлення:${train.departureRoute.formattedDepartureDate}
+                        <br>
+                        Прибуття:${train.arrivalRoute.formattedArrivalDate}
+                    </td>
+                    <td>
+                        Відправлення: ${train.departureRoute.formattedDepartureTime}
+                        <br>
+                        Прибуття: ${train.arrivalRoute.formattedArrivalTime}
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
     </body>
 </html>
