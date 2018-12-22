@@ -1,4 +1,4 @@
-package ua.training.model.dao.implement;
+package ua.training.model.dao.daoimplementation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

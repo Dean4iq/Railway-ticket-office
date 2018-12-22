@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.DaoFactory;
 import ua.training.model.dao.UserDao;
-import ua.training.model.dao.implement.JDBCDaoFactory;
+import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
 import ua.training.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;

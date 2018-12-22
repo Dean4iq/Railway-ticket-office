@@ -99,7 +99,7 @@
             </p>
         </form>
 
-        <c:if test="not empty ${trainList}">
+        <c:if test="${not empty trainList}">
             <h3 align="center">Train LIST</h3>
             <table align="center" border="1">
                 <tr>

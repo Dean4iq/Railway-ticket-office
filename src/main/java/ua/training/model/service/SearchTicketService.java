@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.DaoFactory;
 import ua.training.model.dao.TrainDao;
-import ua.training.model.dao.implement.JDBCDaoFactory;
+import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
 import ua.training.model.entity.Train;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +17,13 @@ public class SearchTicketService implements Service {
     @Override
     public String execute(HttpServletRequest request) {
         if (request.getParameter("SwitchDirections") != null) {
-        }
-        if (request.getParameter("ticketSearchSubmit") != null) {
+        } else if (request.getParameter("ticketSearchSubmit") != null) {
             List<Train> trainList = getTrainList();
             setTravelDate(request, trainList);
             request.setAttribute("trainList", trainList);
+        } else if (request.getParameterNames().hasMoreElements() &&
+                request.getParameterNames().nextElement().contains("wagonInTrain")) {
+            return new WagonReviewingService().execute(request);
         }
 
         Calendar calendar = Calendar.getInstance();

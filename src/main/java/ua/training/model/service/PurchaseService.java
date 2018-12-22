@@ -4,9 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ua.training.model.dao.DaoFactory;
-import ua.training.model.dao.SeatDao;
-import ua.training.model.dao.implement.JDBCDaoFactory;
-import ua.training.model.dao.implement.JDBCSeatDao;
+import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
+import ua.training.model.dao.daoimplementation.JDBCSeatDao;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;

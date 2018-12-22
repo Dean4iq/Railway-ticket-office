@@ -85,7 +85,7 @@
         </form>
         <p style="border-bottom:1px solid;"></p>
 
-        <c:if test="not empty ${trainList}">
+        <c:if test="${not empty trainList}">
             <h3 align="center">Train LIST</h3>
             <table border="1">
                 <tr>
@@ -95,23 +95,25 @@
                     <th>${localeValues['table.column.time']}</th>
                     <th>${localeValues['table.column.seats']}</th>
                 </tr>
-                <c:forEach var="train" items="${trainList}">
-                    <tr>
-                        <td>${train.id}</td>
-                        <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
-                        <td>
-                            ${localeValues['text.station.from']}:${train.departureRoute.formattedDepartureDate}
-                            <br>
-                            ${localeValues['text.station.to']}:${train.arrivalRoute.formattedArrivalDate}
-                        </td>
-                        <td>
-                            ${localeValues['text.station.from']}: ${train.departureRoute.formattedDepartureTime}
-                            <br>
-                            ${localeValues['text.station.to']}: ${train.arrivalRoute.formattedArrivalTime}
-                        </td>
-                        <td>${localeValues['btn.lookSeat']}</td>
-                    </tr>
-                </c:forEach>
+                <form method="post">
+                    <c:forEach var="train" items="${trainList}">
+                        <tr>
+                            <td>${train.id}</td>
+                            <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
+                            <td>
+                                ${localeValues['text.station.from']}:${train.departureRoute.formattedDepartureDate}
+                                <br>
+                                ${localeValues['text.station.to']}:${train.arrivalRoute.formattedArrivalDate}
+                            </td>
+                            <td>
+                                ${localeValues['text.station.from']}: ${train.departureRoute.formattedDepartureTime}
+                                <br>
+                                ${localeValues['text.station.to']}: ${train.arrivalRoute.formattedArrivalTime}
+                            </td>
+                            <td><input type="submit" value="${localeValues['btn.lookSeat']}" name="wagonInTrain${train.id}"/></td>
+                        </tr>
+                    </c:forEach>
+                </form>
             </table>
         </c:if>
     </body>
