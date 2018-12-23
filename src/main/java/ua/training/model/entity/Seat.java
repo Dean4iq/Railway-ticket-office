@@ -5,6 +5,8 @@ public class Seat {
     private int wagonId;
     private boolean occupied;
 
+    private Wagon wagon;
+
     public int getId() {
         return id;
     }
@@ -27,6 +29,14 @@ public class Seat {
 
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
+    }
+
+    public Wagon getWagon() {
+        return wagon;
+    }
+
+    public void setWagon(Wagon wagon) {
+        this.wagon = wagon;
     }
 
     @Override

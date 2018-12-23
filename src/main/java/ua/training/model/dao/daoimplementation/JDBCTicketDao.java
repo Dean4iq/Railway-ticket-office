@@ -3,7 +3,7 @@ package ua.training.model.dao.daoimplementation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.TicketDao;
-import ua.training.model.entity.Ticket;
+import ua.training.model.entity.*;
 import ua.training.util.QueryStringGetter;
 import ua.training.util.QueryType;
 import ua.training.util.TableName;
@@ -12,19 +12,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class JDBCTicketDao implements TicketDao {
-    private static final Logger log = LogManager.getLogger(JDBCTicketDao.class);
+    private static final Logger LOG = LogManager.getLogger(JDBCTicketDao.class);
     private static final TableName tableName = TableName.TICKET;
 
     private Connection connection;
 
     public JDBCTicketDao(Connection connection) {
         this.connection = connection;
-        log.debug("JDBCTicketDao constructor()");
+        LOG.debug("JDBCTicketDao constructor()");
     }
 
     @Override
@@ -40,12 +38,65 @@ public class JDBCTicketDao implements TicketDao {
             preparedStatement.setInt(7, ticket.getTrainId());
 
             preparedStatement.execute();
-            log.debug("JDBCTicketDao create()");
+            LOG.debug("JDBCTicketDao create()");
         } catch (SQLException e) {
-            log.debug("JDBCTicketDao create() failed: " + ticket.toString());
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCTicketDao create() failed: " + ticket.toString());
+            LOG.error(Arrays.toString(e.getStackTrace()));
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Ticket> findByTrainId(Integer trainId) {
+        List<Ticket> ticketList = new ArrayList<>();
+        Map<Integer, Seat> seatMap = new HashMap<>();
+        Map<Integer, Wagon> wagonMap = new HashMap<>();
+        Map<Integer, Train> trainMap = new HashMap<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement
+                (QueryStringGetter.getQuery(QueryType.FIND_BY_TRAIN, tableName))) {
+            preparedStatement.setInt(1, trainId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Ticket ticket = extractFromResultSet(resultSet);
+                Seat seat = JDBCSeatDao.extractFromResultSet(resultSet);
+                Wagon wagon = JDBCWagonDao.extractFromResultSet(resultSet);
+                Train train = JDBCTrainDao.extractFromResultSet(resultSet);
+
+                ticket.setSeat(makeUniqueSeat(seatMap, seat));
+                ticket.setWagon(makeUniqueWagon(wagonMap, wagon));
+                ticket.setTrain(makeUniqueTrain(trainMap, train));
+
+                ticketList.add(ticket);
+            }
+        } catch (SQLException e) {
+            LOG.error(Arrays.toString(e.getStackTrace()));
+        }
+        return ticketList;
+    }
+
+    private Seat makeUniqueSeat(Map<Integer, Seat> seatMap, Seat seat) {
+        seatMap.putIfAbsent(seat.getId(), seat);
+
+        return seatMap.get(seat.getId());
+    }
+
+    private Wagon makeUniqueWagon(Map<Integer, Wagon> wagonMap, Wagon wagon) {
+        wagonMap.putIfAbsent(wagon.getId(), wagon);
+
+        return wagonMap.get(wagon.getId());
+    }
+
+    private Train makeUniqueTrain(Map<Integer, Train> trainMap, Train train) {
+        trainMap.putIfAbsent(train.getId(), train);
+
+        return trainMap.get(train.getId());
+    }
+
+    private Station makeUniqueStation(Map<Integer, Station> stationMap, Station station) {
+        stationMap.putIfAbsent(station.getId(), station);
+
+        return stationMap.get(station.getId());
     }
 
     @Override
@@ -61,11 +112,11 @@ public class JDBCTicketDao implements TicketDao {
                 ticket = extractFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            log.debug("JDBCTicketDao findById() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCTicketDao findById() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
 
-        log.debug("JDBCTicketDao findById()");
+        LOG.debug("JDBCTicketDao findById()");
         return ticket;
     }
 
@@ -81,7 +132,7 @@ public class JDBCTicketDao implements TicketDao {
         ticket.setArrivalStationId(resultSet.getInt("arrival_st_id"));
         ticket.setTrainId(resultSet.getInt("Train_t_id"));
 
-        log.debug("JDBCTicketDao extractFromResultSet(): " + ticket.toString());
+        LOG.debug("JDBCTicketDao extractFromResultSet(): " + ticket.toString());
         return ticket;
     }
 
@@ -98,11 +149,11 @@ public class JDBCTicketDao implements TicketDao {
                 ticketList.add(extractFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            log.debug("JDBCTicketDao findAll() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCTicketDao findAll() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
 
-        log.debug("JDBCTicketDao findAll()");
+        LOG.debug("JDBCTicketDao findAll()");
         return ticketList;
     }
 
@@ -120,10 +171,10 @@ public class JDBCTicketDao implements TicketDao {
             preparedStatement.setInt(8, ticket.getId());
 
             preparedStatement.executeUpdate();
-            log.debug("JDBCTicketDao update()");
+            LOG.debug("JDBCTicketDao update()");
         } catch (SQLException e) {
-            log.debug("JDBCTicketDao update() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCTicketDao update() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
@@ -134,16 +185,16 @@ public class JDBCTicketDao implements TicketDao {
             preparedStatement.setInt(1, ticket.getId());
 
             preparedStatement.execute();
-            log.debug("JDBCTicketDao delete()");
+            LOG.debug("JDBCTicketDao delete()");
         } catch (SQLException e) {
-            log.debug("JDBCTicketDao delete() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCTicketDao delete() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
     @Override
     public void close() throws Exception {
-        log.debug("JDBCTicketDao close()");
+        LOG.debug("JDBCTicketDao close()");
         connection.close();
     }
 }

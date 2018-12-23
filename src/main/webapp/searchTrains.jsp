@@ -29,6 +29,7 @@
         </div>
 
         <h1>${localeValues['head.search']}</h1>
+
         <form method="post">
             <table align="center">
                 <caption><h3>${localeValues['text.train.searchByNumber']}</h3></caption>
@@ -40,7 +41,9 @@
             <br>
             <p align="center"><input type="submit" value="${localeValues['btn.searchSubmit']}" name="trainNumberSubmit"/></p>
         </form>
+
         <p style="border-bottom:1px solid;"></p>
+
         <form method="post">
             <table align="center">
                 <caption><h3>${localeValues['text.train.searchByRoute']}</h3></caption>
@@ -60,7 +63,9 @@
             <br>
             <p align="center"><input type="submit" value="${localeValues['btn.searchSubmit']}" name="trainDestinationSubmit"/></p>
         </form>
+
         <p style="border-bottom:1px solid;"></p>
+
         <form method="post">
             <h3 align="center">${localeValues['text.train.searchAll']}</h3>
             <p align="center">
@@ -84,7 +89,7 @@
                         <td>
                             ${localeValues['table.column.departure']}:${train.departureRoute.formattedDepartureDate}
                             <br>
-                            Прибуття:${train.arrivalRoute.formattedArrivalDate}
+                            ${localeValues['table.column.arrival']}:${train.arrivalRoute.formattedArrivalDate}
                         </td>
                         <td>
                             ${localeValues['table.column.departure']}: ${train.departureRoute.formattedDepartureTime}

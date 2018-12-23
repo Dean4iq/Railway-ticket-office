@@ -3,6 +3,8 @@ package ua.training.model.dao.daoimplementation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.WagonDao;
+import ua.training.model.entity.Seat;
+import ua.training.model.entity.Train;
 import ua.training.model.entity.Wagon;
 import ua.training.util.QueryStringGetter;
 import ua.training.util.QueryType;
@@ -12,33 +14,31 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class JDBCWagonDao implements WagonDao {
-    private static final Logger log = LogManager.getLogger(JDBCWagonDao.class);
-    private static final TableName tableName = TableName.WAGON;
+    private static final Logger LOG = LogManager.getLogger(JDBCWagonDao.class);
+    private static final TableName TABLE_NAME = TableName.WAGON;
 
     private Connection connection;
 
     public JDBCWagonDao(Connection connection) {
         this.connection = connection;
-        log.debug("JDBCWagonDao constructor()");
+        LOG.debug("JDBCWagonDao constructor()");
     }
 
     @Override
     public void create(Wagon wagon) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
+                (QueryStringGetter.getQuery(QueryType.INSERT, TABLE_NAME))) {
             preparedStatement.setInt(1, wagon.getTrainId());
             preparedStatement.setString(2, wagon.getType());
 
             preparedStatement.execute();
-            log.debug("JDBCWagonDao create()");
+            LOG.debug("JDBCWagonDao create()");
         } catch (SQLException e) {
-            log.debug("JDBCWagonDao create() failed: " + wagon.toString());
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCWagonDao create() failed: " + wagon.toString());
+            LOG.error(Arrays.toString(e.getStackTrace()));
             throw new RuntimeException(e);
         }
     }
@@ -48,7 +48,7 @@ public class JDBCWagonDao implements WagonDao {
         Wagon wagon = new Wagon();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                (QueryStringGetter.getQuery(QueryType.FIND, tableName))) {
+                (QueryStringGetter.getQuery(QueryType.FIND, TABLE_NAME))) {
             preparedStatement.setInt(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -56,12 +56,54 @@ public class JDBCWagonDao implements WagonDao {
                 wagon = extractFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            log.debug("JDBCWagonDao findById() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCWagonDao findById() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
 
-        log.debug("JDBCWagonDao findById()");
+        LOG.debug("JDBCWagonDao findById()");
         return wagon;
+    }
+
+    public List<Wagon> findByTrainId(Integer trainId) {
+        List<Wagon> wagonList = new ArrayList<>();
+        Map<Integer, Wagon> wagonMap = new HashMap<>();
+        Map<Integer, Train> trainMap = new HashMap<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement
+                (QueryStringGetter.getQuery(QueryType.FIND_BY_TRAIN, TABLE_NAME))) {
+            preparedStatement.setInt(1, trainId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Wagon wagon = extractFromResultSet(resultSet);
+                Seat seat = JDBCSeatDao.extractFromResultSet(resultSet);
+                Train train = JDBCTrainDao.extractFromResultSet(resultSet);
+
+                wagon = makeUniqueWagon(wagonMap, wagon);
+                train= makeUniqueTrain(trainMap, train);
+
+                seat.setWagon(wagon);
+                wagon.addSeatToList(seat);
+                wagon.setTrain(train);
+            }
+
+            wagonList = new ArrayList<>(wagonMap.values());
+        } catch (SQLException e) {
+            LOG.error(Arrays.toString(e.getStackTrace()));
+        }
+        return wagonList;
+    }
+
+    private Wagon makeUniqueWagon(Map<Integer, Wagon> wagonMap, Wagon wagon) {
+        wagonMap.putIfAbsent(wagon.getId(), wagon);
+
+        return wagonMap.get(wagon.getId());
+    }
+
+    private Train makeUniqueTrain(Map<Integer, Train> trainMap, Train train) {
+        trainMap.putIfAbsent(train.getId(), train);
+
+        return trainMap.get(train.getId());
     }
 
     static Wagon extractFromResultSet(ResultSet resultSet) throws SQLException {
@@ -71,7 +113,7 @@ public class JDBCWagonDao implements WagonDao {
         wagon.setTrainId(resultSet.getInt("Train_t_id"));
         wagon.setType(resultSet.getString("type"));
 
-        log.debug("JDBCWagonDao extractFromResultSet(): " + wagon.toString());
+        LOG.debug("JDBCWagonDao extractFromResultSet(): " + wagon.toString());
         return wagon;
     }
 
@@ -80,54 +122,54 @@ public class JDBCWagonDao implements WagonDao {
         List<Wagon> wagonList = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                (QueryStringGetter.getQuery(QueryType.SELECT, tableName));
+                (QueryStringGetter.getQuery(QueryType.SELECT, TABLE_NAME));
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 wagonList.add(extractFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            log.debug("JDBCWagonDao findAll() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCWagonDao findAll() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
 
-        log.debug("JDBCWagonDao findAll()");
+        LOG.debug("JDBCWagonDao findAll()");
         return wagonList;
     }
 
     @Override
     public void update(Wagon wagon) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                (QueryStringGetter.getQuery(QueryType.UPDATE, tableName))) {
+                (QueryStringGetter.getQuery(QueryType.UPDATE, TABLE_NAME))) {
             preparedStatement.setInt(1, wagon.getTrainId());
             preparedStatement.setString(2, wagon.getType());
             preparedStatement.setInt(3, wagon.getId());
 
             preparedStatement.executeUpdate();
-            log.debug("JDBCWagonDao update()");
+            LOG.debug("JDBCWagonDao update()");
         } catch (SQLException e) {
-            log.debug("JDBCWagonDao update() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCWagonDao update() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
     @Override
     public void delete(Wagon wagon) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
-                (QueryStringGetter.getQuery(QueryType.DELETE, tableName))) {
+                (QueryStringGetter.getQuery(QueryType.DELETE, TABLE_NAME))) {
             preparedStatement.setInt(1, wagon.getId());
 
             preparedStatement.execute();
-            log.debug("JDBCWagonDao delete()");
+            LOG.debug("JDBCWagonDao delete()");
         } catch (SQLException e) {
-            log.debug("JDBCWagonDao delete() error");
-            log.error(Arrays.toString(e.getStackTrace()));
+            LOG.debug("JDBCWagonDao delete() error");
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
     @Override
     public void close() throws Exception {
-        log.debug("JDBCWagonDao close()");
+        LOG.debug("JDBCWagonDao close()");
         connection.close();
     }
 }

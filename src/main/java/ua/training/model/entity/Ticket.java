@@ -13,7 +13,10 @@ public class Ticket {
     private int arrivalStationId;
 
     private Seat seat;
+    private Wagon wagon;
     private Train train;
+    private Station departureStation;
+    private Station arrivalStation;
 
     public int getId() {
         return id;
@@ -93,6 +96,30 @@ public class Ticket {
 
     public void setTrain(Train train) {
         this.train = train;
+    }
+
+    public Wagon getWagon() {
+        return wagon;
+    }
+
+    public void setWagon(Wagon wagon) {
+        this.wagon = wagon;
+    }
+
+    public Station getDepartureStation() {
+        return departureStation;
+    }
+
+    public void setDepartureStation(Station departureStation) {
+        this.departureStation = departureStation;
+    }
+
+    public Station getArrivalStation() {
+        return arrivalStation;
+    }
+
+    public void setArrivalStation(Station arrivalStation) {
+        this.arrivalStation = arrivalStation;
     }
 
     @Override

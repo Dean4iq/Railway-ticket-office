@@ -33,11 +33,11 @@ public class MenuBarFilter implements Filter {
             menuItems.put(localizationStrings.get("btn.login"), "login");
             menuItems.put(localizationStrings.get("btn.register"), "register");
         } else if (session.getAttribute("User") != null) {
-            menuItems.put(localizationStrings.get("btn.purchaseTicket"), "searchToPurchase");
+            menuItems.put(localizationStrings.get("btn.purchaseTicket"), "tickets");
             menuItems.put(localizationStrings.get("btn.logout"), "logout");
         } else {
-            menuItems.put(localizationStrings.get("btn.trainlistAdm"), "trainList");
-            menuItems.put(localizationStrings.get("btn.userList"), "userList");
+            menuItems.put(localizationStrings.get("btn.trainlistAdm"), "trains");
+            menuItems.put(localizationStrings.get("btn.userList"), "users");
             menuItems.put(localizationStrings.get("btn.logout"), "logout");
         }
 
