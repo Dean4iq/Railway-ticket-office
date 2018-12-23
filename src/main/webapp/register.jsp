@@ -5,40 +5,9 @@
 <html>
     <head>
         <title>${localeValues['head.register']}</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/head_style.css" type="text/css">
+
         <style>
-            .nav a{
-                text-decoration:none;
-            }
-            .nav{
-                height:70px;
-                background:#025E10;
-                position:relative;
-            }
-            .nav>ul{
-                position:relative;
-                list-style:none;
-                padding:0;
-                margin:0;
-            }
-            .nav>ul>li{
-                float:left;
-                position:relative;
-            }
-
-            .nav>ul>li>a{
-                padding:0 20px;
-                color:#fff;
-                display:block;
-                line-height:70px !important;
-                font:400 15px 'PT Sans', sans-serif;
-                text-transform:uppercase;
-                text-decoration:none;
-            }
-
-            .nav a:hover{
-                background: black;
-            }
+            <jsp:directive.include file="/styles/css/head_style.css" />
         </style>
     </head>
 
@@ -64,31 +33,31 @@
             <table>
                 <tr>
                     <td>Name:</td>
-                    <td><input type="text" required placeholder="Name" name="name"/></td>
+                    <td><input type="text" placeholder="Name" name="name" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                     <td title="${localeValues['hint.register.name']}">?</td>
                 </tr>
                 <tr>
                     <td>Last name:</td>
-                    <td><input type="text" required placeholder="Last name" name="lastName"/></td>
+                    <td><input type="text" placeholder="Last name" name="lastName" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                     <td title="${localeValues['hint.register.lastName']}">?</td>
                 </tr>
                 <tr>
                     <td>Ім&rsquo;я:</td>
-                    <td><input type="text" required placeholder="Ім'я" name="nameUA"/></td>
+                    <td><input type="text" placeholder="Ім'я" name="nameUA" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                     <td title="${localeValues['hint.register.nameUA']}">?</td>
                 </tr>
                 <tr>
                     <td>Прізвище:</td>
-                    <td><input type="text" required placeholder="Прізвище" name="lastNameUA"/></td>
+                    <td><input type="text" placeholder="Прізвище" name="lastNameUA" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                     <td title="${localeValues['hint.register.lastNameUA']}">?</td>
                 </tr>
                 <tr>
                     <td>login:</td>
-                    <td><input type="text" required placeholder="login" name="login"/></td>
+                    <td><input type="text" placeholder="login" name="login" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                 </tr>
                 <tr>
                     <td>password:</td>
-                    <td><input type="password" required placeholder="${localeValues['text.password']}" name="password"/></td>
+                    <td><input type="password" placeholder="${localeValues['text.password']}" name="password" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                 </tr>
             </table>
             <br>

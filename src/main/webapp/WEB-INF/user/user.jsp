@@ -5,7 +5,9 @@
 <html>
     <head>
         <title>${localeValues['head.user']}</title>
-        <link href="style/head.css" rel="stylesheet" type="text/css"/>
+        <style>
+            <jsp:directive.include file="/styles/css/head_style.css" />
+        </style>
     </head>
 
     <body>

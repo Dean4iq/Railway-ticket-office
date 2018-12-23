@@ -6,38 +6,7 @@
     <head>
         <title>Train list</title>
         <style>
-            .nav a{
-                text-decoration:none;
-            }
-            .nav{
-                height:70px;
-                background:#025E10;
-                position:relative;
-            }
-            .nav>ul{
-                position:relative;
-                list-style:none;
-                padding:0;
-                margin:0;
-            }
-            .nav>ul>li{
-                float:left;
-                position:relative;
-            }
-
-            .nav>ul>li>a{
-                padding:0 20px;
-                color:#fff;
-                display:block;
-                line-height:70px !important;
-                font:400 15px 'PT Sans', sans-serif;
-                text-transform:uppercase;
-                text-decoration:none;
-            }
-
-            .nav a:hover{
-                background: black;
-            }
+            <jsp:directive.include file="/styles/css/head_style.css" />
         </style>
     </head>
     <body>

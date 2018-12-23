@@ -78,7 +78,8 @@
     <filter-name>UserFilter</filter-name>
     <url-pattern>/user/*</url-pattern>
     <url-pattern>/purchase</url-pattern>
-    <url-pattern>/searchToPurchase</url-pattern>
+    <url-pattern>/tickets</url-pattern>
+    <url-pattern>/wagons</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -88,8 +89,8 @@
   <filter-mapping>
     <filter-name>AdminFilter</filter-name>
     <url-pattern>/admin/*</url-pattern>
-    <url-pattern>/trainList</url-pattern>
-    <url-pattern>/userList</url-pattern>
+    <url-pattern>/trains</url-pattern>
+    <url-pattern>/users</url-pattern>
   </filter-mapping>
 
   <filter>

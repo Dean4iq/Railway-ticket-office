@@ -6,38 +6,7 @@
     <head>
         <title>${localeValues['head.search']}</title>
         <style>
-            .nav a{
-                text-decoration:none;
-            }
-            .nav{
-                height:70px;
-                background:#025E10;
-                position:relative;
-            }
-            .nav>ul{
-                position:relative;
-                list-style:none;
-                padding:0;
-                margin:0;
-            }
-            .nav>ul>li{
-                float:left;
-                position:relative;
-            }
-
-            .nav>ul>li>a{
-                padding:0 20px;
-                color:#fff;
-                display:block;
-                line-height:70px !important;
-                font:400 15px 'PT Sans', sans-serif;
-                text-transform:uppercase;
-                text-decoration:none;
-            }
-
-            .nav a:hover{
-                background: black;
-            }
+            <jsp:directive.include file="/styles/css/head_style.css" />
         </style>
     </head>
 
@@ -61,11 +30,18 @@
 
         <table border="1">
             <td>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th>${localeValues['text.train.number']}</th>
+                <th>${localeValues['text.station.from']}</th>
+                <th>${localeValues['text.station.to']}</th>
+                <th>${localeValues['table.column.date']}</th>
+                <th>${localeValues['table.column.time']}</th>
+            </td>
+            <td>
+                <tr>${trainInfo.id}</tr>
+                <tr>${trainInfo.departureRoute.station.name}</tr>
+                <tr>${trainInfo.arrivalRoute.station.name}</tr>
+                <tr>${trainInfo.id}</tr>
+                <tr>${trainInfo.id}</tr>
             </td>
         </table>
     </body>

@@ -5,40 +5,9 @@
 <html>
     <head>
         <title>${localeValues['head.search']}</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/head_style.css" type="text/css">
+
         <style>
-            .nav a{
-                text-decoration:none;
-            }
-            .nav{
-                height:70px;
-                background:#025E10;
-                position:relative;
-            }
-            .nav>ul{
-                position:relative;
-                list-style:none;
-                padding:0;
-                margin:0;
-            }
-            .nav>ul>li{
-                float:left;
-                position:relative;
-            }
-
-            .nav>ul>li>a{
-                padding:0 20px;
-                color:#fff;
-                display:block;
-                line-height:70px !important;
-                font:400 15px 'PT Sans', sans-serif;
-                text-transform:uppercase;
-                text-decoration:none;
-            }
-
-            .nav a:hover{
-                background: black;
-            }
+            <jsp:directive.include file="/styles/css/head_style.css" />
         </style>
     </head>
 
@@ -65,7 +34,7 @@
                 <caption><h3>${localeValues['text.train.searchByNumber']}</h3></caption>
                 <tr>
                     <td>${localeValues['text.train.number']}:</td>
-                    <td><input type="text" placeholder="${localeValues['text.train.number']}" name="trainNumber"/></td>
+                    <td><input type="text" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')" placeholder="${localeValues['text.train.number']}" name="trainNumber"/></td>
                 </tr>
             </table>
             <br>
@@ -81,11 +50,11 @@
                     <th>${localeValues['text.station.to']}</th>
                 </tr>
                 <tr>
-                    <td><input type="text" placeholder="${localeValues['text.station.from']}" required name="departureStation"/></td>
+                    <td><input type="text" placeholder="${localeValues['text.station.from']}" required name="departureStation" oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                     <td style="padding-left: 30px; padding-right: 30px;">
                         ←<input type="submit" value="Switch" name="SwitchDirections"/>→
                     </td>
-                    <td><input type="text" placeholder="${localeValues['text.station.to']}" required name="destinationStation"/></td>
+                    <td><input type="text" placeholder="${localeValues['text.station.to']}" required name="destinationStation" oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
                 </tr>
             </table>
             <br>
@@ -103,24 +72,24 @@
             <h3 align="center">Train LIST</h3>
             <table align="center" border="1">
                 <tr>
-                    <th># train</th>
-                    <th>Route</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
+                    <th>${localeValues['table.column.trainNumber']}</th>
+                    <th>${localeValues['table.column.route']}</th>
+                    <th>${localeValues['table.column.date']}</th>
+                    <th>${localeValues['table.column.time']}</th>
                 </tr>
                 <c:forEach items="${trainList}" var="train">
                     <tr>
                         <td>${train.id}</td>
                         <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
                         <td>
-                            Відправлення:${train.departureRoute.formattedDepartureDate}
+                            ${localeValues['table.column.departure']}:${train.departureRoute.formattedDepartureDate}
                             <br>
                             Прибуття:${train.arrivalRoute.formattedArrivalDate}
                         </td>
                         <td>
-                            Відправлення: ${train.departureRoute.formattedDepartureTime}
+                            ${localeValues['table.column.departure']}: ${train.departureRoute.formattedDepartureTime}
                             <br>
-                            Прибуття: ${train.arrivalRoute.formattedArrivalTime}
+                            ${localeValues['table.column.arrival']}: ${train.arrivalRoute.formattedArrivalTime}
                         </td>
                     </tr>
                 </c:forEach>
