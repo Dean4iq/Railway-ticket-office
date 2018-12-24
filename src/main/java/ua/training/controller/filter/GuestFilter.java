@@ -13,7 +13,7 @@ public class GuestFilter implements Filter {
     private static final Logger LOG = LogManager.getLogger(UserFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         LOG.debug("init()");
     }
 

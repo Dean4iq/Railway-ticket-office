@@ -10,11 +10,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AdminFilter implements Filter {
-    private static final Logger log = LogManager.getLogger(AdminFilter.class);
+    private static final Logger LOG = LogManager.getLogger(AdminFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        log.debug("AdminFilter init()");
+    public void init(FilterConfig filterConfig) {
+        LOG.debug("AdminFilter init()");
     }
 
     @Override
@@ -25,16 +25,16 @@ public class AdminFilter implements Filter {
         HttpSession session = httpRequest.getSession(true);
 
         if (session.getAttribute("Admin") == null) {
-            log.debug("AdminFilter doFilter() loginRequest");
+            LOG.debug("AdminFilter doFilter() loginRequest");
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
         } else {
-            log.debug("AdminFilter doFilter() doFilter");
+            LOG.debug("AdminFilter doFilter() doFilter");
             filterChain.doFilter(httpRequest, httpResponse);
         }
     }
 
     @Override
     public void destroy() {
-        log.debug("AdminFilter destroy()");
+        LOG.debug("AdminFilter destroy()");
     }
 }

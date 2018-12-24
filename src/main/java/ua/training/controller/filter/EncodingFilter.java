@@ -7,11 +7,11 @@ import javax.servlet.*;
 import java.io.IOException;
 
 public class EncodingFilter implements Filter {
-    private static final Logger log = LogManager.getLogger(EncodingFilter.class);
+    private static final Logger LOG = LogManager.getLogger(EncodingFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        log.debug("EncodingFilter init()");
+    public void init(FilterConfig filterConfig) {
+        LOG.debug("EncodingFilter init()");
     }
 
     @Override
@@ -20,12 +20,12 @@ public class EncodingFilter implements Filter {
         servletResponse.setCharacterEncoding("UTF-8");
         servletRequest.setCharacterEncoding("UTF-8");
 
-        log.debug("EncodingFilter doFilter()");
+        LOG.debug("EncodingFilter doFilter()");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
     public void destroy() {
-        log.debug("EncodingFilter destroy()");
+        LOG.debug("EncodingFilter destroy()");
     }
 }

@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.util.Map;
 
 public class LocalizationFilter implements Filter {
-    private static final Logger log = LogManager.getLogger(LocalizationFilter.class);
+    private static final Logger LOG = LogManager.getLogger(LocalizationFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig filterConfig) {
+        LOG.debug("init()");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LocalizationFilter implements Filter {
         httpRequest.getSession().setAttribute("mapValues", localizationStrings);
         httpRequest.setAttribute("localeValues", localizationStrings);
 
-        log.debug("doFilter()");
+        LOG.debug("doFilter()");
         filterChain.doFilter(request, response);
     }
 

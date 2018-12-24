@@ -12,11 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MenuBarFilter implements Filter {
-    private static final Logger log = LogManager.getLogger(MenuBarFilter.class);
+    private static final Logger LOG = LogManager.getLogger(MenuBarFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        log.debug("MenuBarFilter init()");
+    public void init(FilterConfig filterConfig) {
+        LOG.debug("MenuBarFilter init()");
     }
 
     @Override
@@ -43,12 +43,12 @@ public class MenuBarFilter implements Filter {
 
         req.setAttribute("userbar", menuItems);
 
-        log.debug("MenuBarFilter doFilter()");
+        LOG.debug("MenuBarFilter doFilter()");
         filterChain.doFilter(req, res);
     }
 
     @Override
     public void destroy() {
-        log.debug("MenuBarFilter destroy()");
+        LOG.debug("MenuBarFilter destroy()");
     }
 }
