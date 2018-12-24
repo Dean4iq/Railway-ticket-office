@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class LocalizationGetter {
+public final class LocalizationGetter {
     private static final Logger log = LogManager.getLogger(LocalizationGetter.class);
 
     public Map<String, String> getLocalization(String lang) {

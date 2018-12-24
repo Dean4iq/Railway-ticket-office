@@ -2,7 +2,7 @@ package ua.training.util;
 
 import java.util.ResourceBundle;
 
-public class QueryStringGetter {
+public final class QueryStringGetter {
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle(PropertiesSource.SQL_QUERIES.source);
 
     private QueryStringGetter() {
