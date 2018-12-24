@@ -6,43 +6,19 @@
     <head>
         <title>${localeValues['head.login']}</title>
         <style>
-            <jsp:directive.include file="/styles/css/head_style.css" />
+            <jsp:directive.include file="/styles/css/bootstrap.min.css" />
+            <jsp:directive.include file="/styles/css/signin.css" />
         </style>
     </head>
 
-    <body>
-        <form name="langForm" method="post">
-            <select name="langSelect" onchange="document.langForm.submit();">
-                <option value="en" ${langVariable=="en"?"selected":""}>English</option>
-                <option value="uk" ${langVariable=="uk"?"selected":""}>Українська</option>
-            </select>
-        </form>
-        <div class="nav">
-            <ul>
-                <li><a href="${pageContext.request.contextPath}"><c:out value="${localeValues['btn.main']}"/></a></li>
-                <li><a href="search">${localeValues['btn.search']}</a></li>
-                <c:forEach items="${userbar}" var="keyValue">
-                    <li><a href="${keyValue.value}">${keyValue.key}</a></li>
-                </c:forEach>
-            </ul>
-        </div>
-
-        <h1>${localeValues['head.login']}</h1>
-
-        <div style="color:red">${Error}</div>
-        <form method="post">
-            <table>
-                <tr>
-                    <td>${localeValues['text.login']}:</td>
-                    <td><input type="text" placeholder="login" name="login" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                </tr>
-                <tr>
-                    <td>${localeValues['text.password']}:</td>
-                    <td><input type="password" placeholder="password" name="pass" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                </tr>
-            </table>
-            <br>
-            <p align="center"><input type="submit" value="${localeValues['btn.login']}" name="login"/></p>
+    <body class="text-center">
+        <form class="form-signin" method="post">
+            <h1 class="h3 mb-3 font-weight-normal">${localeValues['head.login']}</h1>
+            <label for="inputLogin" class="sr-only">${localeValues['text.login']}</label>
+            <input type="text" id="inputLogin" name="login" class="form-control" placeholder="Login" required autofocus oninvalid="this.setCustomValidity('${localeValues['hint.required']}')">
+            <label for="inputPassword" class="sr-only">${localeValues['text.password']}</label>
+            <input type="password" name="pass" id="inputPassword" class="form-control" placeholder="${localeValues['text.password']}" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')">
+            <button name="login" class="btn btn-lg btn-primary btn-block" type="submit">${localeValues['btn.login']}</button>
         </form>
     </body>
 </html>

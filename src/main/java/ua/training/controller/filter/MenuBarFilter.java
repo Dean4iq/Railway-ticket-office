@@ -36,7 +36,7 @@ public class MenuBarFilter implements Filter {
             menuItems.put(localizationStrings.get("btn.purchaseTicket"), "tickets");
             menuItems.put(localizationStrings.get("btn.logout"), "logout");
         } else {
-            menuItems.put(localizationStrings.get("btn.trainlistAdm"), "trains");
+            menuItems.put(localizationStrings.get("btn.trainList"), "trains");
             menuItems.put(localizationStrings.get("btn.userList"), "users");
             menuItems.put(localizationStrings.get("btn.logout"), "logout");
         }

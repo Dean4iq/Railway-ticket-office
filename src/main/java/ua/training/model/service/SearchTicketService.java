@@ -3,9 +3,11 @@ package ua.training.model.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.DaoFactory;
+import ua.training.model.dao.StationDao;
 import ua.training.model.dao.TrainDao;
 import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
 import ua.training.model.entity.Route;
+import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,60 +17,76 @@ import java.util.stream.Collectors;
 
 public class SearchTicketService implements Service {
     private static final Logger LOG = LogManager.getLogger(SearchTrainService.class);
-    private static final Map<String, SearchTicketService> COMMANDS = new HashMap<>();
+    private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
+
+    public SearchTicketService() {
+        COMMANDS.putIfAbsent("ticketSearchSubmit", this::ticketSearchSubmit);
+        COMMANDS.putIfAbsent("sortTrainNumAsc", this::sortByTrainNumber);
+        COMMANDS.putIfAbsent("sortTrainNumDesc", this::sortByTrainNumber);
+    }
 
     @Override
     public String execute(HttpServletRequest request) {
-        if (request.getParameter("SwitchDirections") != null) {
-            //TODO
-        } else if (request.getParameter("ticketSearchSubmit") != null) {
-            List<Train> trainList = findTrainByRoute(request);
+        LOG.debug("SearchTrainService execute()");
 
-            request.setAttribute("trainList", trainList);
-            request.getSession().setAttribute("tripDateSubmitted", request.getParameter("tripStartDate"));
-        }
+        Enumeration<String> params = request.getParameterNames();
 
-        if (request.getParameter("sortByIdAsc") != null) {
-            List<Train> trainList = findTrainByRoute(request);
-
-            trainList.sort(Comparator.comparingInt(Train::getId));
-        }
-
-        if (request.getParameter("sortByIdDesc") != null) {
-            List<Train> trainList = findTrainByRoute(request);
-
-            trainList.sort(Comparator.comparingInt(Train::getId).reversed());
+        while (params.hasMoreElements()) {
+            String parameter = params.nextElement();
+            if (COMMANDS.containsKey(parameter)) {
+                COMMANDS.get(parameter).call(request);
+            }
         }
 
         if (checkSubmittedTrain(request)) {
             return "redirect: /wagons";
         }
 
-        Calendar calendar = Calendar.getInstance();
-        String minCalendarDate = getFormattedDate(calendar);
-
-        calendar.setTimeInMillis(new Date().getTime() + 1_296_000_000);
-
-        String maxCalendarDate = getFormattedDate(calendar);
-
-        request.setAttribute("minCalendarDate", minCalendarDate);
-        request.setAttribute("maxCalendarDate", maxCalendarDate);
-        LOG.debug("SearchTrainService execute()");
+        setCalendar(request);
+        setStationList(request);
 
         return "/WEB-INF/user/searchToPurchase.jsp";
+    }
+
+    private void ticketSearchSubmit(HttpServletRequest request) {
+        List<Train> trainList = findTrainByRoute(request);
+
+        request.setAttribute("trainList", trainList);
+        request.getSession().setAttribute("tripDateSubmitted", request.getParameter("tripStartDate"));
+    }
+
+    private void sortByTrainNumber(HttpServletRequest request) {
+        List<Train> trainList = findTrainByRoute(request);
+
+        if (request.getParameter("sortTrainNumAsc") != null) {
+            trainList.sort(Comparator.comparingInt(Train::getId));
+        } else {
+            trainList.sort(Comparator.comparingInt(Train::getId).reversed());
+        }
+
+        request.setAttribute("trainList", trainList);
     }
 
     private List<Train> findTrainByRoute(HttpServletRequest request) {
         String stationFrom = request.getParameter("departureStation");
         String stationTo = request.getParameter("destinationStation");
+
+        if (stationFrom == null || stationTo == null) {
+            stationFrom = (String) request.getSession().getAttribute("departureStation");
+            stationTo = (String) request.getSession().getAttribute("arrivalStation");
+        }
+
         List<Train> trains = new ArrayList<>();
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
         try (TrainDao trainDao = daoFactory.createTrainDao()) {
             trains = trainDao.findAll();
 
+            String finalStationFrom = stationFrom;
+            String finalStationTo = stationTo;
+
             trains = trains.stream().filter(train ->
-                    checkTrainRoute(train, stationFrom, stationTo))
+                    checkTrainRoute(train, finalStationFrom, finalStationTo))
                     .collect(Collectors.toList());
 
             setTravelDate(request, trains);
@@ -104,6 +122,18 @@ public class SearchTicketService implements Service {
         return false;
     }
 
+    private void setCalendar(HttpServletRequest request) {
+        Calendar calendar = Calendar.getInstance();
+        String minCalendarDate = getFormattedDate(calendar);
+
+        calendar.setTimeInMillis(new Date().getTime() + 1_296_000_000);
+
+        String maxCalendarDate = getFormattedDate(calendar);
+
+        request.setAttribute("minCalendarDate", minCalendarDate);
+        request.setAttribute("maxCalendarDate", maxCalendarDate);
+    }
+
     private String getFormattedDate(Calendar calendar) {
         return new StringBuilder()
                 .append(calendar.get(Calendar.YEAR))
@@ -116,6 +146,13 @@ public class SearchTicketService implements Service {
     private void setTravelDate(HttpServletRequest request, List<Train> trains) {
         Calendar calendar = Calendar.getInstance();
         String travelDate = request.getParameter("tripStartDate");
+
+        if (travelDate == null) {
+            travelDate = (String) request.getSession().getAttribute("travelDate");
+        }
+
+        request.getSession().setAttribute("travelDate", travelDate);
+
         String[] datesYMD = travelDate.split("-");
 
         calendar.set(Calendar.YEAR, Integer.parseInt(datesYMD[0]));
@@ -167,5 +204,16 @@ public class SearchTicketService implements Service {
             }
         }
         return false;
+    }
+
+    private void setStationList(HttpServletRequest request) {
+        DaoFactory daoFactory = JDBCDaoFactory.getInstance();
+
+        try(StationDao stationDao = daoFactory.createStationDao()){
+            List<Station> stationList = stationDao.findAll();
+            request.setAttribute("stationList", stationList);
+        } catch (Exception e) {
+            LOG.error(Arrays.toString(e.getStackTrace()));
+        }
     }
 }

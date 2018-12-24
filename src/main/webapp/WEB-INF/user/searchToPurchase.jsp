@@ -6,43 +6,74 @@
     <head>
         <title>${localeValues['head.search']}</title>
         <style>
-            <jsp:directive.include file="/styles/css/head_style.css" />
+            <jsp:directive.include file="/styles/css/bootstrap.min.css"/>
         </style>
+
+        <script>
+            <jsp:directive.include file="/styles/js/bootstrap.min.js"/>
+        </script>
     </head>
 
-
     <body>
-        <form name="langForm" method="post">
-            <select name="langSelect" onchange="document.langForm.submit();">
-                <option value="en" ${langVariable=="en"?"selected":""}>English</option>
-                <option value="uk" ${langVariable=="uk"?"selected":""}>Українська</option>
-            </select>
-        </form>
-        <div class="nav">
-            <ul>
-                <li><a href="${pageContext.request.contextPath}"><c:out value="${localeValues['btn.main']}"/></a></li>
-                <li><a href="search">${localeValues['btn.search']}</a></li>
-                <c:forEach items="${userbar}" var="keyValue">
-                    <li><a href="${keyValue.value}">${keyValue.key}</a></li>
-                </c:forEach>
-            </ul>
-        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;">
+            <a class="navbar-brand" href=""></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="${pageContext.request.contextPath}">
+                            ${localeValues['btn.main']}
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="search">
+                            ${localeValues['btn.search']}
+                        </a>
+                    </li>
+                    <c:forEach items="${userbar}" var="keyValue">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="${keyValue.value}">
+                                ${keyValue.key}
+                            </a>
+                        </li>
+                    </c:forEach>
+                </ul>
+                <ul class="navbar-nav">
+                    <form name="langForm" method="post" align="right">
+                        <select name="langSelect" onchange="document.langForm.submit();">
+                            <option ${langVariable=="en"?"selected":""} value="en">English</option>
+                            <option ${langVariable=="uk"?"selected":""} value="uk">Українська</option>
+                        </select>
+                    </form>
+                </ul>
+            </div>
+        </nav>
 
         <h1>${localeValues['head.search']}</h1>
         <form method="post">
             <table align="center">
-                <caption><h3>Пошук за напрямом поїзда</h3></caption>
+                <caption><h3>${localeValues['text.train.searchByRoute']}</h3></caption>
                 <tr>
-                    <th>Станція відправлення</th>
-                    <th></th>
-                    <th>Станція прибуття</th>
+                    <th>${localeValues['text.station.from']}</th>
+                    <th>${localeValues['text.station.to']}</th>
                 </tr>
                 <tr>
-                    <td><input type="text" placeholder="departure" required name="departureStation"/></td>
-                    <td style="padding-left: 30px; padding-right: 30px;">
-                        ←<input type="submit" value="${localeValues['btn.switch']}" name="SwitchDirections"/>→
-                    </td>
-                    <td><input type="text" placeholder="destination" required name="destinationStation"/></td>
+                    <td><input type="text" list="stations" placeholder="${localeValues['text.station.from']}" required name="departureStation"/></td>
+                    <td><input type="text" list="stations" placeholder="${localeValues['text.station.to']}" required name="destinationStation"/></td>
+                    <datalist id="stations">
+                        <c:if test="${langVariable=='en'}">
+                            <c:forEach items="${stationList}" var="station">
+                                <option>${station.nameEN}</option>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${langVariable=='uk'}">
+                            <c:forEach items="${stationList}" var="station">
+                                <option>${station.nameUA}</option>
+                            </c:forEach>
+                        </c:if>
+                    </datalist>
                 </tr>
             </table>
             <br>
@@ -55,10 +86,16 @@
         <p style="border-bottom:1px solid;"></p>
 
         <c:if test="${not empty trainList}">
-            <h3 align="center">Train LIST</h3>
+            <h3 align="center">${localeValues['head.trainList']}</h3>
             <table border="1">
                 <tr>
-                    <th>${localeValues['table.column.trainNumber']}</th>
+                    <th>
+                        ${localeValues['table.column.trainNumber']}
+                        <form method="post">
+                            <input type="submit" name="sortTrainNumAsc" value="↑"/>
+                            <input type="submit" name="sortTrainNumDesc" value="↓"/>
+                        </form>
+                    </th>
                     <th>${localeValues['table.column.route']}</th>
                     <th>${localeValues['table.column.date']}</th>
                     <th>${localeValues['table.column.time']}</th>
@@ -68,7 +105,14 @@
                     <c:forEach var="train" items="${trainList}">
                         <tr>
                             <td>${train.id}</td>
-                            <td>${train.departureRoute.station.nameUA} - ${train.arrivalRoute.station.nameUA}</td>
+                            <td>
+                                <c:if test="${langVariable=='en'}">
+                                    ${train.departureRoute.station.nameEN} - ${train.arrivalRoute.station.nameEN}
+                                </c:if>
+                                <c:if test="${langVariable=='uk'}">
+                                    ${train.departureRoute.station.nameUA} - ${train.arrivalRoute.station.nameUA}
+                                </c:if>
+                            </td>
                             <td>
                                 ${localeValues['table.column.departure']}:${train.departureRoute.formattedDepartureDate}
                                 <br>
