@@ -107,9 +107,9 @@ public class SearchTrainService implements Service {
         List<Route> trainRoute = train.getRouteList();
 
         for (int i = 0; i < trainRoute.size() - 1; i++) {
-            if (trainRoute.get(i).getStation().getName().equals(from)) {
+            if (trainRoute.get(i).getStation().getNameEN().equals(from)) {
                 for (int j = i + 1; j < trainRoute.size(); j++) {
-                    if (trainRoute.get(j).getStation().getName().equals(to)) {
+                    if (trainRoute.get(j).getStation().getNameEN().equals(to)) {
                         return true;
                     }
                 }

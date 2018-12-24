@@ -29,6 +29,8 @@ public class JDBCTicketDao implements TicketDao {
     public void create(Ticket ticket) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             preparedStatement.setString(1, ticket.getUserLogin());
             preparedStatement.setInt(2, ticket.getSeatId());
             preparedStatement.setInt(3, ticket.getCost());
@@ -55,6 +57,7 @@ public class JDBCTicketDao implements TicketDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.FIND_BY_TRAIN, tableName))) {
             preparedStatement.setInt(1, trainId);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -93,12 +96,6 @@ public class JDBCTicketDao implements TicketDao {
         return trainMap.get(train.getId());
     }
 
-    private Station makeUniqueStation(Map<Integer, Station> stationMap, Station station) {
-        stationMap.putIfAbsent(station.getId(), station);
-
-        return stationMap.get(station.getId());
-    }
-
     @Override
     public Ticket findById(Integer id) {
         Ticket ticket = new Ticket();
@@ -106,6 +103,7 @@ public class JDBCTicketDao implements TicketDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.FIND, tableName))) {
             preparedStatement.setInt(1, id);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -140,16 +138,28 @@ public class JDBCTicketDao implements TicketDao {
     public List<Ticket> findAll() {
         List<Ticket> ticketList = new ArrayList<>();
 
-        //TODO
-        try (PreparedStatement preparedStatement = connection.prepareStatement
-                (QueryStringGetter.getQuery(QueryType.SELECT, tableName));
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        Map<Integer, Seat> seatMap = new HashMap<>();
+        Map<Integer, Wagon> wagonMap = new HashMap<>();
+        Map<Integer, Train> trainMap = new HashMap<>();
 
+        try (PreparedStatement preparedStatement = connection.prepareStatement
+                (QueryStringGetter.getQuery(QueryType.SELECT, tableName))) {
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                ticketList.add(extractFromResultSet(resultSet));
+                Ticket ticket = extractFromResultSet(resultSet);
+                Seat seat = JDBCSeatDao.extractFromResultSet(resultSet);
+                Wagon wagon = JDBCWagonDao.extractFromResultSet(resultSet);
+                Train train = JDBCTrainDao.extractFromResultSet(resultSet);
+
+                ticket.setSeat(makeUniqueSeat(seatMap, seat));
+                ticket.setWagon(makeUniqueWagon(wagonMap, wagon));
+                ticket.setTrain(makeUniqueTrain(trainMap, train));
+
+                ticketList.add(ticket);
             }
         } catch (SQLException e) {
-            LOG.debug("JDBCTicketDao findAll() error");
             LOG.error(Arrays.toString(e.getStackTrace()));
         }
 
@@ -161,6 +171,8 @@ public class JDBCTicketDao implements TicketDao {
     public void update(Ticket ticket) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.UPDATE, tableName))) {
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+
             preparedStatement.setString(1, ticket.getUserLogin());
             preparedStatement.setInt(2, ticket.getSeatId());
             preparedStatement.setInt(3, ticket.getCost());
@@ -183,6 +195,7 @@ public class JDBCTicketDao implements TicketDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.DELETE, tableName))) {
             preparedStatement.setInt(1, ticket.getId());
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 
             preparedStatement.execute();
             LOG.debug("JDBCTicketDao delete()");

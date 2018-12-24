@@ -68,7 +68,7 @@
                     <c:forEach var="train" items="${trainList}">
                         <tr>
                             <td>${train.id}</td>
-                            <td>${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}</td>
+                            <td>${train.departureRoute.station.nameUA} - ${train.arrivalRoute.station.nameUA}</td>
                             <td>
                                 ${localeValues['table.column.departure']}:${train.departureRoute.formattedDepartureDate}
                                 <br>

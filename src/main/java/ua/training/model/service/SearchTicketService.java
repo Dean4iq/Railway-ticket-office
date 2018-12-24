@@ -73,6 +73,8 @@ public class SearchTicketService implements Service {
 
             setTravelDate(request, trains);
 
+            request.getSession().setAttribute("departureStation", stationFrom);
+            request.getSession().setAttribute("arrivalStation", stationTo);
             request.setAttribute("trainList", trains);
             LOG.debug("Search all trains by route");
         } catch (Exception e) {
@@ -88,9 +90,11 @@ public class SearchTicketService implements Service {
         List<Route> trainRoute = train.getRouteList();
 
         for (int i = 0; i < trainRoute.size() - 1; i++) {
-            if (trainRoute.get(i).getStation().getName().equals(from)) {
+            if (trainRoute.get(i).getStation().getNameEN().equals(from)
+                    || trainRoute.get(i).getStation().getNameUA().equals(from)) {
                 for (int j = i + 1; j < trainRoute.size(); j++) {
-                    if (trainRoute.get(j).getStation().getName().equals(to)) {
+                    if (trainRoute.get(j).getStation().getNameEN().equals(to)
+                            || trainRoute.get(j).getStation().getNameUA().equals(to)) {
                         return true;
                     }
                 }
@@ -110,8 +114,8 @@ public class SearchTicketService implements Service {
     }
 
     private void setTravelDate(HttpServletRequest request, List<Train> trains) {
-        String travelDate = request.getParameter("tripStartDate");
         Calendar calendar = Calendar.getInstance();
+        String travelDate = request.getParameter("tripStartDate");
         String[] datesYMD = travelDate.split("-");
 
         calendar.set(Calendar.YEAR, Integer.parseInt(datesYMD[0]));

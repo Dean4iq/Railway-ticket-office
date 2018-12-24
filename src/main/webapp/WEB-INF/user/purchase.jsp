@@ -28,10 +28,55 @@
         </div>
 
         <h1>${localeValues['head.purchase']}</h1>
-        Ticket info
+        <table border="1">
+            <caption>Ticket info</caption>
+            <tr align="center">
+                <th>${localeValues['table.column.trainNumber']}</th>
+                <th>${localeValues['table.column.route']}</th>
+                <th>${localeValues['table.column.date']}</th>
+                <th>${localeValues['table.column.time']}</th>
+            </tr>
+            <tr align="center">
+                <td>${purchasedTicket.train.id}</td>
+                <td>
+                    ${purchasedTicket.train.departureRoute.station.nameUA}
+                    <br>
+                    ${purchasedTicket.train.arrivalRoute.station.nameUA}
+                </td>
+                <td>
+                    ${purchasedTicket.train.departureRoute.formattedDepartureDate}
+                    <br>
+                    ${purchasedTicket.train.arrivalRoute.formattedArrivalDate}
+                </td>
+                <td>
+                    ${purchasedTicket.train.departureRoute.formattedDepartureTime}
+                    <br>
+                    ${purchasedTicket.train.arrivalRoute.formattedArrivalTime}
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table border="1">
+            <tr align="center">
+                <th>Seat #</th>
+                <th>Wagon #</th>
+                <th>Departure station</th>
+                <th>Arrival station</th>
+                <th>Date</th>
+            </tr>
+            <tr align="center">
+                <td>${purchasedTicket.seatId}</td>
+                <td>${purchasedTicket.wagon.id}</td>
+                <td>${purchasedTicket.departureStation.nameUA}</td>
+                <td>${purchasedTicket.arrivalStation.nameUA}</td>
+                <td>${purchasedTicket.travelDate}</td>
+            </tr>
+        </table>
+        ${localeValues['text.cost']}: &nbsp; ${purchasedTicket.cost} &nbsp; ${localeValues['text.current.UAH']}
+
         <form method="POST">
-            <input type="submit" name="pay" value="${localeValues['btn.acceptPurchase']}"/>
-            <input type="submit" name="decline" value="${localeValues['btn.declinePurchase']}"/>
+            <input type="submit" name="payForTicket" value="${localeValues['btn.acceptPurchase']}"/>
+            <input type="submit" name="declinePayment" value="${localeValues['btn.declinePurchase']}"/>
         </post>
     </body>
 </html>

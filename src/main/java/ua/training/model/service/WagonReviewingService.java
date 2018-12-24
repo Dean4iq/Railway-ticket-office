@@ -16,18 +16,19 @@ public class WagonReviewingService implements Service {
     @Override
     public String execute(HttpServletRequest request) {
         LOG.debug("WagonReviewingService execute()");
-        Calendar calendar = Calendar.getInstance();
+
+        if (checkPurchaseSubmit(request)) {
+            return "redirect: /purchase";
+        }
+
         String tripDate = (String) request.getSession().getAttribute("tripDateSubmitted");
-
-        putDateStringIntoCalendar(calendar, tripDate);
-
         String parameter = (String) request.getSession().getAttribute("searchTicketParameter");
 
         int trainNumber = Integer.parseInt(parameter.substring("wagonInTrain".length()));
         List<Ticket> ticketList = getTickets(trainNumber);
         List<Wagon> wagonList = getTrainWagons(trainNumber);
 
-        ticketList = filterTicketsByDate(ticketList, calendar);
+        ticketList = filterTicketsByDate(ticketList, tripDate);
 
         checkSeatsStatus(wagonList, ticketList);
 
@@ -35,6 +36,19 @@ public class WagonReviewingService implements Service {
         request.setAttribute("trainInfo", getTrainInfo(trainNumber));
 
         return "/WEB-INF/user/wagons.jsp";
+    }
+
+    private boolean checkPurchaseSubmit(HttpServletRequest request) {
+        Enumeration<String> parameterNames = request.getParameterNames();
+
+        while (parameterNames.hasMoreElements()) {
+            String parameter = parameterNames.nextElement();
+            if (parameter.contains("PurchaseSeat")) {
+                request.getSession().setAttribute("seatToPurchase", parameter);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void putDateStringIntoCalendar(Calendar calendar, String date) {
@@ -56,9 +70,9 @@ public class WagonReviewingService implements Service {
 
             tickets.forEach(ticket -> {
                 ticket.setArrivalStation(stationList.stream().filter(station ->
-                        station.getId() == ticket.getArrivalStationId()).findFirst().get());
+                        station.getId() == ticket.getArrivalStationId()).findFirst().orElse(null));
                 ticket.setDepartureStation(stationList.stream().filter(station ->
-                        station.getId() == ticket.getDepartureStationId()).findFirst().get());
+                        station.getId() == ticket.getDepartureStationId()).findFirst().orElse(null));
             });
         } catch (Exception e) {
             LOG.error(Arrays.toString(e.getStackTrace()));
@@ -67,7 +81,11 @@ public class WagonReviewingService implements Service {
         return tickets;
     }
 
-    private List<Ticket> filterTicketsByDate(List<Ticket> tickets, Calendar calendar) {
+    private List<Ticket> filterTicketsByDate(List<Ticket> tickets, String date) {
+        Calendar calendar = Calendar.getInstance();
+
+        putDateStringIntoCalendar(calendar, date);
+
         return tickets.stream().filter(ticket -> {
             Calendar ticketDate = Calendar.getInstance();
             ticketDate.setTime(ticket.getTravelDate());

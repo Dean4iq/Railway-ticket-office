@@ -1,8 +1,11 @@
 package ua.training.model.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Ticket {
+public class Ticket implements Serializable {
+    private static final long serialVersionUID = 7526472295622776147L;
+
     private int id;
     private String userLogin;
     private Date travelDate;
@@ -12,11 +15,11 @@ public class Ticket {
     private int departureStationId;
     private int arrivalStationId;
 
-    private Seat seat;
-    private Wagon wagon;
-    private Train train;
-    private Station departureStation;
-    private Station arrivalStation;
+    private transient Seat seat;
+    private transient Wagon wagon;
+    private transient Train train;
+    private transient Station departureStation;
+    private transient Station arrivalStation;
 
     public int getId() {
         return id;
