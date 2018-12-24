@@ -65,6 +65,7 @@ public class JDBCStationDao implements StationDao {
 
         station.setId(resultSet.getInt("st_id"));
         station.setName(resultSet.getString("name"));
+        station.setNameUA(resultSet.getString("name_UA"));
 
         log.debug("JDBCStationDao extractFromResultSet(): " + station.toString());
         return station;
