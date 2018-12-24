@@ -2,7 +2,7 @@ package ua.training.model.entity;
 
 public class Station {
     private int id;
-    private String name;
+    private String nameEN;
     private String nameUA;
 
     public int getId() {
@@ -13,12 +13,12 @@ public class Station {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNameEN() {
+        return nameEN;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameEN(String name) {
+        this.nameEN = name;
     }
 
     public String getNameUA() {
@@ -33,7 +33,7 @@ public class Station {
     public String toString() {
         return "Station{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", nameEN='" + nameEN + '\'' +
                 ", nameUA='" + nameUA + '\'' +
                 '}';
     }

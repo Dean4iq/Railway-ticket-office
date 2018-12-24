@@ -28,7 +28,7 @@ public class JDBCStationDao implements StationDao {
     public void create(Station station) {
         try (PreparedStatement ps = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
-            ps.setString(1, station.getName());
+            ps.setString(1, station.getNameEN());
             ps.execute();
 
             log.debug("JDBCStationDao create()");
@@ -64,7 +64,7 @@ public class JDBCStationDao implements StationDao {
         Station station = new Station();
 
         station.setId(resultSet.getInt("st_id"));
-        station.setName(resultSet.getString("name"));
+        station.setNameEN(resultSet.getString("name"));
         station.setNameUA(resultSet.getString("name_UA"));
 
         log.debug("JDBCStationDao extractFromResultSet(): " + station.toString());
@@ -95,7 +95,7 @@ public class JDBCStationDao implements StationDao {
     public void update(Station station) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.UPDATE, tableName))) {
-            preparedStatement.setString(1, station.getName());
+            preparedStatement.setString(1, station.getNameEN());
             preparedStatement.setInt(2, station.getId());
 
             preparedStatement.executeUpdate();
