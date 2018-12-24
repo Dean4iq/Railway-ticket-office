@@ -3,6 +3,7 @@ package ua.training.model.entity;
 public class Station {
     private int id;
     private String name;
+    private String nameUA;
 
     public int getId() {
         return id;
@@ -20,11 +21,20 @@ public class Station {
         this.name = name;
     }
 
+    public String getNameUA() {
+        return nameUA;
+    }
+
+    public void setNameUA(String nameUA) {
+        this.nameUA = nameUA;
+    }
+
     @Override
     public String toString() {
         return "Station{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", nameUA='" + nameUA + '\'' +
                 '}';
     }
 }
