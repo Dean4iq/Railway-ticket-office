@@ -25,8 +25,11 @@ public class JDBCTicketDao implements TicketDao {
         LOG.debug("JDBCTicketDao constructor()");
     }
 
-    @Override
-    public void create(Ticket ticket) {
+    private Connection getConnection() {
+        return connection;
+    }
+
+    public Connection createWithoutCommit(Ticket ticket) {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
             connection.setAutoCommit(false);
@@ -40,11 +43,35 @@ public class JDBCTicketDao implements TicketDao {
             preparedStatement.setInt(7, ticket.getTrainId());
 
             preparedStatement.execute();
+            return getConnection();
+        } catch (SQLException e) {
+            LOG.debug("JDBCTicketDao create() failed: " + ticket.toString());
+            LOG.error(Arrays.toString(e.getStackTrace()));
+        }
+        return null;
+    }
+
+    @Override
+    public void create(Ticket ticket) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement
+                (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+            preparedStatement.setString(1, ticket.getUserLogin());
+            preparedStatement.setInt(2, ticket.getSeatId());
+            preparedStatement.setInt(3, ticket.getCost());
+            preparedStatement.setDate(4, ticket.getTravelDate());
+            preparedStatement.setInt(5, ticket.getDepartureStationId());
+            preparedStatement.setInt(6, ticket.getArrivalStationId());
+            preparedStatement.setInt(7, ticket.getTrainId());
+
+            preparedStatement.execute();
+            connection.commit();
             LOG.debug("JDBCTicketDao create()");
         } catch (SQLException e) {
             LOG.debug("JDBCTicketDao create() failed: " + ticket.toString());
             LOG.error(Arrays.toString(e.getStackTrace()));
-            throw new RuntimeException(e);
+            connection.rollback();
         }
     }
 

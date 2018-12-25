@@ -30,7 +30,6 @@ public class SearchTicketService implements Service {
         LOG.debug("SearchTrainService execute()");
 
         Enumeration<String> params = request.getParameterNames();
-
         while (params.hasMoreElements()) {
             String parameter = params.nextElement();
             if (COMMANDS.containsKey(parameter)) {

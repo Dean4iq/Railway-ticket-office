@@ -3,16 +3,14 @@ package ua.training.model.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ua.training.model.dao.DaoFactory;
-import ua.training.model.dao.StationDao;
-import ua.training.model.dao.TicketDao;
-import ua.training.model.dao.TrainDao;
+import ua.training.model.dao.*;
 import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
 import ua.training.model.entity.Station;
 import ua.training.model.entity.Ticket;
 import ua.training.model.entity.Train;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,10 +26,12 @@ public class PurchaseService implements Service {
         LOG.debug("PurchaseClass execute()");
 
         if (request.getParameter("payForTicket") != null) {
+            confirmPurchasing(request);
             request.getSession().removeAttribute("Ticket");
             return "redirect: /";
         }
         if (request.getParameter("declinePayment") != null) {
+            declinePurchasing(request);
             request.getSession().removeAttribute("Ticket");
             return "redirect: /";
         }
@@ -155,10 +155,30 @@ public class PurchaseService implements Service {
 
     private void startPurchaseTransaction(Ticket ticket, HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
-        try (TicketDao ticketDao = daoFactory.createTicketDao()) {
-            ticketDao.create(ticket);
+        try {
+            TicketDao ticketDao = daoFactory.createTicketDao();
+            Connection connection = ticketDao.createWithoutCommit(ticket);
+            request.getSession().setAttribute("ticketConnection", connection);
+            new Thread(() -> {
+                try {
+                    Thread.sleep(300000);
+                    new TransactionCommit().rollbackAndClose(connection);
+                } catch (InterruptedException e) {
+                    LOG.error("Interrupted thread: {}", Arrays.toString(e.getStackTrace()));
+                }
+            }).start();
         } catch (Exception e) {
             LOG.error(Arrays.toString(e.getStackTrace()));
         }
+    }
+
+    private void confirmPurchasing(HttpServletRequest request) {
+        Connection connection = (Connection) request.getSession().getAttribute("ticketConnection");
+        new TransactionCommit().commitAndClose(connection);
+    }
+
+    private void declinePurchasing(HttpServletRequest request) {
+        Connection connection = (Connection) request.getSession().getAttribute("ticketConnection");
+        new TransactionCommit().rollbackAndClose(connection);
     }
 }

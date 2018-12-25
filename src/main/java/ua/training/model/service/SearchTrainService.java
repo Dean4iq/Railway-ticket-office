@@ -3,32 +3,39 @@ package ua.training.model.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.DaoFactory;
+import ua.training.model.dao.StationDao;
 import ua.training.model.dao.TrainDao;
 import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
 import ua.training.model.entity.Route;
+import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SearchTrainService implements Service {
     private static final Logger LOG = LogManager.getLogger(SearchTrainService.class);
+    private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
+
+    public SearchTrainService() {
+        COMMANDS.putIfAbsent("trainNumberSubmit", this::findTrainById);
+        COMMANDS.putIfAbsent("trainDestinationSubmit", this::findTrainByRoute);
+        COMMANDS.putIfAbsent("allTrainSubmit", this::findAllTrains);
+    }
 
     @Override
     public String execute(HttpServletRequest request) {
-        if (request.getParameter("trainNumberSubmit") != null) {
-            findTrainById(request);
-        } else if (request.getParameter("trainDestinationSubmit") != null) {
-            findTrainByRoute(request);
-        } else if (request.getParameter("allTrainSubmit") != null) {
-            findAllTrains(request);
-
+        Enumeration<String> params = request.getParameterNames();
+        while (params.hasMoreElements()) {
+            String parameter = params.nextElement();
+            if (COMMANDS.containsKey(parameter)) {
+                COMMANDS.get(parameter).call(request);
+            }
         }
+
+        setStationList(request);
         LOG.debug("SearchTrainService execute()");
         return "/searchTrains.jsp";
     }
@@ -107,9 +114,11 @@ public class SearchTrainService implements Service {
         List<Route> trainRoute = train.getRouteList();
 
         for (int i = 0; i < trainRoute.size() - 1; i++) {
-            if (trainRoute.get(i).getStation().getNameEN().equals(from)) {
+            if (trainRoute.get(i).getStation().getNameEN().equals(from)
+                    || trainRoute.get(i).getStation().getNameUA().equals(from)) {
                 for (int j = i + 1; j < trainRoute.size(); j++) {
-                    if (trainRoute.get(j).getStation().getNameEN().equals(to)) {
+                    if (trainRoute.get(j).getStation().getNameEN().equals(to)
+                            || trainRoute.get(j).getStation().getNameUA().equals(to)) {
                         return true;
                     }
                 }
@@ -131,6 +140,17 @@ public class SearchTrainService implements Service {
             LOG.debug("Exception while execute() allTrainSubmit getAllTrain");
             LOG.error("Exception while execute() allTrainSubmit getAllTrain: {}",
                     Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    private void setStationList(HttpServletRequest request) {
+        DaoFactory daoFactory = JDBCDaoFactory.getInstance();
+
+        try(StationDao stationDao = daoFactory.createStationDao()){
+            List<Station> stationList = stationDao.findAll();
+            request.setAttribute("stationList", stationList);
+        } catch (Exception e) {
+            LOG.error(Arrays.toString(e.getStackTrace()));
         }
     }
 }

@@ -14,7 +14,7 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;margin:10px">
             <a class="navbar-brand" href=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -40,6 +40,9 @@
                     </c:forEach>
                 </ul>
                 <ul class="navbar-nav">
+                    <button type="button" class="btn btn-primary" style="margin-right:20px;">
+                        ${localeValues['btn.cart']} <span class="badge badge-light">${ticketsInCart}</span>
+                    </button>
                     <form name="langForm" method="post" align="right">
                         <select name="langSelect" onchange="document.langForm.submit();">
                             <option ${langVariable=="en"?"selected":""} value="en">English</option>
@@ -51,7 +54,16 @@
         </nav>
 
         <h1>${localeValues['head.main']}</h1>
-        <div style="border-bottom:1px solid;"/>
         <h2 align="center">${localeValues['main.news']}</h2>
+        <div style="margin:0 50px;border:1px solid;min-height:70%;background:grey;">
+            <div style="margin: 5px;padding:5px;background:white;">
+                <h1 style="text-decoration:underline">
+                    Ціни на свята знизились!
+                </h1>
+                Ціни на всі поїзди Південно-Західної залізниці було знижено в 0.9 разів!
+                <br>
+                Бажаємо Вам приємних свят!
+            </div>
+        </div>
     </body>
 </html>

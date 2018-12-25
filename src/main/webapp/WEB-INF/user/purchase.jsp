@@ -12,6 +12,26 @@
         <script>
             <jsp:directive.include file="/styles/js/bootstrap.min.js"/>
         </script>
+
+        <script>
+            var countDownDate = new Date(new Date().getTime()+10*60*1000);
+            var x = setInterval(function() {
+              var now = new Date().getTime();
+              var distance = countDownDate - now;
+
+              var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+              var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+              var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+              document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+
+              if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("timer").innerHTML = "EXPIRED";
+              }
+            }, 1000);
+        </script>
     </head>
 
     <body>
@@ -52,6 +72,7 @@
         </nav>
 
         <h1>${localeValues['head.purchase']}</h1>
+        Timer: <p id="timer" style="display:inline;"></p>
         <table border="1">
             <caption>Ticket info</caption>
             <tr align="center">

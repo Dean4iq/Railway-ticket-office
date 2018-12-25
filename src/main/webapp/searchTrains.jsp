@@ -76,8 +76,20 @@
                     <th>${localeValues['text.station.to']}</th>
                 </tr>
                 <tr>
-                    <td><input type="text" placeholder="${localeValues['text.station.from']}" required name="departureStation" oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                    <td><input type="text" placeholder="${localeValues['text.station.to']}" required name="destinationStation" oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
+                    <td><input type="text" list="stations" placeholder="${localeValues['text.station.from']}" required name="departureStation"/></td>
+                    <td><input type="text" list="stations" placeholder="${localeValues['text.station.to']}" required name="destinationStation"/></td>
+                    <datalist id="stations">
+                        <c:if test="${langVariable=='en'}">
+                            <c:forEach items="${stationList}" var="station">
+                                <option>${station.nameEN}</option>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${langVariable=='uk'}">
+                            <c:forEach items="${stationList}" var="station">
+                                <option>${station.nameUA}</option>
+                            </c:forEach>
+                        </c:if>
+                    </datalist>
                 </tr>
             </table>
             <br>

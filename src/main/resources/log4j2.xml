@@ -25,7 +25,7 @@
         </Console>
 
         <RollingFile name="errorLog" fileName="logs/errors/application-error.log"
-                     filePattern="logs/archive/application-error-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-error-%d{yyyy-MM-dd}-%i.log.rar">
             <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
@@ -35,7 +35,7 @@
         </RollingFile>
 
         <RollingFile name="warnLog" fileName="logs/warnings/application-warning.log"
-                     filePattern="logs/archive/application-warning-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-warning-%d{yyyy-MM-dd}-%i.log.rar">
             <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
@@ -45,7 +45,7 @@
         </RollingFile>
 
         <RollingFile name="infoLog" fileName="logs/info/application-info.log"
-                     filePattern="logs/archive/application-info-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-info-%d{yyyy-MM-dd}-%i.log.rar">
             <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
@@ -55,7 +55,7 @@
         </RollingFile>
 
         <RollingFile name="debugLog" fileName="logs/debug/application-debug.log"
-                     filePattern="logs/archive/application-debug-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-debug-%d{yyyy-MM-dd}-%i.log.rar">
             <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
@@ -66,27 +66,6 @@
     </Appenders>
 
     <Loggers>
-        <!--Logger name="ua.training.controller.Servlet" additivity="false">
-            <AppenderRef ref="errorLog"/>
-            <AppenderRef ref="warnLog"/>
-            <AppenderRef ref="infoLog"/>
-            <AppenderRef ref="debugLog"/>
-        </Logger>
-
-        <Logger name="ua.training.controller.filter.LoginFilter" additivity="false">
-            <AppenderRef ref="errorLog"/>
-            <AppenderRef ref="warnLog"/>
-            <AppenderRef ref="infoLog"/>
-            <AppenderRef ref="debugLog"/>
-        </Logger>
-
-        <Logger name="ua.training.controller.filter.LoginService" additivity="false">
-            <AppenderRef ref="errorLog"/>
-            <AppenderRef ref="warnLog"/>
-            <AppenderRef ref="infoLog"/>
-            <AppenderRef ref="debugLog"/>
-        </Logger-->
-
         <Root level="ALL">
             <!--AppenderRef ref="Console"/-->
             <AppenderRef ref="errorLog"/>
