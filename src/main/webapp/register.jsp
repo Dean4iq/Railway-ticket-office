@@ -58,48 +58,83 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="nameEN">Name</label>
-                        <input type="text" class="form-control" id="nameEN" name="name" placeholder required>
+                        <input type="text" class="form-control" id="nameEN" name="name" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
                         </div>
+                        <c:if test="${nameInvalid}">
+                            <div class="alert alert-danger" role="alert">
+                                ${localeValues['text.register.nameRegEx']}
+                            </div>
+                        </c:if>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="lastnameEN">Name</label>
-                        <input type="text" class="form-control" id="lastnameEN" name="lastName" placeholder required>
+                        <input type="text" class="form-control" id="lastnameEN" name="lastName" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
                         </div>
+                        <c:if test="${lastNameInvalid}">
+                            <div class="alert alert-danger" role="alert">
+                                ${localeValues['text.register.lastNameRegEx']}
+                            </div>
+                        </c:if>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="nameUA">Ім &rsquo; я'</label>
-                        <input type="text" class="form-control" id="nameUA" name="nameUA" placeholder required>
+                        <label for="nameUA">Ім`я</label>
+                        <input type="text" class="form-control" id="nameUA" name="nameUA" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
                         </div>
+                        <c:if test="${nameUAInvalid}">
+                            <div class="alert alert-danger" role="alert">
+                                ${localeValues['text.register.nameUARegEx']}
+                            </div>
+                        </c:if>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="lastnameUA">Прізвище</label>
-                        <input type="text" class="form-control" id="lastnameUA" name="lastNameUA" placeholder required>
+                        <input type="text" class="form-control" id="lastnameUA" name="lastNameUA" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
                         </div>
+                        <c:if test="${lastNameUAInvalid}">
+                            <div class="alert alert-danger" role="alert">
+                                ${localeValues['text.register.lastNameUARegEx']}
+                            </div>
+                        </c:if>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="login">Login</label>
-                    <input type="text" class="form-control" id="login" name="login" placeholder required>
+                    <input type="text" class="form-control" id="login" name="login" placeholder value required>
                     <div class="invalid-feedback">
                         ${localeValues['hint.required']}
                     </div>
+                    <c:if test="${notUniqueLogin}">
+                        <div class="alert alert-danger" role="alert">
+                            ${localeValues['text.register.usedLogin']}
+                        </div>
+                    </c:if>
+                    <c:if test="${loginInvalid}">
+                        <div class="alert alert-danger" role="alert">
+                            ${localeValues['text.login.text.register.loginRegEx']}
+                        </div>
+                    </c:if>
                 </div>
                 <div class="mb-3">
                     <label for="pass">${localeValues['text.password']}</label>
-                    <input type="text" class="form-control" id="pass" name="password" placeholder required>
+                    <input type="password" class="form-control" id="pass" name="password" placeholder value required>
                     <div class="invalid-feedback">
                         ${localeValues['hint.required']}
                     </div>
+                    <c:if test="${passwordInvalid}">
+                        <div class="alert alert-danger" role="alert">
+                            ${localeValues['text.register.passwordRegEx']}
+                        </div>
+                    </c:if>
                 </div>
                 <button class="btn btn-primary btn-lg btn-block" type="submit" name="register">${localeValues['btn.register']}</button>
             </form>

@@ -7,10 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public final class LocalizationGetter {
-    private static final Logger log = LogManager.getLogger(LocalizationGetter.class);
+    private static final Logger LOG = LogManager.getLogger(LocalizationGetter.class);
 
     public Map<String, String> getLocalization(String lang) {
-        log.debug("extracting locale Strings");
+        LOG.debug("extracting locale Strings");
 
         Map<String, String> localeKeys = new HashMap<>();
 

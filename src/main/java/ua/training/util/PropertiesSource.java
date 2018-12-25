@@ -2,7 +2,8 @@ package ua.training.util;
 
 public enum PropertiesSource {
     SQL_QUERIES("sql_queries"),
-    LOCALIZATION_STRINGS("messages");
+    LOCALIZATION_STRINGS("messages"),
+    REGEX_STRINGS("regex");
 
     String source;
 

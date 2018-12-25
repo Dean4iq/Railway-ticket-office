@@ -14,7 +14,7 @@
 # OFF< TRACE< DEBUG< INFO< WARN< ERROR< FATAL< ALL
 -->
 
-<Configuration status="ERROR" monitorInterval="30">
+<Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
     </Properties>

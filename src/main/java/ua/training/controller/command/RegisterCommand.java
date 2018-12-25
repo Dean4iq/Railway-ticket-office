@@ -2,11 +2,11 @@ package ua.training.controller.command;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.training.model.dao.DaoFactory;
-import ua.training.model.dao.UserDao;
-import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
+import ua.training.exception.NotUniqueLoginException;
 import ua.training.model.entity.User;
 import ua.training.model.service.RegisterService;
+import ua.training.util.RegExSources;
+import ua.training.util.RegExStringsGetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RegisterCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(RegisterCommand.class);
@@ -35,17 +36,23 @@ public class RegisterCommand implements Command {
                         || elem.getValue().equals(""))) {
 
             User user = setUserData(userAttributes);
-            new RegisterService().createNewUser(user);
 
-            LOG.info(new StringBuilder()
-                    .append("New user '")
-                    .append(user.getLogin())
-                    .append("'"));
+            try {
+                if (RegisterService.checkUniqueLogin(user)
+                        && checkAllFields(userAttributes, request)) {
+                    System.out.println("BLYA");
+                    RegisterService.createNewUser(user);
+                    LOG.info("New user {}", user.getLogin());
 
-            setUserSession(request, user);
+                    setUserSession(request, user);
+                    LOG.debug("New user in RegisterService execute()");
 
-            LOG.debug("New user in RegisterService execute()");
-            return "redirect: /user";
+                    return "redirect: /user";
+                }
+            } catch (NotUniqueLoginException e) {
+                LOG.error("Not unique login", e.getMessage());
+                request.setAttribute("notUniqueLogin", true);
+            }
         }
 
         return "/register.jsp";
@@ -68,5 +75,25 @@ public class RegisterCommand implements Command {
         request.getSession().setAttribute("User", user.getLogin());
         Set<String> loggedUsers = (Set<String>) request.getServletContext().getAttribute("loggedUsers");
         loggedUsers.add(user.getLogin());
+    }
+
+    private boolean checkAllFields(Map<String, String> fields, HttpServletRequest request) {
+        Map<String, String> resultedMap = fields.entrySet().stream().filter(elem -> {
+            String regexKey = Arrays.stream(RegExSources.values()).filter(source ->
+                    elem.getKey().equals(source.getField())).findFirst().get().getLink();
+            if (!checkFieldRegEx(elem.getValue(), regexKey)) {
+                request.setAttribute(elem.getKey() + "Invalid", true);
+                return true;
+            }
+            return false;
+        }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return resultedMap.isEmpty();
+    }
+
+    private boolean checkFieldRegEx(String field, String regexKey) {
+        String regexString = new RegExStringsGetter().getRegExString(regexKey);
+        System.out.println(field + " | " + regexString);
+        return (field.matches(regexString));
     }
 }
