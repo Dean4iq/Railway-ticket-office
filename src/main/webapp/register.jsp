@@ -16,7 +16,7 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;margin:10px">
             <a class="navbar-brand" href=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -36,7 +36,7 @@
                     <c:forEach items="${userbar}" var="keyValue">
                         <li class="nav-item active">
                             <a class="nav-link" href="${keyValue.value}">
-                                ${keyValue.key}
+                                <c:out value="${localeValues[keyValue.key]}"/>
                             </a>
                         </li>
                     </c:forEach>
@@ -52,40 +52,58 @@
             </div>
         </nav>
 
-        <h1>${localeValues['head.register']}</h1>
-        <form method="post">
-            <table>
-                <tr>
-                    <td>Name:</td>
-                    <td><input type="text" placeholder="Name" name="name" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                    <td title="${localeValues['hint.register.name']}">?</td>
-                </tr>
-                <tr>
-                    <td>Last name:</td>
-                    <td><input type="text" placeholder="Last name" name="lastName" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                    <td title="${localeValues['hint.register.lastName']}">?</td>
-                </tr>
-                <tr>
-                    <td>Ім&rsquo;я:</td>
-                    <td><input type="text" placeholder="Ім'я" name="nameUA" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                    <td title="${localeValues['hint.register.nameUA']}">?</td>
-                </tr>
-                <tr>
-                    <td>Прізвище:</td>
-                    <td><input type="text" placeholder="Прізвище" name="lastNameUA" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                    <td title="${localeValues['hint.register.lastNameUA']}">?</td>
-                </tr>
-                <tr>
-                    <td>login:</td>
-                    <td><input type="text" placeholder="login" name="login" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                </tr>
-                <tr>
-                    <td>${localeValues['text.password']}:</td>
-                    <td><input type="password" placeholder="${localeValues['text.password']}" name="password" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')"/></td>
-                </tr>
-            </table>
-            <br>
-            <p align="center"><input type="submit" value="${localeValues['btn.register']}" name="register"/></p>
-        </form>
+        <div class="container" style="margin:20px 100px 0 100px;">
+            <h4 class="mb-3">${localeValues['head.register']}</h4>
+            <form class="needs-validation" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nameEN">Name</label>
+                        <input type="text" class="form-control" id="nameEN" name="name" placeholder required>
+                        <div class="invalid-feedback">
+                            ${localeValues['hint.required']}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastnameEN">Name</label>
+                        <input type="text" class="form-control" id="lastnameEN" name="lastName" placeholder required>
+                        <div class="invalid-feedback">
+                            ${localeValues['hint.required']}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nameUA">Ім &rsquo; я'</label>
+                        <input type="text" class="form-control" id="nameUA" name="nameUA" placeholder required>
+                        <div class="invalid-feedback">
+                            ${localeValues['hint.required']}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastnameUA">Прізвище</label>
+                        <input type="text" class="form-control" id="lastnameUA" name="lastNameUA" placeholder required>
+                        <div class="invalid-feedback">
+                            ${localeValues['hint.required']}
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="login">Login</label>
+                    <input type="text" class="form-control" id="login" name="login" placeholder required>
+                    <div class="invalid-feedback">
+                        ${localeValues['hint.required']}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="pass">${localeValues['text.password']}</label>
+                    <input type="text" class="form-control" id="pass" name="password" placeholder required>
+                    <div class="invalid-feedback">
+                        ${localeValues['hint.required']}
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-lg btn-block" type="submit" name="register">${localeValues['btn.register']}</button>
+            </form>
+            <a href="${pageContext.request.contextPath}/login">${localeValues['text.register.oldie']}</a>
+        </div>
     </body>
 </html>

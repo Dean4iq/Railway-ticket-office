@@ -15,7 +15,7 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;margin:10px">
             <a class="navbar-brand" href=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -35,7 +35,7 @@
                     <c:forEach items="${userbar}" var="keyValue">
                         <li class="nav-item active">
                             <a class="nav-link" href="${keyValue.value}">
-                                ${keyValue.key}
+                                <c:out value="${localeValues[keyValue.key]}"/>
                             </a>
                         </li>
                     </c:forEach>

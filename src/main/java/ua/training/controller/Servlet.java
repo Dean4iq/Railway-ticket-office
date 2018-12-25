@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Servlet extends HttpServlet {
-    private static final Logger log = LogManager.getLogger(Servlet.class);
+    private static final Logger LOG = LogManager.getLogger(Servlet.class);
 
     private final Map<String, Command> commands = new HashMap<>();
 
@@ -37,17 +37,18 @@ public class Servlet extends HttpServlet {
         commands.put("users", new UserListCommand());
         commands.put("wagons", new WagonReviewingCommand());
 
-        log.debug("Servlet initialized");
+        LOG.debug("Servlet initialized");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            log.debug("Servlet doGet");
+            LOG.debug("Servlet doGet");
             processRequest(request, response);
         } catch (Exception ex) {
-            log.error(Arrays.toString(ex.getStackTrace()));
+            LOG.error(Arrays.toString(ex.getStackTrace()));
+            LOG.error("Error by: {}", ex);
             response.sendRedirect(request.getContextPath() + "/exception");
         }
     }
@@ -56,10 +57,11 @@ public class Servlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            log.debug("Servlet doPost");
+            LOG.debug("Servlet doPost");
             processRequest(request, response);
         } catch (Exception ex) {
-            log.error(Arrays.toString(ex.getStackTrace()));
+            LOG.error(Arrays.toString(ex.getStackTrace()));
+            LOG.error("Error by: {}", ex);
             response.sendRedirect(request.getContextPath() + "/exception");
         }
     }
@@ -69,14 +71,14 @@ public class Servlet extends HttpServlet {
         String path = request.getRequestURI();
         path = path.replaceAll(".*/zhd.ua/", "");
         Command command = commands.getOrDefault(path,
-                r -> "/index.jsp");
-        String page = command.execute(request);
+                (r,re) -> "/index.jsp");
+        String page = command.execute(request,response);
 
         if (page.contains("redirect: ")) {
-            log.debug("Servlet redirect to " + page);
+            LOG.debug("Servlet redirect to " + page);
             response.sendRedirect(request.getContextPath() + page.replaceAll("redirect: ", ""));
         } else {
-            log.debug("Servlet forward to " + page);
+            LOG.debug("Servlet forward to " + page);
             request.getRequestDispatcher(page).forward(request, response);
         }
     }

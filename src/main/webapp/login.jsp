@@ -16,7 +16,7 @@
         <form class="form-signin" method="post">
             <h1 class="h3 mb-3 font-weight-normal">${localeValues['head.login']}</h1>
             <label for="inputLogin" class="sr-only">${localeValues['text.login']}</label>
-            <input type="text" id="inputLogin" name="login" class="form-control" placeholder="Login" required autofocus oninvalid="this.setCustomValidity('${localeValues['hint.required']}')">
+            <input type="text" id="inputLogin" name="login" class="form-control" placeholder="Login" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')">
             <label for="inputPassword" class="sr-only">${localeValues['text.password']}</label>
             <input type="password" name="pass" id="inputPassword" class="form-control" placeholder="${localeValues['text.password']}" required oninvalid="this.setCustomValidity('${localeValues['hint.required']}')">
             <c:if test="${invalidLogin}">
@@ -24,12 +24,18 @@
                     ${localeValues['text.login.invalidLogin']}
                 </div>
             </c:if>
-            <c:if test="${usedLogin}">
+            <c:if test="${notExistedLogin}">
                 <div class="alert alert-danger" role="alert">
-                    ${localeValues['text.login.usedLogin']}
+                    ${localeValues['text.login.nonExistedLogin']}
+                </div>
+            </c:if>
+            <c:if test="${loggedLogin}">
+                <div class="alert alert-danger" role="alert">
+                    ${localeValues['text.login.loggedIn']}
                 </div>
             </c:if>
             <button name="login" class="btn btn-lg btn-primary btn-block" type="submit">${localeValues['btn.login']}</button>
+            <a href="${pageContext.request.contextPath}/register">${localeValues['text.login.newbie']}</a>
         </form>
     </body>
 </html>

@@ -9,12 +9,12 @@ public class ContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         Set<String> activeUsers = new HashSet<>();
-        servletContextEvent.getServletContext().setAttribute("activeUsers", activeUsers);
+        servletContextEvent.getServletContext().setAttribute("loggedUsers", activeUsers);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        servletContextEvent.getServletContext().removeAttribute("activeUsers");
+        servletContextEvent.getServletContext().removeAttribute("loggedUsers");
     }
 
 }

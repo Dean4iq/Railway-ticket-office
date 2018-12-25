@@ -34,15 +34,12 @@
                     <c:forEach items="${userbar}" var="keyValue">
                         <li class="nav-item active">
                             <a class="nav-link" href="${keyValue.value}">
-                                ${keyValue.key}
+                                <c:out value="${localeValues[keyValue.key]}"/>
                             </a>
                         </li>
                     </c:forEach>
                 </ul>
                 <ul class="navbar-nav">
-                    <button type="button" class="btn btn-primary" style="margin-right:20px;">
-                        ${localeValues['btn.cart']} <span class="badge badge-light">${ticketsInCart}</span>
-                    </button>
                     <form name="langForm" method="post" align="right">
                         <select name="langSelect" onchange="document.langForm.submit();">
                             <option ${langVariable=="en"?"selected":""} value="en">English</option>

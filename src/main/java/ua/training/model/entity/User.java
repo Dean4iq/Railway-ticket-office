@@ -9,6 +9,14 @@ public class User {
     private String lastNameUA;
     private boolean admin = false;
 
+    public boolean checkLogin() {
+        return (this.login != null) && !(this.login.equals(""));
+    }
+
+    public boolean checkPassword() {
+        return (this.password != null) && !(this.password.equals(""));
+    }
+
     public String getLogin() {
         return login;
     }

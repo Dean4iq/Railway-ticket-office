@@ -9,6 +9,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LocalizationFilter implements Filter {
@@ -44,6 +45,7 @@ public class LocalizationFilter implements Filter {
 
         httpRequest.getSession().setAttribute("mapValues", localizationStrings);
         httpRequest.setAttribute("localeValues", localizationStrings);
+        setMandatoryAttributes(httpRequest);
 
         LOG.debug("doFilter()");
         filterChain.doFilter(request, response);
@@ -51,6 +53,12 @@ public class LocalizationFilter implements Filter {
 
     private Map<String, String> getLocalizationStrings(String locale) {
         return new LocalizationGetter().getLocalization(locale);
+    }
+
+    private void setMandatoryAttributes(HttpServletRequest request) {
+        Map<String, String> menuItems =
+                (LinkedHashMap<String, String>) request.getSession().getAttribute("userbar");
+        request.setAttribute("userbar", menuItems);
     }
 
     @Override
