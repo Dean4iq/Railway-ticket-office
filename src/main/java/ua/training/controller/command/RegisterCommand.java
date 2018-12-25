@@ -93,7 +93,6 @@ public class RegisterCommand implements Command {
 
     private boolean checkFieldRegEx(String field, String regexKey) {
         String regexString = new RegExStringsGetter().getRegExString(regexKey);
-        System.out.println(field + " | " + regexString);
         return (field.matches(regexString));
     }
 }
