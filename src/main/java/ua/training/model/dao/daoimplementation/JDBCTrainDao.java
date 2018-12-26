@@ -111,7 +111,7 @@ public class JDBCTrainDao implements TrainDao {
                 Train train = extractFromResultSet(resultSet);
                 train = makeUniqueTrain(trainMap, train);
 
-                Route route= JDBCRouteDao.extractFromResultSet(resultSet);
+                Route route = JDBCRouteDao.extractFromResultSet(resultSet);
                 Station station = JDBCStationDao.extractFromResultSet(resultSet);
 
                 station = makeUniqueStation(stationMap, station);
@@ -130,6 +130,24 @@ public class JDBCTrainDao implements TrainDao {
 
         log.debug("JDBCTrainDao findAll()");
         return trainList;
+    }
+
+    @Override
+    public List<Train> getEveryTrain() {
+        List<Train> trains = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement(QueryStringGetter.getQuery(QueryType.GET, tableName));
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                Train train = extractFromResultSet(resultSet);
+                trains.add(train);
+            }
+        } catch (SQLException e) {
+            log.error("Error: {}", e);
+        }
+
+        return trains;
     }
 
     @Override

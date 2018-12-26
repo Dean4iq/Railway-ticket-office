@@ -15,58 +15,10 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SearchTicketService implements Service {
+public class SearchTicketService {
     private static final Logger LOG = LogManager.getLogger(SearchTrainService.class);
-    private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
 
-    public SearchTicketService() {
-        COMMANDS.putIfAbsent("ticketSearchSubmit", this::ticketSearchSubmit);
-        COMMANDS.putIfAbsent("sortTrainNumAsc", this::sortByTrainNumber);
-        COMMANDS.putIfAbsent("sortTrainNumDesc", this::sortByTrainNumber);
-    }
-
-    @Override
-    public String execute(HttpServletRequest request) {
-        LOG.debug("SearchTrainService execute()");
-
-        Enumeration<String> params = request.getParameterNames();
-        while (params.hasMoreElements()) {
-            String parameter = params.nextElement();
-            if (COMMANDS.containsKey(parameter)) {
-                COMMANDS.get(parameter).call(request);
-            }
-        }
-
-        if (checkSubmittedTrain(request)) {
-            return "redirect: /wagons";
-        }
-
-        setCalendar(request);
-        setStationList(request);
-
-        return "/WEB-INF/user/searchToPurchase.jsp";
-    }
-
-    private void ticketSearchSubmit(HttpServletRequest request) {
-        List<Train> trainList = findTrainByRoute(request);
-
-        request.setAttribute("trainList", trainList);
-        request.getSession().setAttribute("tripDateSubmitted", request.getParameter("tripStartDate"));
-    }
-
-    private void sortByTrainNumber(HttpServletRequest request) {
-        List<Train> trainList = findTrainByRoute(request);
-
-        if (request.getParameter("sortTrainNumAsc") != null) {
-            trainList.sort(Comparator.comparingInt(Train::getId));
-        } else {
-            trainList.sort(Comparator.comparingInt(Train::getId).reversed());
-        }
-
-        request.setAttribute("trainList", trainList);
-    }
-
-    private List<Train> findTrainByRoute(HttpServletRequest request) {
+    public static List<Train> findTrainByRoute(HttpServletRequest request) {
         String stationFrom = request.getParameter("departureStation");
         String stationTo = request.getParameter("destinationStation");
 
@@ -103,7 +55,7 @@ public class SearchTicketService implements Service {
         return trains;
     }
 
-    private boolean checkTrainRoute(Train train, String from, String to) {
+    private static boolean checkTrainRoute(Train train, String from, String to) {
         List<Route> trainRoute = train.getRouteList();
 
         for (int i = 0; i < trainRoute.size() - 1; i++) {
@@ -121,28 +73,9 @@ public class SearchTicketService implements Service {
         return false;
     }
 
-    private void setCalendar(HttpServletRequest request) {
-        Calendar calendar = Calendar.getInstance();
-        String minCalendarDate = getFormattedDate(calendar);
 
-        calendar.setTimeInMillis(new Date().getTime() + 1_296_000_000);
 
-        String maxCalendarDate = getFormattedDate(calendar);
-
-        request.setAttribute("minCalendarDate", minCalendarDate);
-        request.setAttribute("maxCalendarDate", maxCalendarDate);
-    }
-
-    private String getFormattedDate(Calendar calendar) {
-        return new StringBuilder()
-                .append(calendar.get(Calendar.YEAR))
-                .append('-')
-                .append(setDateZeroCharacter(calendar.get(Calendar.MONTH) + 1))
-                .append('-')
-                .append(setDateZeroCharacter(calendar.get(Calendar.DATE))).toString();
-    }
-
-    private void setTravelDate(HttpServletRequest request, List<Train> trains) {
+    private static void setTravelDate(HttpServletRequest request, List<Train> trains) {
         Calendar calendar = Calendar.getInstance();
         String travelDate = request.getParameter("tripStartDate");
 
@@ -186,26 +119,7 @@ public class SearchTicketService implements Service {
         }
     }
 
-    private String setDateZeroCharacter(int date) {
-        if (date < 10) {
-            return "0" + date;
-        }
-        return Integer.toString(date);
-    }
-
-    private boolean checkSubmittedTrain(HttpServletRequest request) {
-        Enumeration<String> parameters = request.getParameterNames();
-        while (parameters.hasMoreElements()) {
-            String parameter = parameters.nextElement();
-            if (parameter.contains("wagonInTrain")) {
-                request.getSession().setAttribute("searchTicketParameter", parameter);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void setStationList(HttpServletRequest request) {
+    public static void setStationList(HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
         try(StationDao stationDao = daoFactory.createStationDao()){

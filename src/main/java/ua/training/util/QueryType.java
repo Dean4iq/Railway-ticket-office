@@ -6,7 +6,8 @@ public enum QueryType {
     SELECT("select"),
     UPDATE("update"),
     DELETE("delete"),
-    FIND_BY_TRAIN("findByTrain");
+    FIND_BY_TRAIN("findByTrain"),
+    GET("get");
 
     String header;
 

@@ -6,60 +6,12 @@ import ua.training.model.dao.*;
 import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
 import ua.training.model.entity.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class WagonReviewingService implements Service {
+public class WagonReviewingService {
     private static final Logger LOG = LogManager.getLogger(WagonReviewingService.class);
 
-    @Override
-    public String execute(HttpServletRequest request) {
-        LOG.debug("WagonReviewingService execute()");
-
-        if (checkPurchaseSubmit(request)) {
-            return "redirect: /purchase";
-        }
-
-        String tripDate = (String) request.getSession().getAttribute("tripDateSubmitted");
-        String parameter = (String) request.getSession().getAttribute("searchTicketParameter");
-
-        int trainNumber = Integer.parseInt(parameter.substring("wagonInTrain".length()));
-        List<Ticket> ticketList = getTickets(trainNumber);
-        List<Wagon> wagonList = getTrainWagons(trainNumber);
-
-        ticketList = filterTicketsByDate(ticketList, tripDate);
-
-        checkSeatsStatus(wagonList, ticketList);
-
-        request.setAttribute("wagonList", wagonList);
-        request.setAttribute("trainInfo", getTrainInfo(trainNumber));
-
-        return "/WEB-INF/user/wagons.jsp";
-    }
-
-    private boolean checkPurchaseSubmit(HttpServletRequest request) {
-        Enumeration<String> parameterNames = request.getParameterNames();
-
-        while (parameterNames.hasMoreElements()) {
-            String parameter = parameterNames.nextElement();
-            if (parameter.contains("PurchaseSeat")) {
-                request.getSession().setAttribute("seatToPurchase", parameter);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void putDateStringIntoCalendar(Calendar calendar, String date) {
-        String[] dates = date.split("-");
-
-        calendar.set(Calendar.YEAR, Integer.parseInt(dates[0]));
-        calendar.set(Calendar.MONTH, Integer.parseInt(dates[1]) - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dates[2]));
-    }
-
-    private List<Ticket> getTickets(int trainId) {
+    public static List<Ticket> getTickets(int trainId) {
         List<Ticket> tickets = new ArrayList<>();
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
@@ -81,22 +33,7 @@ public class WagonReviewingService implements Service {
         return tickets;
     }
 
-    private List<Ticket> filterTicketsByDate(List<Ticket> tickets, String date) {
-        Calendar calendar = Calendar.getInstance();
-
-        putDateStringIntoCalendar(calendar, date);
-
-        return tickets.stream().filter(ticket -> {
-            Calendar ticketDate = Calendar.getInstance();
-            ticketDate.setTime(ticket.getTravelDate());
-
-            return (calendar.get(Calendar.YEAR) == ticketDate.get(Calendar.YEAR)
-                    && calendar.get(Calendar.MONTH) == ticketDate.get(Calendar.MONTH)
-                    && calendar.get(Calendar.DAY_OF_MONTH) == ticketDate.get(Calendar.DAY_OF_MONTH));
-        }).collect(Collectors.toList());
-    }
-
-    private List<Wagon> getTrainWagons(int trainId) {
+    public static List<Wagon> getTrainWagons(int trainId) {
         List<Wagon> wagonList = new ArrayList<>();
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
@@ -109,19 +46,7 @@ public class WagonReviewingService implements Service {
         return wagonList;
     }
 
-    private void checkSeatsStatus(List<Wagon> wagons, List<Ticket> tickets) {
-        wagons.forEach(wagon ->
-                wagon.getSeatList().forEach(seat ->
-                        tickets.forEach(ticket -> {
-                            if (seat.getId() == ticket.getSeatId()) {
-                                seat.setOccupied(true);
-                            }
-                        })
-                )
-        );
-    }
-
-    private Train getTrainInfo(int trainId) {
+    public static Train getTrainInfo(int trainId) {
         Train train = new Train();
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 

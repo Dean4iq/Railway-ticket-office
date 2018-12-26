@@ -26,11 +26,11 @@ public class Train {
     }
 
     public Route getDepartureRoute() {
-        return routeList.get(0);
+        return (routeList.isEmpty()) ? null : routeList.get(0);
     }
 
     public Route getArrivalRoute() {
-        return routeList.get(routeList.size() - 1);
+        return (routeList.isEmpty()) ? null : routeList.get(routeList.size() - 1);
     }
 
     public List<Route> getStations() {

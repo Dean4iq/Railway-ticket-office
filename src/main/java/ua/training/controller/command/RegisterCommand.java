@@ -40,7 +40,6 @@ public class RegisterCommand implements Command {
             try {
                 if (RegisterService.checkUniqueLogin(user)
                         && checkAllFields(userAttributes, request)) {
-                    System.out.println("BLYA");
                     RegisterService.createNewUser(user);
                     LOG.info("New user {}", user.getLogin());
 

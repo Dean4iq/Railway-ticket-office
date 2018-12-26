@@ -15,32 +15,10 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SearchTrainService implements Service {
+public class SearchTrainService {
     private static final Logger LOG = LogManager.getLogger(SearchTrainService.class);
-    private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
 
-    public SearchTrainService() {
-        COMMANDS.putIfAbsent("trainNumberSubmit", this::findTrainById);
-        COMMANDS.putIfAbsent("trainDestinationSubmit", this::findTrainByRoute);
-        COMMANDS.putIfAbsent("allTrainSubmit", this::findAllTrains);
-    }
-
-    @Override
-    public String execute(HttpServletRequest request) {
-        Enumeration<String> params = request.getParameterNames();
-        while (params.hasMoreElements()) {
-            String parameter = params.nextElement();
-            if (COMMANDS.containsKey(parameter)) {
-                COMMANDS.get(parameter).call(request);
-            }
-        }
-
-        setStationList(request);
-        LOG.debug("SearchTrainService execute()");
-        return "/searchTrains.jsp";
-    }
-
-    private void findTrainById(HttpServletRequest request) {
+    public static void findTrainById(HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
         try (TrainDao trainDao = daoFactory.createTrainDao()) {
@@ -57,7 +35,7 @@ public class SearchTrainService implements Service {
         }
     }
 
-    private void setTravelDate(List<Train> trains) {
+    private static void setTravelDate(List<Train> trains) {
         Calendar calendar = Calendar.getInstance();
 
         for (Train train : trains) {
@@ -87,7 +65,7 @@ public class SearchTrainService implements Service {
         }
     }
 
-    private void findTrainByRoute(HttpServletRequest request) {
+    public static void findTrainByRoute(HttpServletRequest request) {
         String stationFrom = request.getParameter("departureStation");
         String stationTo = request.getParameter("destinationStation");
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
@@ -110,7 +88,7 @@ public class SearchTrainService implements Service {
         }
     }
 
-    private boolean checkTrainRoute(Train train, String from, String to) {
+    private static boolean checkTrainRoute(Train train, String from, String to) {
         List<Route> trainRoute = train.getRouteList();
 
         for (int i = 0; i < trainRoute.size() - 1; i++) {
@@ -128,7 +106,7 @@ public class SearchTrainService implements Service {
         return false;
     }
 
-    private void findAllTrains(HttpServletRequest request) {
+    public static void findAllTrains(HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
         try (TrainDao trainDao = daoFactory.createTrainDao()) {
@@ -143,7 +121,7 @@ public class SearchTrainService implements Service {
         }
     }
 
-    private void setStationList(HttpServletRequest request) {
+    public static void setStationList(HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
         try(StationDao stationDao = daoFactory.createStationDao()){

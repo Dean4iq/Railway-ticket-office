@@ -58,22 +58,36 @@
                 <th>${localeValues['table.column.route']}</th>
                 <th>${localeValues['table.column.departure']}</th>
                 <th>${localeValues['table.column.arrival']}</th>
+                <th>${localeValues['table.column.action']}</th>
             </tr>
-            <c:forEach items="${trainList}" var="train">
-              <tr>
-                <td><c:out value="${train.id}"/></td>
-                <td>
-                    <c:if test="${langVariable=='en'}">
-                        ${train.departureRoute.station.nameEN} - ${train.arrivalRoute.station.nameEN}
-                    </c:if>
-                    <c:if test="${langVariable=='uk'}">
-                        ${train.departureRoute.station.nameUA} - ${train.arrivalRoute.station.nameUA}
-                    </c:if>
-                </td>
-                <td><c:out value="${train.departureRoute.formattedDepartureTime}"/></td>
-                <td><c:out value="${train.arrivalRoute.formattedArrivalTime}"/></td>
-              </tr>
-            </c:forEach>
+            <form method="post">
+                <c:forEach items="${trainList}" var="train">
+                  <tr>
+                    <td><c:out value="${train.id}"/></td>
+                    <td>
+                        <c:if test="${langVariable=='en'}">
+                            <c:out default="null" value="${train.departureRoute.station.nameEN}"/>
+                            -
+                            <c:out default="null" value="${train.arrivalRoute.station.nameEN}"/>
+                        </c:if>
+                        <c:if test="${langVariable=='uk'}">
+                            <c:out default="null" value="${train.departureRoute.station.nameUA}"/>
+                            -
+                            <c:out default="null" value="${train.arrivalRoute.station.nameUA}"/>
+                        </c:if>
+                    </td>
+                    <td>
+                        <c:out default="null" value="${train.departureRoute.formattedDepartureTime}"/>
+                    </td>
+                    <td>
+                        <c:out default="null" value="${train.arrivalRoute.formattedArrivalTime}"/>
+                    </td>
+                    <td>
+                        <input type="submit" name="del${train.id}" value="${localeValues['action.delete']}"/>
+                    </td>
+                  </tr>
+                </c:forEach>
+            </form>
         </table>
     </body>
 </html>

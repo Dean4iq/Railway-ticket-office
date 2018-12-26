@@ -18,79 +18,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PurchaseService implements Service {
+public class PurchaseService {
     private static final Logger LOG = LogManager.getLogger(PurchaseService.class);
 
-    @Override
-    public String execute(HttpServletRequest request) {
-        LOG.debug("PurchaseClass execute()");
-
-        if (request.getParameter("payForTicket") != null) {
-            confirmPurchasing(request);
-            request.getSession().removeAttribute("Ticket");
-            return "redirect: /";
-        }
-        if (request.getParameter("declinePayment") != null) {
-            declinePurchasing(request);
-            request.getSession().removeAttribute("Ticket");
-            return "redirect: /";
-        }
-
-        String seatParameter = (String) request.getSession().getAttribute("seatToPurchase");
-        String tripDate = (String) request.getSession().getAttribute("tripDateSubmitted");
-
-        int seatNumber = Integer.parseInt(seatParameter.substring("PurchaseSeat".length()));
-        Calendar travelDate = getCalendarForDate(tripDate);
-
-        if (request.getSession().getAttribute("Ticket") == null
-                && isSeatFree(seatNumber, travelDate)) {
-            Ticket ticket = new Ticket();
-
-            String parameter = (String) request.getSession().getAttribute("searchTicketParameter");
-            String departureStationName = (String) request.getSession().getAttribute("departureStation");
-            String arrivalStationName = (String) request.getSession().getAttribute("arrivalStation");
-            String login = (String) request.getSession().getAttribute("User");
-
-            int trainNumber = Integer.parseInt(parameter.substring("wagonInTrain".length()));
-            Station departureStation = pickStationByName(departureStationName);
-            Station arrivalStation = pickStationByName(arrivalStationName);
-            Train train = getTrain(trainNumber);
-
-            ticket.setTrain(train);
-            ticket.setDepartureStation(departureStation);
-            ticket.setArrivalStation(arrivalStation);
-
-            ticket.setSeatId(seatNumber);
-            ticket.setTrainId(train.getId());
-            ticket.setCost(train.getCost());
-            ticket.setTravelDate(new Date(travelDate.getTimeInMillis()));
-            ticket.setDepartureStationId(departureStation.getId());
-            ticket.setArrivalStationId(arrivalStation.getId());
-            ticket.setUserLogin(login);
-
-            request.getSession().setAttribute("Ticket", ticket);
-            startPurchaseTransaction(ticket, request);
-        } else if (!isSeatFree(seatNumber, travelDate)) {
-            return "redirect: /exception";
-        }
-
-        request.setAttribute("purchasedTicket", request.getSession().getAttribute("Ticket"));
-
-        return "/WEB-INF/user/purchase.jsp";
-    }
-
-    private Calendar getCalendarForDate(String date) {
-        Calendar calendar = Calendar.getInstance();
-        String[] splittedDate = date.split("-");
-
-        calendar.set(Calendar.YEAR, Integer.parseInt(splittedDate[0]));
-        calendar.set(Calendar.MONTH, Integer.parseInt(splittedDate[1]) - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(splittedDate[2]));
-
-        return calendar;
-    }
-
-    private boolean isSeatFree(int seatId, Calendar travelDate) {
+    public static boolean isSeatFree(int seatId, Calendar travelDate) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
         try (TicketDao ticketDao = daoFactory.createTicketDao()) {
@@ -108,12 +39,12 @@ public class PurchaseService implements Service {
         return false;
     }
 
-    private List<Ticket> getTicketsBySeat(List<Ticket> tickets, int seatId) {
+    private static List<Ticket> getTicketsBySeat(List<Ticket> tickets, int seatId) {
         return tickets.stream().filter(ticket ->
                 ticket.getSeatId() == seatId).collect(Collectors.toList());
     }
 
-    private List<Ticket> getTicketsByDate(List<Ticket> tickets, Calendar travelDate) {
+    private static List<Ticket> getTicketsByDate(List<Ticket> tickets, Calendar travelDate) {
         return tickets.stream().filter(ticket -> {
             Calendar ticketTravelDate = Calendar.getInstance();
             ticketTravelDate.setTimeInMillis(ticket.getTravelDate().getTime());
@@ -123,7 +54,7 @@ public class PurchaseService implements Service {
         }).collect(Collectors.toList());
     }
 
-    private Station pickStationByName(String stationName) {
+    public static Station pickStationByName(String stationName) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
         List<Station> stationList = new ArrayList<>();
         try (StationDao stationDao = daoFactory.createStationDao()) {
@@ -140,7 +71,7 @@ public class PurchaseService implements Service {
                 .findFirst().orElse(null);
     }
 
-    private Train getTrain(int trainId) {
+    public static Train getTrain(int trainId) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
         Train train = new Train();
 
@@ -153,7 +84,7 @@ public class PurchaseService implements Service {
         return train;
     }
 
-    private void startPurchaseTransaction(Ticket ticket, HttpServletRequest request) {
+    public static void startPurchaseTransaction(Ticket ticket, HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
         try {
             TicketDao ticketDao = daoFactory.createTicketDao();
@@ -172,12 +103,12 @@ public class PurchaseService implements Service {
         }
     }
 
-    private void confirmPurchasing(HttpServletRequest request) {
+    public static void confirmPurchasing(HttpServletRequest request) {
         Connection connection = (Connection) request.getSession().getAttribute("ticketConnection");
         new TransactionCommit().commitAndClose(connection);
     }
 
-    private void declinePurchasing(HttpServletRequest request) {
+    public static void declinePurchasing(HttpServletRequest request) {
         Connection connection = (Connection) request.getSession().getAttribute("ticketConnection");
         new TransactionCommit().rollbackAndClose(connection);
     }
