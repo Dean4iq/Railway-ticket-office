@@ -9,6 +9,7 @@ import ua.training.util.RegExStringsGetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,6 +76,7 @@ public class UserListCommand implements Command {
 
             if (checkAllFields(userAttributes, request)) {
                 UserListManagingService.updateUser(user);
+                endUserSession(request, user.getLogin());
             }
         }
     }
@@ -109,5 +111,14 @@ public class UserListCommand implements Command {
     private boolean checkFieldRegEx(String field, String regexKey) {
         String regexString = new RegExStringsGetter().getRegExString(regexKey);
         return (field.matches(regexString));
+    }
+
+    private void endUserSession(HttpServletRequest request, String login) {
+        Set<HttpSession> sessions = (Set<HttpSession>) request
+                .getServletContext().getAttribute("activeSessions");
+
+        sessions.stream().filter(httpSession ->
+                httpSession.getAttribute("User").equals(login))
+                .findFirst().ifPresent(HttpSession::invalidate);
     }
 }

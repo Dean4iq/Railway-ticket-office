@@ -10,10 +10,7 @@ import ua.training.util.RegExStringsGetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RegisterCommand implements Command {
@@ -71,9 +68,16 @@ public class RegisterCommand implements Command {
     }
 
     private void setUserSession(HttpServletRequest request, User user) {
+        Map<String, String> menuItems = new LinkedHashMap<>();
+
         request.getSession().setAttribute("User", user.getLogin());
         Set<String> loggedUsers = (Set<String>) request.getServletContext().getAttribute("loggedUsers");
         loggedUsers.add(user.getLogin());
+
+        menuItems.put("btn.purchaseTicket", "tickets");
+        menuItems.put("btn.logout", "logout");
+
+        request.getSession().setAttribute("userbar", menuItems);
     }
 
     private boolean checkAllFields(Map<String, String> fields, HttpServletRequest request) {
