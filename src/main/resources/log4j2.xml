@@ -25,41 +25,45 @@
         </Console>
 
         <RollingFile name="errorLog" fileName="logs/errors/application-error.log"
-                     filePattern="logs/archive/application-error-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-error-%d{yyyy-MM-dd}-%i.log.zip">
             <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+                <OnStartupTriggeringPolicy />
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
         <RollingFile name="warnLog" fileName="logs/warnings/application-warning.log"
-                     filePattern="logs/archive/application-warning-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-warning-%d{yyyy-MM-dd}-%i.log.zip">
             <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+                <OnStartupTriggeringPolicy />
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
         <RollingFile name="infoLog" fileName="logs/info/application-info.log"
-                     filePattern="logs/archive/application-info-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-info-%d{yyyy-MM-dd}-%i.log.zip">
             <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+                <OnStartupTriggeringPolicy />
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
         <RollingFile name="debugLog" fileName="logs/debug/application-debug.log"
-                     filePattern="logs/archive/application-debug-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="logs/archive/application-debug-%d{yyyy-MM-dd}-%i.log.zip">
             <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+                <OnStartupTriggeringPolicy />
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
