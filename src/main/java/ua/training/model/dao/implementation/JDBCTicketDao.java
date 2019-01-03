@@ -1,4 +1,4 @@
-package ua.training.model.dao.daoimplementation;
+package ua.training.model.dao.implementation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,10 +23,6 @@ public class JDBCTicketDao implements TicketDao {
     public JDBCTicketDao(Connection connection) {
         this.connection = connection;
         LOG.debug("JDBCTicketDao constructor()");
-    }
-
-    private Connection getConnection() {
-        return connection;
     }
 
     public Connection createWithoutCommit(Ticket ticket) {
@@ -105,24 +101,6 @@ public class JDBCTicketDao implements TicketDao {
         return ticketList;
     }
 
-    private Seat makeUniqueSeat(Map<Integer, Seat> seatMap, Seat seat) {
-        seatMap.putIfAbsent(seat.getId(), seat);
-
-        return seatMap.get(seat.getId());
-    }
-
-    private Wagon makeUniqueWagon(Map<Integer, Wagon> wagonMap, Wagon wagon) {
-        wagonMap.putIfAbsent(wagon.getId(), wagon);
-
-        return wagonMap.get(wagon.getId());
-    }
-
-    private Train makeUniqueTrain(Map<Integer, Train> trainMap, Train train) {
-        trainMap.putIfAbsent(train.getId(), train);
-
-        return trainMap.get(train.getId());
-    }
-
     @Override
     public Ticket findById(Integer id) {
         Ticket ticket = new Ticket();
@@ -142,22 +120,6 @@ public class JDBCTicketDao implements TicketDao {
         }
 
         LOG.debug("JDBCTicketDao findById()");
-        return ticket;
-    }
-
-    static Ticket extractFromResultSet(ResultSet resultSet) throws SQLException {
-        Ticket ticket = new Ticket();
-
-        ticket.setId(resultSet.getInt("tick_id"));
-        ticket.setUserLogin(resultSet.getString("User_login"));
-        ticket.setSeatId(resultSet.getInt("Seat_s_id"));
-        ticket.setCost(resultSet.getInt("cost"));
-        ticket.setTravelDate(resultSet.getDate("date"));
-        ticket.setDepartureStationId(resultSet.getInt("departure_st_id"));
-        ticket.setArrivalStationId(resultSet.getInt("arrival_st_id"));
-        ticket.setTrainId(resultSet.getInt("Train_t_id"));
-
-        LOG.debug("JDBCTicketDao extractFromResultSet(): " + ticket.toString());
         return ticket;
     }
 
@@ -236,5 +198,43 @@ public class JDBCTicketDao implements TicketDao {
     public void close() throws Exception {
         LOG.debug("JDBCTicketDao close()");
         connection.close();
+    }
+
+    static Ticket extractFromResultSet(ResultSet resultSet) throws SQLException {
+        Ticket ticket = new Ticket();
+
+        ticket.setId(resultSet.getInt("tick_id"));
+        ticket.setUserLogin(resultSet.getString("User_login"));
+        ticket.setSeatId(resultSet.getInt("Seat_s_id"));
+        ticket.setCost(resultSet.getInt("cost"));
+        ticket.setTravelDate(resultSet.getDate("date"));
+        ticket.setDepartureStationId(resultSet.getInt("departure_st_id"));
+        ticket.setArrivalStationId(resultSet.getInt("arrival_st_id"));
+        ticket.setTrainId(resultSet.getInt("Train_t_id"));
+
+        LOG.debug("JDBCTicketDao extractFromResultSet(): " + ticket.toString());
+        return ticket;
+    }
+
+    private Connection getConnection() {
+        return connection;
+    }
+
+    private Seat makeUniqueSeat(Map<Integer, Seat> seatMap, Seat seat) {
+        seatMap.putIfAbsent(seat.getId(), seat);
+
+        return seatMap.get(seat.getId());
+    }
+
+    private Wagon makeUniqueWagon(Map<Integer, Wagon> wagonMap, Wagon wagon) {
+        wagonMap.putIfAbsent(wagon.getId(), wagon);
+
+        return wagonMap.get(wagon.getId());
+    }
+
+    private Train makeUniqueTrain(Map<Integer, Train> trainMap, Train train) {
+        trainMap.putIfAbsent(train.getId(), train);
+
+        return trainMap.get(train.getId());
     }
 }

@@ -1,6 +1,6 @@
 package ua.training.model.dao;
 
-import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
+import ua.training.model.dao.implementation.JDBCDaoFactory;
 
 public abstract class DaoFactory {
     private static DaoFactory daoFactory;

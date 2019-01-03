@@ -1,4 +1,4 @@
-package ua.training.model.dao.daoimplementation;
+package ua.training.model.dao.implementation;
 
 import ua.training.model.dao.*;
 

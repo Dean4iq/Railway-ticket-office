@@ -1,4 +1,4 @@
-package ua.training.model.dao.daoimplementation;
+package ua.training.model.dao.implementation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +26,10 @@ public class JDBCUserDao implements UserDao {
 
     @Override
     public void create(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("Argument 'user' is null");
+        }
+
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
             preparedStatement.setString(1, user.getLogin());
@@ -41,7 +45,6 @@ public class JDBCUserDao implements UserDao {
         } catch (SQLException e) {
             log.debug("JDBCUserDao create() failed: " + user.toString());
             log.error(Arrays.toString(e.getStackTrace()));
-            throw new RuntimeException(e);
         }
     }
 
