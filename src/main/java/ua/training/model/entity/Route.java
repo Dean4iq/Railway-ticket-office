@@ -2,6 +2,7 @@ package ua.training.model.entity;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 
 public class Route {
     private int trainId;
@@ -43,7 +44,7 @@ public class Route {
         this.departureTime = departureTime;
     }
 
-    public String  getFormattedArrivalTime() {
+    public String getFormattedArrivalTime() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         return timeFormat.format(arrivalTime);
     }
@@ -53,7 +54,7 @@ public class Route {
         return timeFormat.format(departureTime);
     }
 
-    public String  getFormattedArrivalDate() {
+    public String getFormattedArrivalDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return dateFormat.format(arrivalTime);
     }
@@ -69,6 +70,27 @@ public class Route {
 
     public void setStation(Station station) {
         this.station = station;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || object.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Route route = (Route) object;
+        return this.trainId == route.getTrainId()
+                && this.stationId == route.getStationId()
+                && this.arrivalTime.equals(route.getArrivalTime())
+                && this.departureTime.equals(route.getDepartureTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTrainId(), getStationId(), getArrivalTime(), getDepartureTime());
     }
 
     @Override

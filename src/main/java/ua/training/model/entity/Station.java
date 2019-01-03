@@ -1,5 +1,7 @@
 package ua.training.model.entity;
 
+import java.util.Objects;
+
 public class Station {
     private int id;
     private String nameEN;
@@ -27,6 +29,26 @@ public class Station {
 
     public void setNameUA(String nameUA) {
         this.nameUA = nameUA;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || object.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Station station = (Station) object;
+        return getId() == station.getId()
+                && getNameEN().equals(station.getNameEN())
+                && getNameUA().equals(station.getNameUA());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNameEN(), getNameUA());
     }
 
     @Override

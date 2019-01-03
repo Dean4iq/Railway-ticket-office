@@ -2,6 +2,7 @@ package ua.training.model.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Objects;
 
 public class Ticket implements Serializable {
     private static final long serialVersionUID = 7526472295622776147L;
@@ -85,7 +86,7 @@ public class Ticket implements Serializable {
         this.arrivalStationId = arrivalStationId;
     }
 
-    public void setSeat(Seat seat){
+    public void setSeat(Seat seat) {
         this.seat = seat;
     }
 
@@ -123,6 +124,33 @@ public class Ticket implements Serializable {
 
     public void setArrivalStation(Station arrivalStation) {
         this.arrivalStation = arrivalStation;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || object.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Ticket ticket = (Ticket) object;
+        return getId() == ticket.getId()
+                && getSeatId() == ticket.getSeatId()
+                && getTrainId() == ticket.getTrainId()
+                && getCost() == ticket.getCost()
+                && getDepartureStationId() == ticket.getDepartureStationId()
+                && getArrivalStationId() == ticket.getArrivalStationId()
+                && Objects.equals(getUserLogin(), ticket.getUserLogin())
+                && Objects.equals(getTravelDate(), ticket.getTravelDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUserLogin(), getTravelDate(),
+                getSeatId(), getTrainId(), getCost(), getDepartureStationId(),
+                getArrivalStationId());
     }
 
     @Override

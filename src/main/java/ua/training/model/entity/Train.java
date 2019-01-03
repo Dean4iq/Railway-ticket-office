@@ -2,6 +2,7 @@ package ua.training.model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Train {
     private int id;
@@ -43,6 +44,25 @@ public class Train {
 
     public List<Route> getRouteList() {
         return routeList;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || object.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Train train = (Train) object;
+        return getId() == train.getId()
+                && getCost() == train.getCost();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCost());
     }
 
     @Override

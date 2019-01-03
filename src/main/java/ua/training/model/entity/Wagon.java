@@ -2,6 +2,7 @@ package ua.training.model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Wagon {
     private int id;
@@ -51,8 +52,28 @@ public class Wagon {
         this.seatList = seatList;
     }
 
-    public void addSeatToList(Seat seat){
+    public void addSeatToList(Seat seat) {
         seatList.add(seat);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || object.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Wagon wagon = (Wagon) object;
+        return getId() == wagon.getId()
+                && getTrainId() == wagon.getTrainId()
+                && getType().equals(wagon.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getTrainId(), getType());
     }
 
     @Override

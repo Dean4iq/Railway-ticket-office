@@ -1,5 +1,7 @@
 package ua.training.model.entity;
 
+import java.util.Objects;
+
 public class User {
     private String login;
     private String password;
@@ -71,6 +73,31 @@ public class User {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || object.getClass() != this.getClass()) {
+            return false;
+        }
+
+        User user = (User) object;
+        return isAdmin() == user.isAdmin()
+                && getLogin().equals(user.getLogin())
+                && getPassword().equals(user.getPassword())
+                && getName().equals(user.getName())
+                && getLastName().equals(user.getLastName())
+                && getNameUA().equals(user.getNameUA())
+                && getLastNameUA().equals(user.getLastNameUA());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getLogin(), getPassword(), getName(), getLastName(),
+                getNameUA(), getLastNameUA(), isAdmin());
     }
 
     @Override
