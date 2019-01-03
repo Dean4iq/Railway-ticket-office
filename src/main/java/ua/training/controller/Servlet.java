@@ -15,13 +15,20 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+/**
+ * Class {@code Servlet} exists to provide control of user requests
+ *
+ * @author Dean4iq
+ * @version 1.0
+ * @see HttpServlet
+ */
 public class Servlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(Servlet.class);
 
     private final Map<String, Command> commands = new HashMap<>();
 
     @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
+    public void init(ServletConfig servletConfig) {
         servletConfig.getServletContext().setAttribute("loggedUsers", new HashSet<String>());
 
         commands.put("exception", new ExceptionCommand());
@@ -42,7 +49,7 @@ public class Servlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         try {
             LOG.debug("Servlet doGet");
             processRequest(request, response);
@@ -55,7 +62,7 @@ public class Servlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         try {
             LOG.debug("Servlet doPost");
             processRequest(request, response);
@@ -66,10 +73,20 @@ public class Servlet extends HttpServlet {
         }
     }
 
+    /**
+     * Defines which class should process the user's request
+     *   and redirects or forwards to the page
+     *
+     * @param request request to process
+     * @param response response to return
+     * @throws ServletException
+     * @throws IOException
+     */
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
         path = path.replaceAll(".*/zhd.ua/", "");
+
         Command command = commands.getOrDefault(path,
                 (r,re) -> "/index.jsp");
         String page = command.execute(request,response);
