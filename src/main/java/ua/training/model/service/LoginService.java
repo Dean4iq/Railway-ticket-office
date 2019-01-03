@@ -4,13 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.exception.InvalidLoginOrPasswordException;
 import ua.training.exception.NotExistedLoginException;
-import ua.training.exception.NotUniqueLoginException;
 import ua.training.model.dao.DaoFactory;
 import ua.training.model.dao.UserDao;
-import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
+import ua.training.model.dao.implementation.JDBCDaoFactory;
 import ua.training.model.entity.User;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 public class LoginService {

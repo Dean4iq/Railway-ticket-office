@@ -3,7 +3,7 @@ package ua.training.model.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.*;
-import ua.training.model.dao.daoimplementation.JDBCDaoFactory;
+import ua.training.model.dao.implementation.JDBCDaoFactory;
 import ua.training.model.entity.*;
 
 import java.util.*;
