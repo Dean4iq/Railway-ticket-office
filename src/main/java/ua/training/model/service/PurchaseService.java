@@ -107,8 +107,7 @@ public class PurchaseService {
         new TransactionCommit().commitAndClose(connection);
     }
 
-    public static void declinePurchasing(HttpServletRequest request) {
-        Connection connection = (Connection) request.getSession().getAttribute("ticketConnection");
+    public static void declinePurchasing(Connection connection) {
         new TransactionCommit().rollbackAndClose(connection);
     }
 }
