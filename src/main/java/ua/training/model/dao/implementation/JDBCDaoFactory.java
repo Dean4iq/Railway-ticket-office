@@ -52,6 +52,4 @@ public class JDBCDaoFactory extends DaoFactory {
             throw new RuntimeException(e);
         }
     }
-
-
 }
