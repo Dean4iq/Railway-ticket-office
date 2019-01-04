@@ -49,13 +49,13 @@ public class SessionListener implements HttpSessionListener {
                     .getAttribute("User");
             loggedUsers.remove(userName);
 
-            LOG.info("User {} has logged out", userName);
+            LOG.info("User's '{}' session destroyed", userName);
         } else if (httpSessionEvent.getSession().getAttribute("Admin") != null) {
             String userName = (String) httpSessionEvent.getSession()
                     .getAttribute("Admin");
             loggedUsers.remove(userName);
 
-            LOG.info("Admin {} has logged out", userName);
+            LOG.info("Admin's '{}' session destroyed", userName);
         }
 
         LOG.debug("sessionDestroyed()");
