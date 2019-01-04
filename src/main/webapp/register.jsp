@@ -69,7 +69,7 @@
                         </c:if>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="lastnameEN">Name</label>
+                        <label for="lastnameEN">Last name</label>
                         <input type="text" class="form-control" id="lastnameEN" name="lastName" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
