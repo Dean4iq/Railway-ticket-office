@@ -88,7 +88,7 @@ public class Servlet extends HttpServlet {
         path = path.replaceAll(".*/zhd.ua/", "");
 
         Command command = commands.getOrDefault(path,
-                (r,re) -> "/index.jsp");
+                (r,re) -> "redirect: /");
         String page = command.execute(request,response);
 
         if (page.contains("redirect: ")) {
