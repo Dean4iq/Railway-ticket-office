@@ -20,6 +20,7 @@ public class SearchCommand implements Command {
         COMMANDS.putIfAbsent("trainDestinationSubmit", SearchTrainService::findTrainByRoute);
         COMMANDS.putIfAbsent("allTrainSubmit", SearchTrainService::findAllTrains);
     }
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("execute()");
