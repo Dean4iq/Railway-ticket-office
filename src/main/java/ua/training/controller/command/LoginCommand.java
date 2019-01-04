@@ -45,6 +45,7 @@ public class LoginCommand implements Command {
             }
         } catch (NotExistedLoginException e) {
             request.setAttribute("notExistedLogin", true);
+
             LOG.warn("Someone tried to log in using non-existed username: {}", e.getMessage());
         } catch (InvalidLoginOrPasswordException e) {
             request.setAttribute("invalidLogin", true);
@@ -75,6 +76,8 @@ public class LoginCommand implements Command {
 
         request.getSession().setAttribute("Admin", user.getLogin());
         addUserToServletContext(request, user);
+
+        request.getSession().setMaxInactiveInterval(0);
 
         LOG.debug("Admin in LoginService class execute()");
         LOG.info("Admin {} has successfully logged in", user.getLogin());
