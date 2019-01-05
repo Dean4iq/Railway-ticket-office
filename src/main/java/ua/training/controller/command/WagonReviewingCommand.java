@@ -21,6 +21,7 @@ public class WagonReviewingCommand implements Command {
         LOG.debug("WagonReviewingService execute()");
 
         if (checkPurchaseSubmit(request)) {
+            LOG.debug("A ticket exists, redirecting");
             return "redirect: /purchase";
         }
 
@@ -51,7 +52,8 @@ public class WagonReviewingCommand implements Command {
                 return true;
             }
         }
-        return false;
+
+        return (request.getSession().getAttribute("Ticket") != null);
     }
 
     private List<Ticket> filterTicketsByDate(List<Ticket> tickets, String date) {
