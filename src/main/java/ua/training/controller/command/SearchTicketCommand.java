@@ -24,6 +24,11 @@ public class SearchTicketCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("execute()");
 
+        if (checkExistedTickets(request)) {
+            LOG.debug("A ticket exists, redirecting");
+            return "redirect: /purchase";
+        }
+
         Enumeration<String> params = request.getParameterNames();
         while (params.hasMoreElements()) {
             String parameter = params.nextElement();
@@ -40,6 +45,10 @@ public class SearchTicketCommand implements Command {
         SearchTicketService.setStationList(request);
 
         return "/WEB-INF/user/searchToPurchase.jsp";
+    }
+
+    private boolean checkExistedTickets(HttpServletRequest request) {
+        return (request.getSession().getAttribute("Ticket") != null);
     }
 
     private void ticketSearchSubmit(HttpServletRequest request) {
