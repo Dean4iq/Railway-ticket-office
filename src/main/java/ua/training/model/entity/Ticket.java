@@ -16,8 +16,9 @@ public class Ticket implements Serializable {
     private int departureStationId;
     private int arrivalStationId;
 
+    private int wagonId;
+
     private transient Seat seat;
-    private transient Wagon wagon;
     private transient Train train;
     private transient Station departureStation;
     private transient Station arrivalStation;
@@ -102,12 +103,12 @@ public class Ticket implements Serializable {
         this.train = train;
     }
 
-    public Wagon getWagon() {
-        return wagon;
+    public int getWagonId() {
+        return wagonId;
     }
 
-    public void setWagon(Wagon wagon) {
-        this.wagon = wagon;
+    public void setWagonId(int wagonId) {
+        this.wagonId = wagonId;
     }
 
     public Station getDepartureStation() {

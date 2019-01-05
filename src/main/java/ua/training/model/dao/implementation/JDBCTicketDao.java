@@ -89,8 +89,10 @@ public class JDBCTicketDao implements TicketDao {
                 Wagon wagon = JDBCWagonDao.extractFromResultSet(resultSet);
                 Train train = JDBCTrainDao.extractFromResultSet(resultSet);
 
+                wagon = makeUniqueWagon(wagonMap, wagon);
+
                 ticket.setSeat(makeUniqueSeat(seatMap, seat));
-                ticket.setWagon(makeUniqueWagon(wagonMap, wagon));
+                ticket.setWagonId(wagon.getId());
                 ticket.setTrain(makeUniqueTrain(trainMap, train));
 
                 ticketList.add(ticket);
@@ -142,8 +144,10 @@ public class JDBCTicketDao implements TicketDao {
                 Wagon wagon = JDBCWagonDao.extractFromResultSet(resultSet);
                 Train train = JDBCTrainDao.extractFromResultSet(resultSet);
 
+                wagon = makeUniqueWagon(wagonMap, wagon);
+
                 ticket.setSeat(makeUniqueSeat(seatMap, seat));
-                ticket.setWagon(makeUniqueWagon(wagonMap, wagon));
+                ticket.setWagonId(wagon.getId());
                 ticket.setTrain(makeUniqueTrain(trainMap, train));
 
                 ticketList.add(ticket);
