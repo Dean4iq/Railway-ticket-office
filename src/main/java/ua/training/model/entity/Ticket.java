@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 public class Ticket implements Serializable {
-    private static final long serialVersionUID = 7526472295622776147L;
+    private static final long serialVersionUID = 4710159281959669434L;
 
     private int id;
     private String userLogin;
