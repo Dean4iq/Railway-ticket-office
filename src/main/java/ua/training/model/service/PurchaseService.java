@@ -86,7 +86,7 @@ public class PurchaseService {
         Wagon wagon = new Wagon();
 
         try (SeatDao seatDao = daoFactory.createSeatDao();
-                WagonDao wagonDao = daoFactory.createWagonDao()) {
+             WagonDao wagonDao = daoFactory.createWagonDao()) {
             Seat seat = seatDao.findById(seatId);
             wagon = wagonDao.findById(seat.getWagonId());
         } catch (Exception e) {
@@ -98,8 +98,7 @@ public class PurchaseService {
 
     public static void startPurchaseTransaction(Ticket ticket, HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
-        try {
-            TicketDao ticketDao = daoFactory.createTicketDao();
+        try (TicketDao ticketDao = daoFactory.createTicketDao()) {
             Connection connection = ticketDao.createWithoutCommit(ticket);
             request.getSession().setAttribute("ticketConnection", connection);
 
