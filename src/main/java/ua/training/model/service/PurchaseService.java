@@ -5,9 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import ua.training.model.dao.*;
 import ua.training.model.dao.implementation.JDBCDaoFactory;
-import ua.training.model.entity.Station;
-import ua.training.model.entity.Ticket;
-import ua.training.model.entity.Train;
+import ua.training.model.entity.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -83,20 +81,39 @@ public class PurchaseService {
         return train;
     }
 
+    public static Wagon getWagonBySeatId(int seatId) {
+        DaoFactory daoFactory = JDBCDaoFactory.getInstance();
+        Wagon wagon = new Wagon();
+
+        try (SeatDao seatDao = daoFactory.createSeatDao();
+                WagonDao wagonDao = daoFactory.createWagonDao()) {
+            Seat seat = seatDao.findById(seatId);
+            wagon = wagonDao.findById(seat.getWagonId());
+        } catch (Exception e) {
+            LOG.error(Arrays.toString(e.getStackTrace()));
+        }
+
+        return wagon;
+    }
+
     public static void startPurchaseTransaction(Ticket ticket, HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
         try {
             TicketDao ticketDao = daoFactory.createTicketDao();
             Connection connection = ticketDao.createWithoutCommit(ticket);
             request.getSession().setAttribute("ticketConnection", connection);
+
             new Thread(() -> {
                 try {
-                    Thread.sleep(300000);
+                    Thread.sleep(600_000); //Wait 10 minutes for purchasing
                     new TransactionCommit().rollbackAndClose(connection);
+
+                    request.getSession().removeAttribute("Ticket");
                 } catch (InterruptedException e) {
                     LOG.error("Interrupted thread: {}", Arrays.toString(e.getStackTrace()));
                 }
             }).start();
+
         } catch (Exception e) {
             LOG.error(Arrays.toString(e.getStackTrace()));
         }
