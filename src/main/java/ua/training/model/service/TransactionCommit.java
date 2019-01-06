@@ -1,4 +1,4 @@
-package ua.training.model.dao;
+package ua.training.model.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,10 +6,10 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class TransactionCommit {
+class TransactionCommit {
     private static final Logger LOG = LogManager.getLogger(TransactionCommit.class);
 
-    public void commitAndClose(Connection connection) {
+    void commitAndClose(Connection connection) {
         try {
             if (!connection.isClosed()) {
                 connection.commit();
@@ -21,7 +21,7 @@ public class TransactionCommit {
         }
     }
 
-    public void rollbackAndClose(Connection connection) {
+    void rollbackAndClose(Connection connection) {
         try {
             if (!connection.isClosed()) {
                 connection.rollback();
