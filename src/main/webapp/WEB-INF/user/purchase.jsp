@@ -111,7 +111,7 @@
             </tr>
             <tr align="center">
                 <td>${purchasedTicket.seatId}</td>
-                <td>${purchasedTicket.wagon.id}</td>
+                <td>${purchasedTicket.wagonId}</td>
                 <td>${purchasedTicket.departureStation.nameUA}</td>
                 <td>${purchasedTicket.arrivalStation.nameUA}</td>
                 <td>${purchasedTicket.travelDate}</td>
