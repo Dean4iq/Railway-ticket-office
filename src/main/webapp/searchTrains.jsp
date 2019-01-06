@@ -107,7 +107,7 @@
 
         <c:if test="${not empty trainList}">
             <h3 align="center">${localeValues['head.trainList']}</h3>
-            <table align="center" border="1">
+            <table align="center" style="text-align:center;" border="1">
                 <tr>
                     <th>${localeValues['table.column.trainNumber']}</th>
                     <th>${localeValues['table.column.route']}</th>
@@ -125,15 +125,41 @@
                                 ${train.departureRoute.station.nameUA} - ${train.arrivalRoute.station.nameUA}
                             </c:if>
                         </td>
-                        <td>
-                            ${localeValues['table.column.departure']}:${train.departureRoute.formattedDepartureDate}
-                            <br>
-                            ${localeValues['table.column.arrival']}:${train.arrivalRoute.formattedArrivalDate}
+                        <td align="left">
+                            <div>
+                                <div style="display: inline;">
+                                    ${localeValues['table.column.departure']}:
+                                </div>
+                                <div style="float: right; margin-left: 15px;">
+                                    ${train.departureRoute.formattedDepartureDate}
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: inline;">
+                                    ${localeValues['table.column.arrival']}:
+                                </div>
+                                <div style="float: right; margin-left: 15px;">
+                                    ${train.arrivalRoute.formattedArrivalDate}
+                                </div>
+                            </div>
                         </td>
-                        <td>
-                            ${localeValues['table.column.departure']}: ${train.departureRoute.formattedDepartureTime}
-                            <br>
-                            ${localeValues['table.column.arrival']}: ${train.arrivalRoute.formattedArrivalTime}
+                        <td align="left">
+                            <div>
+                                <div style="display: inline;">
+                                    ${localeValues['table.column.departure']}:
+                                </div>
+                                <div style="float: right; margin-left: 15px;">
+                                    ${train.departureRoute.formattedDepartureTime}
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: inline;">
+                                    ${localeValues['table.column.arrival']}:
+                                </div>
+                                <div style="float: right; margin-left: 15px;">
+                                    ${train.arrivalRoute.formattedArrivalTime}
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </c:forEach>
