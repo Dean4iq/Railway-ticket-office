@@ -11,7 +11,7 @@ public final class RegExStringsGetter {
     private static final ResourceBundle RESOURCE_BUNDLE =
             ResourceBundle.getBundle(PropertiesSource.REGEX_STRINGS.source);
 
-    public String getRegExString(String key){
+    public String getRegExString(String key) {
         LOG.debug("extracting regEx Strings");
 
         return formatString(RESOURCE_BUNDLE.getString(key));
