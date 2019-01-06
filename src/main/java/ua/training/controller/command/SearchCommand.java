@@ -10,6 +10,7 @@ import ua.training.model.service.SearchTrainService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,14 +42,15 @@ public class SearchCommand implements Command {
     }
 
     private void findByTrainId(HttpServletRequest request) {
-        LOG.debug("Search trains by id");
-
         int trainNumber = Integer.parseInt(request.getParameter("trainNumber"));
 
         List<Train> trains = SearchTrainService.findTrainById(trainNumber);
 
         setTravelDate(trains);
+        setForRouteLocaleTime(trains, request);
+
         request.setAttribute("trainList", trains);
+        LOG.debug("Search trains by id");
     }
 
     private void findTrainByRoute(HttpServletRequest request) {
@@ -62,6 +64,7 @@ public class SearchCommand implements Command {
                 .collect(Collectors.toList());
 
         setTravelDate(trains);
+        setForRouteLocaleTime(trains, request);
 
         request.setAttribute("trainList", trains);
         LOG.debug("Search trains by route");
@@ -71,8 +74,9 @@ public class SearchCommand implements Command {
         List<Train> trains = SearchTrainService.findAllTrains();
 
         setTravelDate(trains);
-        request.setAttribute("trainList", trains);
+        setForRouteLocaleTime(trains, request);
 
+        request.setAttribute("trainList", trains);
         LOG.debug("Search all trains");
     }
 
@@ -126,5 +130,33 @@ public class SearchCommand implements Command {
         }
 
         LOG.debug("Set travel date");
+    }
+
+    private void setForRouteLocaleTime(List<Train> trains, HttpServletRequest request) {
+        String lang = (String) request.getSession().getAttribute("language");
+        Locale locale = new Locale(lang);
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, locale);
+        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+
+        trains.forEach(train ->
+                train.getRouteList().forEach(route -> {
+                    route.setLocaleArrivalTime(setFormattedDateTime(route.getArrivalTime(),
+                            dateFormat, timeFormat));
+                    route.setLocaleDepartureTime(setFormattedDateTime(route.getDepartureTime(),
+                            dateFormat, timeFormat));
+                })
+        );
+    }
+
+    private String setFormattedDateTime(Timestamp dateTime, DateFormat dateFormat,
+                                        DateFormat timeFormat) {
+        Date date = new Date(dateTime.getTime());
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(dateFormat.format(date))
+                .append("*")
+                .append(timeFormat.format(date));
+
+        return stringBuilder.toString();
     }
 }

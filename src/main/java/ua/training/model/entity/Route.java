@@ -11,6 +11,8 @@ public class Route {
     private Timestamp departureTime;
 
     private Station station;
+    private String localeArrivalTime;
+    private String localeDepartureTime;
 
     public int getTrainId() {
         return trainId;
@@ -44,24 +46,32 @@ public class Route {
         this.departureTime = departureTime;
     }
 
+    public void setLocaleArrivalTime(String localeArrivalTime) {
+        this.localeArrivalTime = localeArrivalTime;
+    }
+
+    public void setLocaleDepartureTime(String localeDepartureTime) {
+        this.localeDepartureTime = localeDepartureTime;
+    }
+
     public String getFormattedArrivalTime() {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        return timeFormat.format(arrivalTime);
+        String[] dateTime = localeArrivalTime.split("[*]");
+        return dateTime[1];
     }
 
     public String getFormattedDepartureTime() {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        return timeFormat.format(departureTime);
+        String[] dateTime = localeDepartureTime.split("[*]");
+        return dateTime[1];
     }
 
     public String getFormattedArrivalDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        return dateFormat.format(arrivalTime);
+        String[] dateTime = localeArrivalTime.split("[*]");
+        return dateTime[0];
     }
 
     public String getFormattedDepartureDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        return dateFormat.format(departureTime);
+        String[] dateTime = localeDepartureTime.split("[*]");
+        return dateTime[0];
     }
 
     public Station getStation() {
