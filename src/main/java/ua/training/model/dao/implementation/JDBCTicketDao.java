@@ -18,6 +18,8 @@ public class JDBCTicketDao implements TicketDao {
     private static final Logger LOG = LogManager.getLogger(JDBCTicketDao.class);
     private static final TableName tableName = TableName.TICKET;
 
+    private boolean permissionToClose = true;
+
     private Connection connection;
 
     public JDBCTicketDao(Connection connection) {
@@ -25,11 +27,13 @@ public class JDBCTicketDao implements TicketDao {
         LOG.debug("JDBCTicketDao constructor()");
     }
 
-    public Connection createWithoutCommit(Ticket ticket) {
+    public Connection createWithoutCommit(Ticket ticket){
+        LOG.debug("Creating ticket without commit");
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+
             preparedStatement.setString(1, ticket.getUserLogin());
             preparedStatement.setInt(2, ticket.getSeatId());
             preparedStatement.setInt(3, ticket.getCost());
@@ -38,7 +42,10 @@ public class JDBCTicketDao implements TicketDao {
             preparedStatement.setInt(6, ticket.getArrivalStationId());
             preparedStatement.setInt(7, ticket.getTrainId());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
+
+            permissionToClose = false;
+
             return getConnection();
         } catch (SQLException e) {
             LOG.debug("JDBCTicketDao create() failed: " + ticket.toString());
@@ -201,7 +208,10 @@ public class JDBCTicketDao implements TicketDao {
     @Override
     public void close() throws Exception {
         LOG.debug("JDBCTicketDao close()");
-        connection.close();
+
+        if (permissionToClose) {
+            connection.close();
+        }
     }
 
     static Ticket extractFromResultSet(ResultSet resultSet) throws SQLException {
