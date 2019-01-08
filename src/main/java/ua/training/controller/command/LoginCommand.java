@@ -7,6 +7,8 @@ import ua.training.exception.LoggedInLoginException;
 import ua.training.exception.NotExistedLoginException;
 import ua.training.model.entity.User;
 import ua.training.model.service.LoginService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,7 @@ import java.util.Set;
 
 public class LoginCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(LoginCommand.class);
+    private AttributeResourceManager attributeManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -24,8 +27,8 @@ public class LoginCommand implements Command {
 
         User user = new User();
 
-        String username = request.getParameter("login");
-        String password = request.getParameter("pass");
+        String username = request.getParameter(attributeManager.getString(AttributeSources.LOGIN_PARAM));
+        String password = request.getParameter(attributeManager.getString(AttributeSources.PASSWORD_PARAM));
 
         user.setLogin(username);
         user.setPassword(password);
@@ -44,14 +47,17 @@ public class LoginCommand implements Command {
                 }
             }
         } catch (NotExistedLoginException e) {
-            request.setAttribute("notExistedLogin", true);
+            request.setAttribute(attributeManager.getString(AttributeSources.LOGIN_NOT_EXISTED_ATTR),
+                    true);
 
             LOG.warn("Someone tried to log in using non-existed username: {}", e.getMessage());
         } catch (InvalidLoginOrPasswordException e) {
-            request.setAttribute("invalidLogin", true);
+            request.setAttribute(attributeManager.getString(AttributeSources.INVALID_LOGIN_ATTR),
+                    true);
             LOG.warn("Someone tried to log in: {}", e.getMessage());
         } catch (LoggedInLoginException e) {
-            request.setAttribute("loggedLogin", true);
+            request.setAttribute(attributeManager.getString(AttributeSources.ALREADY_LOGGED_IN_ATTR),
+                    true);
             LOG.warn("Someone tried to log in again: {}", e.getMessage());
         } catch (Exception e) {
             LOG.error(Arrays.toString(e.getStackTrace()));
@@ -63,7 +69,8 @@ public class LoginCommand implements Command {
 
     private boolean checkUserSession(HttpServletRequest request, User user)
             throws LoggedInLoginException {
-        Set<String> users = (Set<String>) request.getServletContext().getAttribute("loggedUsers");
+        Set<String> users = (Set<String>) request.getServletContext()
+                .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT_ATTR));
         if (users.stream().noneMatch(loggedUser ->
                 user.getLogin().equals(loggedUser))) {
             return true;
@@ -74,7 +81,8 @@ public class LoginCommand implements Command {
     private void processAdmin(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
 
-        request.getSession().setAttribute("Admin", user.getLogin());
+        request.getSession().setAttribute(attributeManager.getString(AttributeSources.ROLE_ADMIN_ATTR),
+                user.getLogin());
         addUserToServletContext(request, user);
 
         request.getSession().setMaxInactiveInterval(0);
@@ -85,13 +93,15 @@ public class LoginCommand implements Command {
         menuItems.put("btn.trainList", "trains");
         menuItems.put("btn.userList", "users");
         menuItems.put("btn.logout", "logout");
-        request.getSession().setAttribute("userbar", menuItems);
+        request.getSession().setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
+                menuItems);
     }
 
     private void processUser(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
 
-        request.getSession(true).setAttribute("User", user.getLogin());
+        request.getSession(true).setAttribute(attributeManager.getString(AttributeSources.ROLE_USER_ATTR),
+                user.getLogin());
         addUserToServletContext(request, user);
 
         LOG.debug("User in LoginService class execute()");
@@ -100,11 +110,13 @@ public class LoginCommand implements Command {
         menuItems.put("btn.purchaseTicket", "tickets");
         menuItems.put("btn.logout", "logout");
 
-        request.getSession().setAttribute("userbar", menuItems);
+        request.getSession().setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
+                menuItems);
     }
 
     private void addUserToServletContext(HttpServletRequest request, User user) {
-        Set<String> users = (Set<String>) request.getServletContext().getAttribute("loggedUsers");
+        Set<String> users = (Set<String>) request.getServletContext()
+                .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT_ATTR));
         users.add(user.getLogin());
     }
 }
