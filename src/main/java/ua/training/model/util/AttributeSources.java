@@ -3,12 +3,18 @@ package ua.training.model.util;
 public final class AttributeSources {
     public static final String LOGIN_PARAM = "parameter.login.login";
     public static final String PASSWORD_PARAM = "parameter.login.password";
+    public static final String PASSWORD_REG_PARAM = "parameter.register.password";
+    public static final String NAME_PARAM = "parameter.register.name";
+    public static final String NAME_UA_PARAM = "parameter.register.nameUA";
+    public static final String LASTNAME_PARAM = "parameter.register.lastName";
+    public static final String LASTNAME_UA_PARAM = "parameter.register.lastNameUA";
     public static final String ACCEPT_PURCHASING_PARAM = "parameter.purchase.acceptPurchasing";
     public static final String DECLINE_PURCHASING_PARAM = "parameter.purchase.declinePurchasing";
     public static final String PURCHASE_SEAT_PARAM = "parameter.purchase.purchaseSeat";
     public static final String LOGIN_NOT_EXISTED = "attribute.login.loginNotExisted";
     public static final String INVALID_LOGIN = "attribute.login.invalidLogin";
     public static final String ALREADY_LOGGED_IN = "attribute.login.alreadyLoggedIn";
+    public static final String NOT_UNIQUE_LOGIN = "attribute.register.notUniqueLogin";
     public static final String ROLE_ADMIN = "attribute.role.admin";
     public static final String ROLE_USER = "attribute.role.user";
     public static final String USERBAR = "attribute.userbar";

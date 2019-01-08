@@ -5,32 +5,43 @@ import org.apache.logging.log4j.Logger;
 import ua.training.exception.NotUniqueLoginException;
 import ua.training.model.entity.User;
 import ua.training.model.service.RegisterService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 import ua.training.model.util.RegExSources;
 import ua.training.model.util.RegExStringsGetter;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class RegisterCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(RegisterCommand.class);
+    AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("execute()");
         Map<String, String> userAttributes = new HashMap<>();
 
-        userAttributes.put("name", request.getParameter("name"));
-        userAttributes.put("lastName", request.getParameter("lastName"));
-        userAttributes.put("nameUA", request.getParameter("nameUA"));
-        userAttributes.put("lastNameUA", request.getParameter("lastNameUA"));
-        userAttributes.put("login", request.getParameter("login"));
-        userAttributes.put("password", request.getParameter("password"));
+        userAttributes.put(attrManager.getString(AttributeSources.NAME_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.NAME_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.LASTNAME_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.LASTNAME_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.NAME_UA_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.NAME_UA_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.LASTNAME_UA_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.LASTNAME_UA_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.LOGIN_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.LOGIN_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.PASSWORD_REG_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.PASSWORD_REG_PARAM)));
 
         if (userAttributes.entrySet().stream()
                 .noneMatch(elem -> elem.getValue() == null
-                        || elem.getValue().equals(""))) {
+                        || elem.getValue().isEmpty())) {
 
             User user = setUserData(userAttributes);
 
@@ -47,7 +58,7 @@ public class RegisterCommand implements Command {
                 }
             } catch (NotUniqueLoginException e) {
                 LOG.error("Not unique login", e.getMessage());
-                request.setAttribute("notUniqueLogin", true);
+                request.setAttribute(attrManager.getString(AttributeSources.NOT_UNIQUE_LOGIN), true);
             }
         }
 
@@ -57,27 +68,30 @@ public class RegisterCommand implements Command {
     private User setUserData(Map<String, String> userDataMap) {
         User user = new User();
 
-        user.setName(userDataMap.get("name"));
-        user.setLastName(userDataMap.get("lastName"));
-        user.setNameUA(userDataMap.get("nameUA"));
-        user.setLastNameUA(userDataMap.get("lastNameUA"));
-        user.setLogin(userDataMap.get("login"));
-        user.setPassword(userDataMap.get("password"));
+        user.setName(userDataMap.get(attrManager.getString(AttributeSources.NAME_PARAM)));
+        user.setLastName(userDataMap.get(attrManager.getString(AttributeSources.LASTNAME_PARAM)));
+        user.setNameUA(userDataMap.get(attrManager.getString(AttributeSources.NAME_UA_PARAM)));
+        user.setLastNameUA(userDataMap.get(attrManager.getString(AttributeSources.LASTNAME_UA_PARAM)));
+        user.setLogin(userDataMap.get(attrManager.getString(AttributeSources.LOGIN_PARAM)));
+        user.setPassword(userDataMap.get(attrManager.getString(AttributeSources.PASSWORD_REG_PARAM)));
 
         return user;
     }
 
     private void setUserSession(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
+        HttpSession session = request.getSession();
+        ServletContext context = request.getServletContext();
 
-        request.getSession().setAttribute("User", user.getLogin());
-        Set<String> loggedUsers = (Set<String>) request.getServletContext().getAttribute("loggedUsers");
+        session.setAttribute(attrManager.getString(AttributeSources.ROLE_USER), user.getLogin());
+        Set<String> loggedUsers = (Set<String>) context.getAttribute(attrManager
+                .getString(AttributeSources.LOGGED_USERS_CONTEXT));
         loggedUsers.add(user.getLogin());
 
         menuItems.put("btn.purchaseTicket", "tickets");
         menuItems.put("btn.logout", "logout");
 
-        request.getSession().setAttribute("userbar", menuItems);
+        request.getSession().setAttribute(attrManager.getString(AttributeSources.USERBAR), menuItems);
     }
 
     private boolean checkAllFields(Map<String, String> fields, HttpServletRequest request) {
