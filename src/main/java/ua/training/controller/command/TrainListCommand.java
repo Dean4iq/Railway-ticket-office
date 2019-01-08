@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.entity.Train;
 import ua.training.model.service.TrainListManagingService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class TrainListCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(TrainListCommand.class);
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -21,7 +24,7 @@ public class TrainListCommand implements Command {
         checkActions(request);
 
         List<Train> trains = getTrains();
-        request.setAttribute("trainList", trains);
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
 
         return "/WEB-INF/admin/trainList.jsp";
     }
@@ -30,15 +33,18 @@ public class TrainListCommand implements Command {
         Enumeration<String> parameters = request.getParameterNames();
         while (parameters.hasMoreElements()) {
             String parameter = parameters.nextElement();
-            if (parameter.contains("del")) {
+            if (parameter.contains(attrManager.getString(AttributeSources.DELETE_TRAIN_PARAM))) {
                 processActions(parameter);
+
+                break;
             }
         }
     }
 
     private void processActions(String parameter) {
-        if (parameter.contains("del")) {
-            int trainId = Integer.parseInt(parameter.substring("del".length()));
+        if (parameter.contains(attrManager.getString(AttributeSources.DELETE_TRAIN_PARAM))) {
+            int trainId = Integer.parseInt(parameter
+                    .substring(attrManager.getString(AttributeSources.DELETE_TRAIN_PARAM).length()));
             TrainListManagingService.deleteTrain(trainId);
         }
     }

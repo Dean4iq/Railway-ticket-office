@@ -19,6 +19,7 @@ public final class AttributeSources {
     public static final String TICKET_SORT_BY_TRAIN_DEPART_PARAM_ASC = "parameter.ticket.sortByTrainDepartTimeASC";
     public static final String TICKET_SORT_BY_TRAIN_DEPART_PARAM_DESC = "parameter.ticket.sortByTrainDepartTimeDESC";
     public static final String TRIP_START_DATE_PARAM = "parameter.search.tripStartDate";
+    public static final String DELETE_TRAIN_PARAM = "parameter.train.delete";
     public static final String LOGIN_NOT_EXISTED = "attribute.login.loginNotExisted";
     public static final String INVALID_LOGIN = "attribute.login.invalidLogin";
     public static final String ALREADY_LOGGED_IN = "attribute.login.alreadyLoggedIn";
