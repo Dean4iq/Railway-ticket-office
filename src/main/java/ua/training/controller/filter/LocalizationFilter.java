@@ -2,8 +2,8 @@ package ua.training.controller.filter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.training.util.LanguageISO;
-import ua.training.util.LocalizationGetter;
+import ua.training.model.util.LanguageISO;
+import ua.training.model.util.LocalizationGetter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

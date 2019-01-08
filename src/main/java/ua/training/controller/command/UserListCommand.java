@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.entity.User;
 import ua.training.model.service.UserListManagingService;
-import ua.training.util.RegExSources;
-import ua.training.util.RegExStringsGetter;
+import ua.training.model.util.RegExSources;
+import ua.training.model.util.RegExStringsGetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

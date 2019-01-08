@@ -5,8 +5,8 @@ import org.apache.logging.log4j.Logger;
 import ua.training.exception.NotUniqueLoginException;
 import ua.training.model.entity.User;
 import ua.training.model.service.RegisterService;
-import ua.training.util.RegExSources;
-import ua.training.util.RegExStringsGetter;
+import ua.training.model.util.RegExSources;
+import ua.training.model.util.RegExStringsGetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

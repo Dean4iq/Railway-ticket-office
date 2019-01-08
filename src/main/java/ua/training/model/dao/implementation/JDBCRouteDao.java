@@ -6,9 +6,9 @@ import ua.training.model.dao.RouteDao;
 import ua.training.model.entity.Route;
 import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
-import ua.training.util.QueryStringGetter;
-import ua.training.util.QueryType;
-import ua.training.util.TableName;
+import ua.training.model.util.QueryStringGetter;
+import ua.training.model.util.QueryType;
+import ua.training.model.util.TableName;
 
 import java.sql.*;
 import java.util.*;

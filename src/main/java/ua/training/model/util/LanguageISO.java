@@ -1,4 +1,4 @@
-package ua.training.util;
+package ua.training.model.util;
 
 public enum LanguageISO {
     ENGLISH("en"),

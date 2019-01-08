@@ -7,7 +7,7 @@
 	<uri>/WEB-INF/helloworldTag</uri>
 	<tag>
 		<name>pagination</name>
-		<tag-class>ua.training.util.PaginationJstl</tag-class>
+		<tag-class>ua.training.model.util.PaginationJstl</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>pageNumber</name>

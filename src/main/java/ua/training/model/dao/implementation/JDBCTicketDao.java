@@ -4,9 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.TicketDao;
 import ua.training.model.entity.*;
-import ua.training.util.QueryStringGetter;
-import ua.training.util.QueryType;
-import ua.training.util.TableName;
+import ua.training.model.util.QueryStringGetter;
+import ua.training.model.util.QueryType;
+import ua.training.model.util.TableName;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

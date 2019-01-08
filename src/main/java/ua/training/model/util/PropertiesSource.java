@@ -1,4 +1,4 @@
-package ua.training.util;
+package ua.training.model.util;
 
 public enum PropertiesSource {
     SQL_QUERIES("sql_queries"),

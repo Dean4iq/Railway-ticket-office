@@ -1,4 +1,4 @@
-package ua.training.util;
+package ua.training.model.util;
 
 import java.util.ResourceBundle;
 
