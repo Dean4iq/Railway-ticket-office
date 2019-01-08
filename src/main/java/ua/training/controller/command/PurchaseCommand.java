@@ -194,7 +194,7 @@ public class PurchaseCommand implements Command {
         String[] splittedDate = date.split("-");
 
         calendar.set(Calendar.YEAR, Integer.parseInt(splittedDate[0]));
-        calendar.set(Calendar.MONTH, Integer.parseInt(splittedDate[1]));
+        calendar.set(Calendar.MONTH, Integer.parseInt(splittedDate[1]) - 1);
         calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(splittedDate[2]));
 
         return calendar;
@@ -259,7 +259,7 @@ public class PurchaseCommand implements Command {
         calendar.setTimeInMillis(trainTime.getTime());
 
         calendar.set(Calendar.YEAR, Integer.parseInt(splittedDate[0]));
-        calendar.set(Calendar.MONTH, Integer.parseInt(splittedDate[1]));
+        calendar.set(Calendar.MONTH, Integer.parseInt(splittedDate[1]) - 1);
         calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(splittedDate[2]));
 
         return calendar;
