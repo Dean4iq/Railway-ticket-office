@@ -7,6 +7,8 @@ import ua.training.model.entity.Route;
 import ua.training.model.entity.Train;
 import ua.training.model.service.MethodProvider;
 import ua.training.model.service.SearchTrainService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,12 +20,16 @@ import java.util.stream.Collectors;
 public class SearchCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(SearchCommand.class);
     private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     public SearchCommand() {
-        COMMANDS.putIfAbsent("trainNumberSubmit", this::findByTrainId);
-        COMMANDS.putIfAbsent("trainDestinationSubmit", this::findTrainByRoute);
-        COMMANDS.putIfAbsent("allTrainSubmit", this::findAllTrains);
-        COMMANDS.putIfAbsent("page", this::pagingElements);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.SEARCH_BY_TRAIN_NUM),
+                this::findByTrainId);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.SEARCH_BY_ROUTE),
+                this::findTrainByRoute);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.SEARCH_ALL_TRAIN),
+                this::findAllTrains);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.SEARCH_PAGE), this::pagingElements);
     }
 
     @Override
@@ -34,8 +40,11 @@ public class SearchCommand implements Command {
 
         while (params.hasMoreElements()) {
             String parameter = params.nextElement();
-            if (COMMANDS.containsKey(parameter) || parameter.contains("page")) {
-                parameter = parameter.contains("page") ? "page" : parameter;
+            if (COMMANDS.containsKey(parameter)
+                    || parameter.contains(attrManager.getString(AttributeSources.SEARCH_PAGE))) {
+                parameter = parameter.contains(attrManager.getString(AttributeSources.SEARCH_PAGE))
+                        ? attrManager.getString(AttributeSources.SEARCH_PAGE)
+                        : parameter;
 
                 COMMANDS.get(parameter).call(request);
                 break;
@@ -48,24 +57,27 @@ public class SearchCommand implements Command {
     }
 
     private void findByTrainId(HttpServletRequest request) {
-        int trainNumber = Integer.parseInt(request.getParameter("trainNumber"));
+        int trainNumber = Integer.parseInt(request.getParameter(attrManager
+                .getString(AttributeSources.TRAIN_NUMBER)));
 
         List<Train> trains = SearchTrainService.findTrainById(trainNumber);
 
         setTravelDate(trains);
         setForRouteLocaleTime(trains, request);
 
-        request.setAttribute("trainList", trains);
-        request.setAttribute("currentPage", 1);
-        request.setAttribute("pageNumber", 1);
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), 1);
 
         LOG.debug("Search trains by id");
     }
 
     private void findTrainByRoute(HttpServletRequest request) {
         Pagination<Train> pagination = new Pagination<>();
-        String stationFrom = request.getParameter("departureStation");
-        String stationTo = request.getParameter("destinationStation");
+        String stationFrom = request.getParameter(attrManager
+                .getString(AttributeSources.DEPARTURE_STATION_PARAM));
+        String stationTo = request.getParameter(attrManager
+                .getString(AttributeSources.DESTINATION_STATION_PARAM));
 
         List<Train> trains = SearchTrainService.findAllTrains();
 
@@ -79,9 +91,9 @@ public class SearchCommand implements Command {
         int pageNumber = pagination.getPageNumber(trains);
         trains = pagination.getPageList(trains, 1);
 
-        request.setAttribute("trainList", trains);
-        request.setAttribute("currentPage", 1);
-        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), pageNumber);
         LOG.debug("Search trains by route");
     }
 
@@ -95,9 +107,9 @@ public class SearchCommand implements Command {
         int pageNumber = pagination.getPageNumber(trains);
         trains = pagination.getPageList(trains, 1);
 
-        request.setAttribute("trainList", trains);
-        request.setAttribute("currentPage", 1);
-        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), pageNumber);
         LOG.debug("Search all trains");
     }
 
@@ -110,8 +122,9 @@ public class SearchCommand implements Command {
 
         while (params.hasMoreElements()) {
             String parameter = params.nextElement();
-            if (parameter.contains("page")) {
-                page = Integer.parseInt(parameter.substring("page".length()));
+            if (parameter.contains(attrManager.getString(AttributeSources.SEARCH_PAGE))) {
+                page = Integer.parseInt(parameter
+                        .substring(attrManager.getString(AttributeSources.SEARCH_PAGE).length()));
                 break;
             }
         }
@@ -122,9 +135,9 @@ public class SearchCommand implements Command {
         int pageNumber = pagination.getPageNumber(trains);
         trains = pagination.getPageList(trains, page);
 
-        request.setAttribute("trainList", trains);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), page);
+        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), pageNumber);
 
         LOG.debug("Paging list");
     }
@@ -182,7 +195,8 @@ public class SearchCommand implements Command {
     }
 
     private void setForRouteLocaleTime(List<Train> trains, HttpServletRequest request) {
-        String lang = (String) request.getSession().getAttribute("language");
+        String lang = (String) request.getSession()
+                .getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
         Locale locale = new Locale(lang);
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, locale);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
@@ -200,12 +214,7 @@ public class SearchCommand implements Command {
     private String setFormattedDateTime(Timestamp dateTime, DateFormat dateFormat,
                                         DateFormat timeFormat) {
         Date date = new Date(dateTime.getTime());
-        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(dateFormat.format(date))
-                .append("*")
-                .append(timeFormat.format(date));
-
-        return stringBuilder.toString();
+        return dateFormat.format(date) + "*" + timeFormat.format(date);
     }
 }

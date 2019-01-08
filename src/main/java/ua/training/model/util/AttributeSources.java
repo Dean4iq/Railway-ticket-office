@@ -11,6 +11,8 @@ public final class AttributeSources {
     public static final String ACCEPT_PURCHASING_PARAM = "parameter.purchase.acceptPurchasing";
     public static final String DECLINE_PURCHASING_PARAM = "parameter.purchase.declinePurchasing";
     public static final String PURCHASE_SEAT_PARAM = "parameter.purchase.purchaseSeat";
+    public static final String DEPARTURE_STATION_PARAM = "parameter.search.departure";
+    public static final String DESTINATION_STATION_PARAM = "parameter.search.destination";
     public static final String LOGIN_NOT_EXISTED = "attribute.login.loginNotExisted";
     public static final String INVALID_LOGIN = "attribute.login.invalidLogin";
     public static final String ALREADY_LOGGED_IN = "attribute.login.alreadyLoggedIn";
@@ -31,4 +33,12 @@ public final class AttributeSources {
     public static final String STATION_ARRIVAL = "attribute.station.arrival";
     public static final String LOGGED_USERS_CONTEXT = "attribute.context.loggedUsers";
     public static final String LANGUAGE = "attribute.session.language";
+    public static final String SEARCH_BY_TRAIN_NUM = "attribute.search.trainNumber";
+    public static final String SEARCH_BY_ROUTE = "attribute.search.trainDestination";
+    public static final String SEARCH_ALL_TRAIN = "attribute.search.allTrain";
+    public static final String SEARCH_PAGE = "attribute.search.page";
+    public static final String SEARCH_TRAIN_LIST = "attribute.search.trainList";
+    public static final String PAGINATE_CURRENT_PAGE = "attribute.paginate.currentPage";
+    public static final String PAGINATE_PAGE_NUM = "attribute.paginate.pageNumber";
+    public static final String TRAIN_NUMBER = "attribute.train.number";
 }
