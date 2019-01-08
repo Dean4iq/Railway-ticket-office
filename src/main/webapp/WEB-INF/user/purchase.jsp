@@ -14,69 +14,45 @@
         </script>
 
         <script>
-            var countDownDate = new Date(new Date().getTime()+10*60*1000);
+            var countDownDate = new Date(${purchaseTime}+10*60*1000);
+
             var x = setInterval(function() {
               var now = new Date().getTime();
               var distance = countDownDate - now;
 
-              var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-              var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
               var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
               var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (minutes < 10){
+                minutes = '0' + minutes;
+            }
+            if (seconds < 10){
+                seconds = '0' + seconds;
+            }
 
               document.getElementById("timer").innerHTML = minutes + ":" + seconds;
 
               if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("timer").innerHTML = "EXPIRED";
+                document.getElementById("timer").innerHTML = "00:00";
+                document.getElementById('timeOutAlarm').style.display = 'block';
               }
             }, 1000);
         </script>
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;margin:10px">
-            <a class="navbar-brand" href=""></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="${pageContext.request.contextPath}">
-                            ${localeValues['btn.main']}
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="search">
-                            ${localeValues['btn.search']}
-                        </a>
-                    </li>
-                    <c:forEach items="${userbar}" var="keyValue">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="${keyValue.value}">
-                                <c:out value="${localeValues[keyValue.key]}"/>
-                            </a>
-                        </li>
-                    </c:forEach>
-                </ul>
-                <ul class="navbar-nav">
-                    <form name="langForm" method="post" align="right">
-                        <select name="langSelect" onchange="document.langForm.submit();">
-                            <option ${langVariable=="en"?"selected":""} value="en">English</option>
-                            <option ${langVariable=="uk"?"selected":""} value="uk">Українська</option>
-                        </select>
-                    </form>
-                </ul>
-            </div>
-        </nav>
-
+        <jsp:include page="/styles/page_parts/navbar.jsp"/>
+        <div class="alert alert-danger" id="timeOutAlarm" role="alert" style="display: none; width: 100%; text-align: center; position:relative;">
+            ${localeValues['text.timer.expired']}
+        </div>
         <h1>${localeValues['head.purchase']}</h1>
-        Timer: <p id="timer" style="display:inline;"></p>
+        <div style="font-size: 28px;" align="center">${localeValues['text.purchase.timer']}: <p id="timer" style="font-size: 28px; display:inline;"></p></div>
         <table border="1">
-            <caption>Ticket info</caption>
+            <caption style="caption-side: top">${localeValues['table.header.travelInfo']}</caption>
             <tr align="center">
                 <th>${localeValues['table.column.trainNumber']}</th>
+                <th>${localeValues['table.column.trainRoute']}</th>
                 <th>${localeValues['table.column.route']}</th>
                 <th>${localeValues['table.column.date']}</th>
                 <th>${localeValues['table.column.time']}</th>
@@ -84,19 +60,30 @@
             <tr align="center">
                 <td>${purchasedTicket.train.id}</td>
                 <td>
-                    ${purchasedTicket.train.departureRoute.station.nameUA}
-                    <br>
-                    ${purchasedTicket.train.arrivalRoute.station.nameUA}
+                    <c:if test="${langVariable=='en'}">
+                        ${purchasedTicket.train.departureRoute.station.nameEN} - ${purchasedTicket.train.arrivalRoute.station.nameEN}
+                    </c:if>
+                    <c:if test="${langVariable=='uk'}">
+                        ${purchasedTicket.train.departureRoute.station.nameUA} - ${purchasedTicket.train.arrivalRoute.station.nameUA}
+                    </c:if>
                 </td>
                 <td>
-                    ${purchasedTicket.train.departureRoute.formattedDepartureDate}
-                    <br>
-                    ${purchasedTicket.train.arrivalRoute.formattedArrivalDate}
+                    <c:if test="${langVariable=='en'}">
+                        ${purchasedTicket.train.userDepartureRoute.station.nameEN} - ${purchasedTicket.train.userArrivalRoute.station.nameEN}
+                    </c:if>
+                    <c:if test="${langVariable=='uk'}">
+                        ${purchasedTicket.train.userDepartureRoute.station.nameUA} - ${purchasedTicket.train.userArrivalRoute.station.nameUA}
+                    </c:if>
                 </td>
                 <td>
-                    ${purchasedTicket.train.departureRoute.formattedDepartureTime}
+                    ${purchasedTicket.train.userDepartureRoute.formattedDepartureDate}
                     <br>
-                    ${purchasedTicket.train.arrivalRoute.formattedArrivalTime}
+                    ${purchasedTicket.train.userArrivalRoute.formattedArrivalDate}
+                </td>
+                <td>
+                    ${purchasedTicket.train.userDepartureRoute.formattedDepartureTime}
+                    <br>
+                    ${purchasedTicket.train.userArrivalRoute.formattedArrivalTime}
                 </td>
             </tr>
         </table>
@@ -112,12 +99,26 @@
             <tr align="center">
                 <td>${purchasedTicket.seatId}</td>
                 <td>${purchasedTicket.wagonId}</td>
-                <td>${purchasedTicket.departureStation.nameUA}</td>
-                <td>${purchasedTicket.arrivalStation.nameUA}</td>
-                <td>${purchasedTicket.travelDate}</td>
+                <td>
+                    <c:if test="${langVariable=='en'}">
+                        ${purchasedTicket.departureStation.nameEN}
+                    </c:if>
+                    <c:if test="${langVariable=='uk'}">
+                        ${purchasedTicket.departureStation.nameUA}
+                    </c:if>
+                </td>
+                <td>
+                    <c:if test="${langVariable=='en'}">
+                        ${purchasedTicket.arrivalStation.nameEN}
+                    </c:if>
+                    <c:if test="${langVariable=='uk'}">
+                        ${purchasedTicket.arrivalStation.nameUA}
+                    </c:if>
+                </td>
+                <td>${purchasedTicket.formattedTravelDate}</td>
             </tr>
         </table>
-        ${localeValues['text.cost']}: &nbsp; ${purchasedTicket.cost} &nbsp; ${localeValues['text.current.UAH']}
+        ${localeValues['text.cost']}: &nbsp; ${purchasedTicket.localeCost} &nbsp; ${localeValues['text.current.UAH']}
 
         <form method="POST">
             <input type="submit" name="payForTicket" value="${localeValues['btn.acceptPurchase']}"/>

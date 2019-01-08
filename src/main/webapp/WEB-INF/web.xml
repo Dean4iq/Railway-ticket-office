@@ -95,6 +95,6 @@
 
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
-        <location>/WEB-INF/error.jsp</location>
+        <location>/error.jsp</location>
     </error-page>
 </web-app>

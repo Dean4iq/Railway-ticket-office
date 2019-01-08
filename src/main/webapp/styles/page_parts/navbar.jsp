@@ -1,20 +1,6 @@
-<%@ page pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<META http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<html>
-    <head>
-        <title>Train list</title>
-        <style>
-            <jsp:directive.include file="/styles/css/bootstrap.min.css"/>
-        </style>
 
-        <script>
-            <jsp:directive.include file="/styles/js/bootstrap.min.js"/>
-        </script>
-    </head>
-
-    <body>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;margin:10px">
             <a class="navbar-brand" href=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,29 +36,3 @@
                 </ul>
             </div>
         </nav>
-
-        <h1>${localeValues['head.purchase']}</h1>
-        <table border="1">
-            <caption>${localeValues['text.ticket']}</caption>
-            <tr>
-                <th>${localeValues['table.column.trainNumber']}</th>
-                <th>${localeValues['table.column.route']}</th>
-                <th>${localeValues['table.column.departure']}</th>
-                <th>${localeValues['table.column.arrival']}</th>
-            </tr>
-            <c:forEach items="${trainList}" var="train">
-              <tr>
-                <td><c:out value="${train.id}"/></td>
-                <td><c:out value="${train.departureRoute.station.name} - ${train.arrivalRoute.station.name}"/></td>
-                <td><c:out value="${train.departureRoute.formattedDepartureTime}"/></td>
-                <td><c:out value="${train.arrivalRoute.formattedArrivalTime}"/></td>
-              </tr>
-            </c:forEach>
-        </table>
-
-        <form method="post">
-            <input type="submit" name="accept" value="${localeValues['btn.acceptPurchase']}"/>
-            <input type="submit" name="decline" value="${localeValues['btn.declinePurchase']}"/>
-        </form>
-    </body>
-</html>

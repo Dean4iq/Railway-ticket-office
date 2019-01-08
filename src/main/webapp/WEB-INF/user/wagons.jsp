@@ -15,44 +15,10 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0c5e00;margin:10px">
-            <a class="navbar-brand" href=""></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="${pageContext.request.contextPath}">
-                            ${localeValues['btn.main']}
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="search">
-                            ${localeValues['btn.search']}
-                        </a>
-                    </li>
-                    <c:forEach items="${userbar}" var="keyValue">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="${keyValue.value}">
-                                <c:out value="${localeValues[keyValue.key]}"/>
-                            </a>
-                        </li>
-                    </c:forEach>
-                </ul>
-                <ul class="navbar-nav">
-                    <form name="langForm" method="post" align="right">
-                        <select name="langSelect" onchange="document.langForm.submit();">
-                            <option ${langVariable=="en"?"selected":""} value="en">English</option>
-                            <option ${langVariable=="uk"?"selected":""} value="uk">Українська</option>
-                        </select>
-                    </form>
-                </ul>
-            </div>
-        </nav>
+        <jsp:include page="/styles/page_parts/navbar.jsp"/>
 
-        <h3 align="center">${localeValues['text.trainInfo']}</h3>
-        <table class="table" align="center" border="1">
+        <h3 align="center">${localeValues['table.header.travelInfo']}</h3>
+        <table class="table" align="center" border="1" style="width: 90%">
             <thead class="thread-light">
                 <tr>
                     <th>${localeValues['text.train.number']}</th>
@@ -65,10 +31,30 @@
             </tbody>
                 <tr>
                     <th scope="row">${trainInfo.id}</td>
-                    <td>${trainInfo.departureRoute.station.nameUA}</td>
-                    <td>${trainInfo.arrivalRoute.station.nameUA}</td>
-                    <td>${trainInfo.departureRoute.departureTime}</td>
-                    <td>${trainInfo.arrivalRoute.arrivalTime}</td>
+                    <td>
+                        <c:if test="${langVariable=='en'}">
+                            ${trainInfo.userDepartureRoute.station.nameEN}
+                        </c:if>
+                        <c:if test="${langVariable=='uk'}">
+                            ${trainInfo.userDepartureRoute.station.nameUA}
+                        </c:if>
+                    </td>
+                    <td>
+                        <c:if test="${langVariable=='en'}">
+                            ${trainInfo.userArrivalRoute.station.nameEN}
+                        </c:if>
+                        <c:if test="${langVariable=='uk'}">
+                            ${trainInfo.userArrivalRoute.station.nameUA}
+                        </c:if>
+                    </td>
+                    <td>
+                        ${trainInfo.userDepartureRoute.formattedDepartureDate}
+                        ${trainInfo.userDepartureRoute.formattedDepartureTime}
+                    </td>
+                    <td>
+                        ${trainInfo.userArrivalRoute.formattedDepartureDate}
+                        ${trainInfo.userArrivalRoute.formattedDepartureTime}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -83,14 +69,24 @@
                     </tr>
                     <tr>
                         <td>${wagon.id}</td>
-                        <td>${wagon.type}</td>
+                        <td>
+                            <c:if test="${langVariable=='en'}">
+                                ${wagon.typeEN}
+                            </c:if>
+                            <c:if test="${langVariable=='uk'}">
+                                ${wagon.typeUA}
+                            </c:if>
+                        </td>
                     </tr>
                 </table>
                 <c:forEach items="${wagon.seatList}" var="seat">
                     <ul style="list-style-type: none;border-bottom:1px solid;">
                         <li>
-                            ${localeValues['text.seatNumber']}:${seat.id}
-                            ${localeValues['text.cost']}:${wagon.train.cost}${localeValues['text.current.UAH']}
+                            ${localeValues['text.seatNumber']}:
+                            ${seat.id}
+                            ${localeValues['text.cost']}:
+                            ${wagon.train.localeCost}
+                            ${localeValues['text.current.UAH']}
                             <c:if test="${not seat.occupied}">
                                 <input type="submit" name="PurchaseSeat${seat.id}" value="${localeValues['btn.purchaseTicket']}"/>
                             </c:if>
