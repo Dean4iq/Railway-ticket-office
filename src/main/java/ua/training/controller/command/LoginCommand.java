@@ -48,16 +48,16 @@ public class LoginCommand implements Command {
                 }
             }
         } catch (NotExistedLoginException e) {
-            request.setAttribute(attributeManager.getString(AttributeSources.LOGIN_NOT_EXISTED_ATTR),
+            request.setAttribute(attributeManager.getString(AttributeSources.LOGIN_NOT_EXISTED),
                     true);
 
             LOG.warn("Someone tried to log in using non-existed username: {}", e.getMessage());
         } catch (InvalidLoginOrPasswordException e) {
-            request.setAttribute(attributeManager.getString(AttributeSources.INVALID_LOGIN_ATTR),
+            request.setAttribute(attributeManager.getString(AttributeSources.INVALID_LOGIN),
                     true);
             LOG.warn("Someone tried to log in: {}", e.getMessage());
         } catch (LoggedInLoginException e) {
-            request.setAttribute(attributeManager.getString(AttributeSources.ALREADY_LOGGED_IN_ATTR),
+            request.setAttribute(attributeManager.getString(AttributeSources.ALREADY_LOGGED_IN),
                     true);
             LOG.warn("Someone tried to log in again: {}", e.getMessage());
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class LoginCommand implements Command {
             throws LoggedInLoginException {
         ServletContext context = request.getServletContext();
         Set<String> users = (Set<String>) context
-                .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT_ATTR));
+                .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT));
 
         if (users.stream().noneMatch(loggedUser -> user.getLogin().equals(loggedUser))) {
             return true;
@@ -84,7 +84,7 @@ public class LoginCommand implements Command {
         Map<String, String> menuItems = new LinkedHashMap<>();
         HttpSession session = request.getSession();
 
-        session.setAttribute(attributeManager.getString(AttributeSources.ROLE_ADMIN_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.ROLE_ADMIN),
                 user.getLogin());
         addUserToServletContext(request, user);
 
@@ -96,7 +96,7 @@ public class LoginCommand implements Command {
         menuItems.put("btn.trainList", "trains");
         menuItems.put("btn.userList", "users");
         menuItems.put("btn.logout", "logout");
-        session.setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.USERBAR),
                 menuItems);
     }
 
@@ -104,7 +104,7 @@ public class LoginCommand implements Command {
         Map<String, String> menuItems = new LinkedHashMap<>();
         HttpSession session = request.getSession();
 
-        session.setAttribute(attributeManager.getString(AttributeSources.ROLE_USER_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.ROLE_USER),
                 user.getLogin());
         addUserToServletContext(request, user);
 
@@ -114,13 +114,13 @@ public class LoginCommand implements Command {
         menuItems.put("btn.purchaseTicket", "tickets");
         menuItems.put("btn.logout", "logout");
 
-        session.setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.USERBAR),
                 menuItems);
     }
 
     private void addUserToServletContext(HttpServletRequest request, User user) {
         Set<String> users = (Set<String>) request.getServletContext()
-                .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT_ATTR));
+                .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT));
         users.add(user.getLogin());
     }
 }

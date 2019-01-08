@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.entity.*;
 import ua.training.model.service.PurchaseService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,20 +21,24 @@ import java.util.*;
 
 public class PurchaseCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(PurchaseCommand.class);
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("execute()");
 
-        if (request.getParameter("payForTicket") != null) {
+        if (request.getParameter(attrManager
+                .getString(AttributeSources.ACCEPT_PURCHASING_PARAM)) != null) {
             acceptPurchasing(request);
             return "redirect: /";
-        } else if (request.getParameter("declinePayment") != null) {
+        } else if (request.getParameter(attrManager
+                .getString(AttributeSources.DECLINE_PURCHASING_PARAM)) != null) {
             declinePurchasing(request);
             return "redirect: /";
         }
 
-        if (request.getSession().getAttribute("seatToPurchase") != null) {
+        if (request.getSession().getAttribute(attrManager
+                .getString(AttributeSources.SEAT_PURCHASE)) != null) {
             return setTicketData(request);
         }
         return "redirect: /tickets";
@@ -40,32 +46,40 @@ public class PurchaseCommand implements Command {
 
     private String setTicketData(HttpServletRequest request) {
         LOG.debug("Setting up ticket");
+        HttpSession session = request.getSession();
 
-        String seatParameter = (String) request.getSession().getAttribute("seatToPurchase");
-        String tripDate = (String) request.getSession().getAttribute("tripDateSubmitted");
+        String seatParameter = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.SEAT_PURCHASE));
+        String tripDate = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.DATE_TRIP_PURCHASE));
 
-        int seatNumber = Integer.parseInt(seatParameter.substring("PurchaseSeat".length()));
+        int seatNumber = Integer.parseInt(seatParameter.substring(attrManager
+                .getString(AttributeSources.PURCHASE_SEAT_PARAM).length()));
         Calendar travelDate = getCalendarForDate(tripDate);
 
-        if (request.getSession().getAttribute("Ticket") == null
+        if (session.getAttribute(attrManager.getString(AttributeSources.TICKET_PURCHASE)) == null
                 && PurchaseService.isSeatFree(seatNumber, travelDate)) {
             Ticket ticket = initializeTicket(request, seatNumber, travelDate);
 
-            request.getSession().setAttribute("timeForPurchase", new java.util.Date().getTime());
-            request.getSession().setAttribute("Ticket", ticket);
+            session.setAttribute(attrManager.getString(AttributeSources.TIME_PURCHASE),
+                    new java.util.Date().getTime());
+            session.setAttribute(attrManager.getString(AttributeSources.TICKET_PURCHASE), ticket);
             PurchaseService.startPurchaseTransaction(ticket, request);
         } else if (!PurchaseService.isSeatFree(seatNumber, travelDate)
-                && request.getSession().getAttribute("Ticket") == null) {
+                && session.getAttribute(attrManager.getString(AttributeSources.TICKET_PURCHASE)) == null) {
             return "redirect: /exception";
         }
 
-        Ticket ticket = (Ticket) request.getSession().getAttribute("Ticket");
+        Ticket ticket = (Ticket) session.getAttribute(attrManager
+                .getString(AttributeSources.TICKET_PURCHASE));
         setUpTrain(ticket.getTrain(), request);
         setLocaleTime(ticket, request);
         setLocaleCurrency(ticket, request);
 
-        request.setAttribute("purchaseTime", request.getSession().getAttribute("timeForPurchase"));
-        request.setAttribute("purchasedTicket", request.getSession().getAttribute("Ticket"));
+        request.setAttribute(attrManager.getString(AttributeSources.TIMELEFT_PURCHASE),
+                session.getAttribute(attrManager.getString(AttributeSources.TIME_PURCHASE)));
+        request.setAttribute(attrManager.getString(AttributeSources.PURCHASED_TICKET_PURCHASE),
+                session.getAttribute(attrManager.getString(AttributeSources.TICKET_PURCHASE)));
 
         return "/WEB-INF/user/purchase.jsp";
     }
@@ -83,22 +97,29 @@ public class PurchaseCommand implements Command {
     }
 
     private void processPageAttributes(HttpServletRequest request) {
-        request.getSession().removeAttribute("Ticket");
-        request.getSession().removeAttribute("seatToPurchase");
-        request.getSession().removeAttribute("tripDateSubmitted");
-        request.getSession().removeAttribute("ticketConnection");
+        HttpSession session = request.getSession();
+
+        session.removeAttribute(attrManager.getString(AttributeSources.TICKET_PURCHASE));
+        session.removeAttribute(attrManager.getString(AttributeSources.SEAT_PURCHASE));
+        session.removeAttribute(attrManager.getString(AttributeSources.DATE_TRIP_PURCHASE));
+        session.removeAttribute(attrManager.getString(AttributeSources.TICKET_CONNECTION));
     }
 
     private Ticket initializeTicket(HttpServletRequest request, int seatNumber,
                                     Calendar travelDate) {
+        HttpSession session = request.getSession();
         Ticket ticket = new Ticket();
 
-        String parameter = (String) request.getSession().getAttribute("searchTicketParameter");
-        String departureStationName = (String) request.getSession().getAttribute("departureStation");
-        String arrivalStationName = (String) request.getSession().getAttribute("arrivalStation");
-        String login = (String) request.getSession().getAttribute("User");
+        String parameter = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.TICKET_PARAMETERS));
+        String departureStationName = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.STATION_DEPARTURE));
+        String arrivalStationName = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.STATION_ARRIVAL));
+        String login = (String) session.getAttribute(attrManager.getString(AttributeSources.ROLE_USER));
 
-        int trainNumber = Integer.parseInt(parameter.substring("wagonInTrain".length()));
+        int trainNumber = Integer.parseInt(parameter.substring(attrManager
+                .getString(AttributeSources.WAGON_PURCHASE).length()));
         Station departureStation = PurchaseService.pickStationByName(departureStationName);
         Station arrivalStation = PurchaseService.pickStationByName(arrivalStationName);
         Train train = PurchaseService.getTrain(trainNumber);
@@ -123,10 +144,13 @@ public class PurchaseCommand implements Command {
     private void setUpTrain(Train train, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
-        String departureStationName = (String) session.getAttribute("departureStation");
-        String arrivalStationName = (String) session.getAttribute("arrivalStation");
-        String tripDate = (String) session.getAttribute("tripDateSubmitted");
-        String lang = (String) session.getAttribute("language");
+        String departureStationName = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.STATION_DEPARTURE));
+        String arrivalStationName = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.STATION_ARRIVAL));
+        String tripDate = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.DATE_TRIP_PURCHASE));
+        String lang = (String) session.getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
 
         setUserRoute(train, departureStationName, arrivalStationName);
         setTravelDateTime(train, tripDate, lang);
@@ -144,8 +168,11 @@ public class PurchaseCommand implements Command {
     }
 
     private void setLocaleTime(Ticket ticket, HttpServletRequest request) {
-        String lang = (String) request.getSession().getAttribute("language");
-        String tripDate = (String) request.getSession().getAttribute("tripDateSubmitted");
+        HttpSession session = request.getSession();
+
+        String lang = (String) session.getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
+        String tripDate = (String) session.getAttribute(attrManager
+                .getString(AttributeSources.DATE_TRIP_PURCHASE));
         Locale locale = new Locale(lang);
         Train train = ticket.getTrain();
 
@@ -239,7 +266,8 @@ public class PurchaseCommand implements Command {
     }
 
     private void setLocaleCurrency(Ticket ticket, HttpServletRequest request) {
-        final String language = (String) request.getSession().getAttribute("language");
+        final String language = (String) request.getSession()
+                .getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
         ticket.setLocaleCost(moneyFormatter(language, ticket.getCost()));
     }
 

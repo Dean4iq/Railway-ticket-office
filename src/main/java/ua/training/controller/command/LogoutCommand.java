@@ -21,19 +21,19 @@ public class LogoutCommand implements Command {
         HttpSession session = request.getSession();
         ServletContext context = request.getServletContext();
 
-        if (session.getAttribute(attrManag.getString(AttributeSources.ROLE_USER_ATTR)) != null) {
-            String userName = (String) session.getAttribute(attrManag.getString(AttributeSources.ROLE_USER_ATTR));
+        if (session.getAttribute(attrManag.getString(AttributeSources.ROLE_USER)) != null) {
+            String userName = (String) session.getAttribute(attrManag.getString(AttributeSources.ROLE_USER));
             Set<String> loggedUsers = (Set<String>) context
-                    .getAttribute(attrManag.getString(AttributeSources.LOGGED_USERS_CONTEXT_ATTR));
+                    .getAttribute(attrManag.getString(AttributeSources.LOGGED_USERS_CONTEXT));
 
-            session.removeAttribute(attrManag.getString(AttributeSources.ROLE_USER_ATTR));
+            session.removeAttribute(attrManag.getString(AttributeSources.ROLE_USER));
             loggedUsers.remove(userName);
-        } else if (session.getAttribute(attrManag.getString(AttributeSources.ROLE_ADMIN_ATTR)) != null) {
-            String userName = (String) session.getAttribute(attrManag.getString(AttributeSources.ROLE_ADMIN_ATTR));
+        } else if (session.getAttribute(attrManag.getString(AttributeSources.ROLE_ADMIN)) != null) {
+            String userName = (String) session.getAttribute(attrManag.getString(AttributeSources.ROLE_ADMIN));
             Set<String> loggedUsers = (Set<String>) context
-                    .getAttribute(attrManag.getString(AttributeSources.LOGGED_USERS_CONTEXT_ATTR));
+                    .getAttribute(attrManag.getString(AttributeSources.LOGGED_USERS_CONTEXT));
 
-            session.removeAttribute(attrManag.getString(AttributeSources.ROLE_ADMIN_ATTR));
+            session.removeAttribute(attrManag.getString(AttributeSources.ROLE_ADMIN));
             loggedUsers.remove(userName);
         }
 
