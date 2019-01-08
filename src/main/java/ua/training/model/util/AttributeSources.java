@@ -29,6 +29,7 @@ public final class AttributeSources {
     public static final String USER_UPDATE_NAME_UA_PARAM = "parameter.user.update.nameUA";
     public static final String USER_UPDATE_LASTNAME_UA_PARAM = "parameter.user.update.lastNameUA";
     public static final String USER_UPDATE_PASS_PARAM = "parameter.user.update.password";
+    public static final String LANG_SELECT_PARAM = "parameter.language.selector";
 
     public static final String LOGIN_NOT_EXISTED = "attribute.login.loginNotExisted";
     public static final String INVALID_LOGIN = "attribute.login.invalidLogin";
@@ -52,6 +53,7 @@ public final class AttributeSources {
     public static final String TICKET_PARAMETERS = "attribute.ticket.ticketParameters";
     public static final String STATION_DEPARTURE = "attribute.station.departure";
     public static final String STATION_ARRIVAL = "attribute.station.arrival";
+    public static final String LANGUAGE_VALUE = "attribute.language.value";
     public static final String LOGGED_USERS_CONTEXT = "attribute.context.loggedUsers";
     public static final String LANGUAGE = "attribute.session.language";
     public static final String ACTIVE_SESSIONS = "attribute.session.activeSessions";
@@ -67,4 +69,6 @@ public final class AttributeSources {
     public static final String TRAIN_NUMBER = "attribute.train.number";
     public static final String TRAIN_INFO = "attribute.train.info";
     public static final String WAGON_LIST = "attribute.wagon.list";
+    public static final String FILTER_LOCALE_VALUES = "attribute.filter.localeValues";
+    public static final String FILET_MAP_VALUES = "attribute.filter.mapValues";
 }

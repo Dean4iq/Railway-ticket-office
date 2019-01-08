@@ -2,6 +2,8 @@ package ua.training.controller.filter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import java.io.IOException;
 
 public class GuestFilter implements Filter {
     private static final Logger LOG = LogManager.getLogger(UserFilter.class);
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -24,8 +27,8 @@ public class GuestFilter implements Filter {
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(true);
 
-        if (session.getAttribute("User") != null
-                || session.getAttribute("Admin") != null) {
+        if (session.getAttribute(attrManager.getString(AttributeSources.ROLE_ADMIN)) != null
+                || session.getAttribute(attrManager.getString(AttributeSources.ROLE_USER)) != null) {
             LOG.warn("doFilter() access denied to authorized user");
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/");
         } else {

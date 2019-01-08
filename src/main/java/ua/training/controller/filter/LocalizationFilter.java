@@ -2,6 +2,8 @@ package ua.training.controller.filter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 import ua.training.model.util.LanguageISO;
 import ua.training.model.util.LocalizationGetter;
 
@@ -14,6 +16,7 @@ import java.util.Map;
 
 public class LocalizationFilter implements Filter {
     private static final Logger LOG = LogManager.getLogger(LocalizationFilter.class);
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -27,24 +30,33 @@ public class LocalizationFilter implements Filter {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession();
 
-        String selectedLangParameter = httpRequest.getParameter("langSelect");
-        String sessionLanguage = (String) session.getAttribute("language");
+        String selectedLangParameter = httpRequest
+                .getParameter(attrManager.getString(AttributeSources.LANG_SELECT_PARAM));
+        String sessionLanguage = (String) session
+                .getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
 
         if (selectedLangParameter != null && !selectedLangParameter.equals(sessionLanguage)) {
-            httpRequest.setAttribute("langVariable", selectedLangParameter);
+            httpRequest.setAttribute(attrManager.getString(AttributeSources.LANGUAGE_VALUE),
+                    selectedLangParameter);
             localizationStrings = getLocalizationStrings(selectedLangParameter);
-            session.setAttribute("language", selectedLangParameter);
+            session.setAttribute(attrManager.getString(AttributeSources.LANGUAGE), selectedLangParameter);
         } else if (sessionLanguage == null) {
-            httpRequest.setAttribute("langVariable", LanguageISO.UKRAINIAN.getCode());
-            session.setAttribute("language", LanguageISO.UKRAINIAN.getCode());
+            httpRequest.setAttribute(attrManager.getString(AttributeSources.LANGUAGE_VALUE),
+                    LanguageISO.UKRAINIAN.getCode());
+            session.setAttribute(attrManager.getString(AttributeSources.LANGUAGE),
+                    LanguageISO.UKRAINIAN.getCode());
             localizationStrings = getLocalizationStrings(LanguageISO.UKRAINIAN.getCode());
         } else {
-            httpRequest.setAttribute("langVariable", sessionLanguage);
-            localizationStrings = (Map<String, String>) httpRequest.getSession().getAttribute("mapValues");
+            httpRequest.setAttribute(attrManager.getString(AttributeSources.LANGUAGE_VALUE),
+                    sessionLanguage);
+            localizationStrings = (Map<String, String>) session
+                    .getAttribute(attrManager.getString(AttributeSources.FILET_MAP_VALUES));
         }
 
-        httpRequest.getSession().setAttribute("mapValues", localizationStrings);
-        httpRequest.setAttribute("localeValues", localizationStrings);
+        session.setAttribute(attrManager.getString(AttributeSources.FILET_MAP_VALUES),
+                localizationStrings);
+        httpRequest.setAttribute(attrManager.getString(AttributeSources.FILTER_LOCALE_VALUES),
+                localizationStrings);
         setMandatoryAttributes(httpRequest);
 
         LOG.debug("doFilter()");
@@ -56,9 +68,9 @@ public class LocalizationFilter implements Filter {
     }
 
     private void setMandatoryAttributes(HttpServletRequest request) {
-        Map<String, String> menuItems =
-                (LinkedHashMap<String, String>) request.getSession().getAttribute("userbar");
-        request.setAttribute("userbar", menuItems);
+        Map<String, String> menuItems = (LinkedHashMap<String, String>) request.getSession()
+                .getAttribute(attrManager.getString(AttributeSources.USERBAR));
+        request.setAttribute(attrManager.getString(AttributeSources.USERBAR), menuItems);
     }
 
     @Override
