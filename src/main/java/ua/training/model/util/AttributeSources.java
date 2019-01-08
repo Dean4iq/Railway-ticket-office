@@ -20,6 +20,16 @@ public final class AttributeSources {
     public static final String TICKET_SORT_BY_TRAIN_DEPART_PARAM_DESC = "parameter.ticket.sortByTrainDepartTimeDESC";
     public static final String TRIP_START_DATE_PARAM = "parameter.search.tripStartDate";
     public static final String DELETE_TRAIN_PARAM = "parameter.train.delete";
+    public static final String USER_CHANGE_PARAM = "parameter.user.actions";
+    public static final String USER_ACTION_UPDATE_PARAM = "parameter.user.updateAction";
+    public static final String USER_DELETE_PARAM = "parameter.user.delete";
+    public static final String USER_UPDATE_PARAM = "parameter.user.update";
+    public static final String USER_UPDATE_NAME_PARAM = "parameter.user.update.name";
+    public static final String USER_UPDATE_LASTNAME_PARAM = "parameter.user.update.lastName";
+    public static final String USER_UPDATE_NAME_UA_PARAM = "parameter.user.update.nameUA";
+    public static final String USER_UPDATE_LASTNAME_UA_PARAM = "parameter.user.update.lastNameUA";
+    public static final String USER_UPDATE_PASS_PARAM = "parameter.user.update.password";
+
     public static final String LOGIN_NOT_EXISTED = "attribute.login.loginNotExisted";
     public static final String INVALID_LOGIN = "attribute.login.invalidLogin";
     public static final String ALREADY_LOGGED_IN = "attribute.login.alreadyLoggedIn";
@@ -28,6 +38,9 @@ public final class AttributeSources {
     public static final String ROLE_USER = "attribute.role.user";
     public static final String USERBAR = "attribute.userbar";
     public static final String USER_USERNAME = "attribute.user.name";
+    public static final String USER_USERLIST = "attribute.user.list";
+    public static final String USER_SELECTED = "attribute.user.selected";
+    public static final String USER_SELECTED_LOGIN = "attribute.user.selectedLogin";
     public static final String SEAT_PURCHASE = "attribute.purchase.seat";
     public static final String DATE_TRIP_PURCHASE = "attribute.purchase.tripDate";
     public static final String TICKET_PURCHASE = "attribute.purchase.ticket";
@@ -41,6 +54,7 @@ public final class AttributeSources {
     public static final String STATION_ARRIVAL = "attribute.station.arrival";
     public static final String LOGGED_USERS_CONTEXT = "attribute.context.loggedUsers";
     public static final String LANGUAGE = "attribute.session.language";
+    public static final String ACTIVE_SESSIONS = "attribute.session.activeSessions";
     public static final String SEARCH_BY_TRAIN_NUM = "attribute.search.trainNumber";
     public static final String SEARCH_BY_ROUTE = "attribute.search.trainDestination";
     public static final String SEARCH_ALL_TRAIN = "attribute.search.allTrain";

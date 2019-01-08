@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.model.entity.User;
 import ua.training.model.service.UserListManagingService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 import ua.training.model.util.RegExSources;
 import ua.training.model.util.RegExStringsGetter;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class UserListCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(UserListCommand.class);
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -23,36 +26,41 @@ public class UserListCommand implements Command {
         checkActions(request);
 
         List<User> users = UserListManagingService.getUserList();
-        request.setAttribute("userList", users);
+        request.setAttribute(attrManager.getString(AttributeSources.USER_USERLIST), users);
 
         return "/WEB-INF/admin/userList.jsp";
     }
 
     private void checkActions(HttpServletRequest request) {
         LOG.debug("checkActions()");
-        if (request.getParameter("actionPicker") != null) {
+
+        if (request.getParameter(attrManager.getString(AttributeSources.USER_CHANGE_PARAM)) != null) {
             processActions(request);
-        } else if (request.getParameter("changeUserData") != null) {
+        } else if (request.getParameter(attrManager
+                .getString(AttributeSources.USER_ACTION_UPDATE_PARAM)) != null) {
             changeUserData(request);
         }
     }
 
     private void processActions(HttpServletRequest request) {
         LOG.debug("processActions()");
-        String parameter = request.getParameter("actionPicker");
+        String parameter = request.getParameter(attrManager.getString(AttributeSources.USER_CHANGE_PARAM));
 
-        if (parameter.contains("delete")) {
-            String userLogin = parameter.substring("delete".length());
+        if (parameter.contains(attrManager.getString(AttributeSources.USER_DELETE_PARAM))) {
+            String userLogin = parameter.substring(attrManager
+                    .getString(AttributeSources.USER_DELETE_PARAM).length());
             User user = UserListManagingService.getUser(userLogin);
             if (user.checkLogin() && !user.isAdmin()) {
                 UserListManagingService.deleteUser(user);
             }
-        } else if (parameter.contains("update")) {
-            String userLogin = parameter.substring("update".length());
+        } else if (parameter.contains(attrManager.getString(AttributeSources.USER_UPDATE_PARAM))) {
+            String userLogin = parameter.substring(attrManager
+                    .getString(AttributeSources.USER_UPDATE_PARAM).length());
             User user = UserListManagingService.getUser(userLogin);
             if (user.checkLogin() && !user.isAdmin()) {
-                request.setAttribute("selectedUser", user);
-                request.getSession().setAttribute("selectedUserLogin", user.getLogin());
+                request.setAttribute(attrManager.getString(AttributeSources.USER_SELECTED), user);
+                request.getSession().setAttribute(attrManager
+                        .getString(AttributeSources.USER_SELECTED_LOGIN), user.getLogin());
             }
         }
     }
@@ -60,13 +68,20 @@ public class UserListCommand implements Command {
     private void changeUserData(HttpServletRequest request) {
         LOG.debug("changeUserData()");
         Map<String, String> userAttributes = new HashMap<>();
+        HttpSession session = request.getSession();
 
-        userAttributes.put("name", request.getParameter("updateName"));
-        userAttributes.put("lastName", request.getParameter("updateLastName"));
-        userAttributes.put("nameUA", request.getParameter("updateNameUA"));
-        userAttributes.put("lastNameUA", request.getParameter("updateLastNameUA"));
-        userAttributes.put("login", (String) request.getSession().getAttribute("selectedUserLogin"));
-        userAttributes.put("password", request.getParameter("updatePassword"));
+        userAttributes.put(attrManager.getString(AttributeSources.NAME_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.USER_UPDATE_NAME_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.LASTNAME_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.USER_UPDATE_LASTNAME_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.NAME_UA_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.USER_UPDATE_NAME_UA_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.LASTNAME_UA_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.USER_UPDATE_LASTNAME_UA_PARAM)));
+        userAttributes.put(attrManager.getString(AttributeSources.LOGIN_PARAM),
+                (String) session.getAttribute(attrManager.getString(AttributeSources.USER_SELECTED_LOGIN)));
+        userAttributes.put(attrManager.getString(AttributeSources.PASSWORD_REG_PARAM),
+                request.getParameter(attrManager.getString(AttributeSources.USER_UPDATE_PASS_PARAM)));
 
         if (userAttributes.entrySet().stream()
                 .noneMatch(elem -> elem.getValue() == null
@@ -84,12 +99,12 @@ public class UserListCommand implements Command {
     private User setUserData(Map<String, String> userDataMap) {
         User user = new User();
 
-        user.setName(userDataMap.get("name"));
-        user.setLastName(userDataMap.get("lastName"));
-        user.setNameUA(userDataMap.get("nameUA"));
-        user.setLastNameUA(userDataMap.get("lastNameUA"));
-        user.setLogin(userDataMap.get("login"));
-        user.setPassword(userDataMap.get("password"));
+        user.setName(userDataMap.get(attrManager.getString(AttributeSources.NAME_PARAM)));
+        user.setLastName(userDataMap.get(attrManager.getString(AttributeSources.LASTNAME_PARAM)));
+        user.setNameUA(userDataMap.get(attrManager.getString(AttributeSources.NAME_UA_PARAM)));
+        user.setLastNameUA(userDataMap.get(attrManager.getString(AttributeSources.LASTNAME_UA_PARAM)));
+        user.setLogin(userDataMap.get(attrManager.getString(AttributeSources.LOGIN_PARAM)));
+        user.setPassword(userDataMap.get(attrManager.getString(AttributeSources.PASSWORD_REG_PARAM)));
 
         return user;
     }
@@ -115,10 +130,10 @@ public class UserListCommand implements Command {
 
     private void endUserSession(HttpServletRequest request, String login) {
         Set<HttpSession> sessions = (Set<HttpSession>) request
-                .getServletContext().getAttribute("activeSessions");
+                .getServletContext().getAttribute(attrManager.getString(AttributeSources.ACTIVE_SESSIONS));
 
         sessions.stream().filter(httpSession ->
-                httpSession.getAttribute("User").equals(login))
+                httpSession.getAttribute(attrManager.getString(AttributeSources.ROLE_USER)).equals(login))
                 .findFirst().ifPresent(HttpSession::invalidate);
     }
 }
