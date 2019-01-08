@@ -9,22 +9,32 @@ import ua.training.model.dao.implementation.JDBCDaoFactory;
 import ua.training.model.entity.Route;
 import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class SearchTicketService {
     private static final Logger LOG = LogManager.getLogger(SearchTrainService.class);
+    private static AttributeResourceManager attrManag = AttributeResourceManager.INSTANCE;
 
     public static List<Train> findTrainByRoute(HttpServletRequest request) {
-        String stationFrom = request.getParameter("departureStation");
-        String stationTo = request.getParameter("destinationStation");
+        HttpSession session = request.getSession();
+
+        String stationFrom = request.getParameter(attrManag
+                .getString(AttributeSources.DEPARTURE_STATION_PARAM));
+        String stationTo = request.getParameter(attrManag
+                .getString(AttributeSources.DESTINATION_STATION_PARAM));
 
         if (stationFrom == null || stationTo == null) {
-            stationFrom = (String) request.getSession().getAttribute("departureStation");
-            stationTo = (String) request.getSession().getAttribute("arrivalStation");
+            stationFrom = (String) session.getAttribute(attrManag
+                    .getString(AttributeSources.STATION_DEPARTURE));
+            stationTo = (String) session.getAttribute(attrManag
+                    .getString(AttributeSources.STATION_ARRIVAL));
         }
 
         List<Train> trains = new ArrayList<>();
@@ -42,9 +52,9 @@ public class SearchTicketService {
 
             setTravelDate(request, trains);
 
-            request.getSession().setAttribute("departureStation", stationFrom);
-            request.getSession().setAttribute("arrivalStation", stationTo);
-            request.setAttribute("trainList", trains);
+            session.setAttribute(attrManag.getString(AttributeSources.STATION_DEPARTURE), stationFrom);
+            session.setAttribute(attrManag.getString(AttributeSources.STATION_ARRIVAL), stationTo);
+            request.setAttribute(attrManag.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
             LOG.debug("Search all trains by route");
         } catch (Exception e) {
             LOG.debug("Exception while execute() find Train by Route");
@@ -77,13 +87,16 @@ public class SearchTicketService {
 
     private static void setTravelDate(HttpServletRequest request, List<Train> trains) {
         Calendar calendar = Calendar.getInstance();
-        String travelDate = request.getParameter("tripStartDate");
+        HttpSession session = request.getSession();
+
+        String travelDate = request
+                .getParameter(attrManag.getString(AttributeSources.TRIP_START_DATE_PARAM));
 
         if (travelDate == null) {
-            travelDate = (String) request.getSession().getAttribute("travelDate");
+            travelDate = (String) session.getAttribute(attrManag.getString(AttributeSources.TRAVEL_DATE));
         }
 
-        request.getSession().setAttribute("travelDate", travelDate);
+        session.setAttribute(attrManag.getString(AttributeSources.TRAVEL_DATE), travelDate);
 
         String[] datesYMD = travelDate.split("-");
 
@@ -124,7 +137,7 @@ public class SearchTicketService {
 
         try (StationDao stationDao = daoFactory.createStationDao()) {
             List<Station> stationList = stationDao.findAll();
-            request.setAttribute("stationList", stationList);
+            request.setAttribute(attrManag.getString(AttributeSources.STATION_LIST), stationList);
         } catch (Exception e) {
             LOG.error(Arrays.toString(e.getStackTrace()));
         }

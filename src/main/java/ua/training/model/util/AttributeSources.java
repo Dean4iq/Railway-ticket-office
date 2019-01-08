@@ -64,6 +64,8 @@ public final class AttributeSources {
     public static final String SEARCH_TRAIN_LIST = "attribute.search.trainList";
     public static final String MIN_DATE_SEARCH = "attribute.search.minCalendarDate";
     public static final String MAX_DATE_SEARCH = "attribute.search.maxCalendarDate";
+    public static final String TRAVEL_DATE = "attribute.search.travelDate";
+    public static final String STATION_LIST = "attribute.station.list";
     public static final String PAGINATE_CURRENT_PAGE = "attribute.paginate.currentPage";
     public static final String PAGINATE_PAGE_NUM = "attribute.paginate.pageNumber";
     public static final String TRAIN_NUMBER = "attribute.train.number";

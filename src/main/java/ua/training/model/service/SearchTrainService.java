@@ -8,12 +8,15 @@ import ua.training.model.dao.TrainDao;
 import ua.training.model.dao.implementation.JDBCDaoFactory;
 import ua.training.model.entity.Station;
 import ua.training.model.entity.Train;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 public class SearchTrainService {
     private static final Logger LOG = LogManager.getLogger(SearchTrainService.class);
+    private static AttributeResourceManager attrManag = AttributeResourceManager.INSTANCE;
 
     public static List<Train> findTrainById(int trainNumber) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
@@ -53,7 +56,7 @@ public class SearchTrainService {
 
         try(StationDao stationDao = daoFactory.createStationDao()){
             List<Station> stationList = stationDao.findAll();
-            request.setAttribute("stationList", stationList);
+            request.setAttribute(attrManag.getString(AttributeSources.STATION_LIST), stationList);
         } catch (Exception e) {
             LOG.error(Arrays.toString(e.getStackTrace()));
         }

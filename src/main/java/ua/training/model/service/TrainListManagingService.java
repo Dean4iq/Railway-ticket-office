@@ -15,6 +15,7 @@ public class TrainListManagingService {
 
     public static List<Train> getTrainList() {
         LOG.debug("getTrains()");
+
         List<Train> trains = new ArrayList<>();
 
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
@@ -29,6 +30,7 @@ public class TrainListManagingService {
 
     public static List<Train> getAllTrainList() {
         LOG.debug("getAllTrains()");
+
         List<Train> trains = new ArrayList<>();
 
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();

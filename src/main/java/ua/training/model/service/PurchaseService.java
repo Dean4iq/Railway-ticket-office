@@ -6,8 +6,9 @@ import org.apache.logging.log4j.Logger;
 import ua.training.model.dao.*;
 import ua.training.model.dao.implementation.JDBCDaoFactory;
 import ua.training.model.entity.*;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
-import javax.jms.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class PurchaseService {
     private static final Logger LOG = LogManager.getLogger(PurchaseService.class);
+    private static AttributeResourceManager attrManag = AttributeResourceManager.INSTANCE;
 
     public static boolean isSeatFree(int seatId, Calendar travelDate) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
@@ -104,14 +106,16 @@ public class PurchaseService {
 
         try (TicketDao ticketDao = daoFactory.createTicketDao()) {
             Connection connection = ticketDao.createWithoutCommit(ticket);
-            session.setAttribute("ticketConnection", connection);
+            session.setAttribute(attrManag.getString(AttributeSources.TICKET_CONNECTION), connection);
 
             new Thread(() -> {
                 try {
                     Thread.sleep(600_000); //Wait 10 minutes for purchasing
                     new TransactionCommit().rollbackAndClose(connection);
 
-                    session.removeAttribute("Ticket");
+                    session.removeAttribute(attrManag.getString(AttributeSources.TICKET_PURCHASE));
+                    session.removeAttribute(attrManag.getString(AttributeSources.TICKET_CONNECTION));
+
                     LOG.debug("10 minutes have passed, Transaction rollback and Connection closed");
                 } catch (InterruptedException e) {
                     LOG.error("Interrupted thread: {}", Arrays.toString(e.getStackTrace()));
@@ -124,7 +128,8 @@ public class PurchaseService {
     }
 
     public static void confirmPurchasing(HttpServletRequest request) {
-        Connection connection = (Connection) request.getSession().getAttribute("ticketConnection");
+        Connection connection = (Connection) request.getSession()
+                .getAttribute(attrManag.getString(AttributeSources.TICKET_CONNECTION));
         new TransactionCommit().commitAndClose(connection);
     }
 
