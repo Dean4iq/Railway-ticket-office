@@ -32,7 +32,8 @@ public class JDBCWagonDao implements WagonDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, TABLE_NAME))) {
             preparedStatement.setInt(1, wagon.getTrainId());
-            preparedStatement.setString(2, wagon.getType());
+            preparedStatement.setString(2, wagon.getTypeUA());
+            preparedStatement.setString(3, wagon.getTypeEN());
 
             preparedStatement.execute();
             LOG.debug("JDBCWagonDao create()");
@@ -111,7 +112,8 @@ public class JDBCWagonDao implements WagonDao {
 
         wagon.setId(resultSet.getInt("w_id"));
         wagon.setTrainId(resultSet.getInt("Train_t_id"));
-        wagon.setType(resultSet.getString("type"));
+        wagon.setTypeUA(resultSet.getString("typeUA"));
+        wagon.setTypeEN(resultSet.getString("typeEN"));
 
         LOG.debug("JDBCWagonDao extractFromResultSet(): " + wagon.toString());
         return wagon;
@@ -142,8 +144,9 @@ public class JDBCWagonDao implements WagonDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.UPDATE, TABLE_NAME))) {
             preparedStatement.setInt(1, wagon.getTrainId());
-            preparedStatement.setString(2, wagon.getType());
-            preparedStatement.setInt(3, wagon.getId());
+            preparedStatement.setString(2, wagon.getTypeUA());
+            preparedStatement.setString(3, wagon.getTypeEN());
+            preparedStatement.setInt(4, wagon.getId());
 
             preparedStatement.executeUpdate();
             LOG.debug("JDBCWagonDao update()");
