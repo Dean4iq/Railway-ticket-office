@@ -23,17 +23,22 @@ public class SearchCommand implements Command {
         COMMANDS.putIfAbsent("trainNumberSubmit", this::findByTrainId);
         COMMANDS.putIfAbsent("trainDestinationSubmit", this::findTrainByRoute);
         COMMANDS.putIfAbsent("allTrainSubmit", this::findAllTrains);
+        COMMANDS.putIfAbsent("page", this::pagingElements);
     }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("execute()");
+
         Enumeration<String> params = request.getParameterNames();
 
         while (params.hasMoreElements()) {
             String parameter = params.nextElement();
-            if (COMMANDS.containsKey(parameter)) {
+            if (COMMANDS.containsKey(parameter) || parameter.contains("page")) {
+                parameter = parameter.contains("page") ? "page" : parameter;
+
                 COMMANDS.get(parameter).call(request);
+                break;
             }
         }
 
@@ -51,10 +56,14 @@ public class SearchCommand implements Command {
         setForRouteLocaleTime(trains, request);
 
         request.setAttribute("trainList", trains);
+        request.setAttribute("currentPage", 1);
+        request.setAttribute("pageNumber", 1);
+
         LOG.debug("Search trains by id");
     }
 
     private void findTrainByRoute(HttpServletRequest request) {
+        Pagination<Train> pagination = new Pagination<>();
         String stationFrom = request.getParameter("departureStation");
         String stationTo = request.getParameter("destinationStation");
 
@@ -67,18 +76,57 @@ public class SearchCommand implements Command {
         setTravelDate(trains);
         setForRouteLocaleTime(trains, request);
 
+        int pageNumber = pagination.getPageNumber(trains);
+        trains = pagination.getPageList(trains, 1);
+
         request.setAttribute("trainList", trains);
+        request.setAttribute("currentPage", 1);
+        request.setAttribute("pageNumber", pageNumber);
         LOG.debug("Search trains by route");
     }
 
     private void findAllTrains(HttpServletRequest request) {
+        Pagination<Train> pagination = new Pagination<>();
         List<Train> trains = SearchTrainService.findAllTrains();
 
         setTravelDate(trains);
         setForRouteLocaleTime(trains, request);
 
+        int pageNumber = pagination.getPageNumber(trains);
+        trains = pagination.getPageList(trains, 1);
+
         request.setAttribute("trainList", trains);
+        request.setAttribute("currentPage", 1);
+        request.setAttribute("pageNumber", pageNumber);
         LOG.debug("Search all trains");
+    }
+
+    private void pagingElements(HttpServletRequest request) {
+        Pagination<Train> pagination = new Pagination<>();
+        List<Train> trains = SearchTrainService.findAllTrains();
+        int page = 1;
+
+        Enumeration<String> params = request.getParameterNames();
+
+        while (params.hasMoreElements()) {
+            String parameter = params.nextElement();
+            if (parameter.contains("page")) {
+                page = Integer.parseInt(parameter.substring("page".length()));
+                break;
+            }
+        }
+
+        setTravelDate(trains);
+        setForRouteLocaleTime(trains, request);
+
+        int pageNumber = pagination.getPageNumber(trains);
+        trains = pagination.getPageList(trains, page);
+
+        request.setAttribute("trainList", trains);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("pageNumber", pageNumber);
+
+        LOG.debug("Paging list");
     }
 
     private static boolean checkTrainRoute(Train train, String from, String to) {
@@ -159,13 +207,5 @@ public class SearchCommand implements Command {
                 .append(timeFormat.format(date));
 
         return stringBuilder.toString();
-    }
-
-    private int countPages(List<Train> trains){
-        return new Pagination<Train>().getPageNumber(trains);
-    }
-
-    private List<Train> paginateList(List<Train> trains, int page) {
-        return new Pagination<Train>().getPageList(trains, page);
     }
 }

@@ -1,5 +1,6 @@
 <%@ page pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="pag" uri="/WEB-INF/tld/paginate.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <META http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html>
@@ -8,6 +9,7 @@
 
         <style>
             <jsp:directive.include file="/styles/css/bootstrap.min.css"/>
+            <jsp:directive.include file="/styles/css/pagination.css"/>
         </style>
 
         <script>
@@ -130,23 +132,8 @@
                     </tr>
                 </c:forEach>
             </table>
-            <nav style="margin-top: 20px;" aria-label="Page navigation">
-              <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item active" aria-current="page"><a class="page-link" href="#">1<span class="sr-only">(current)</span></a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-              </ul>
-            </nav>
+
+            <pag:pagination pageNumber="${pageNumber}" currentPage="${currentPage}"/>
         </c:if>
     </body>
 </html>
