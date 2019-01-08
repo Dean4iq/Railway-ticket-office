@@ -10,9 +10,10 @@ import ua.training.model.service.LoginService;
 import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
+import javax.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class LoginCommand implements Command {
                     true);
             LOG.warn("Someone tried to log in again: {}", e.getMessage());
         } catch (Exception e) {
-            LOG.error(Arrays.toString(e.getStackTrace()));
+            LOG.error("Exception {}", e);
             return "redirect: /exception";
         }
 
@@ -69,10 +70,11 @@ public class LoginCommand implements Command {
 
     private boolean checkUserSession(HttpServletRequest request, User user)
             throws LoggedInLoginException {
-        Set<String> users = (Set<String>) request.getServletContext()
+        ServletContext context = request.getServletContext();
+        Set<String> users = (Set<String>) context
                 .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT_ATTR));
-        if (users.stream().noneMatch(loggedUser ->
-                user.getLogin().equals(loggedUser))) {
+
+        if (users.stream().noneMatch(loggedUser -> user.getLogin().equals(loggedUser))) {
             return true;
         }
         throw new LoggedInLoginException(user.getLogin());
@@ -80,12 +82,13 @@ public class LoginCommand implements Command {
 
     private void processAdmin(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
+        HttpSession session = request.getSession();
 
-        request.getSession().setAttribute(attributeManager.getString(AttributeSources.ROLE_ADMIN_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.ROLE_ADMIN_ATTR),
                 user.getLogin());
         addUserToServletContext(request, user);
 
-        request.getSession().setMaxInactiveInterval(0);
+        session.setMaxInactiveInterval(0); //Endless inactive interval
 
         LOG.debug("Admin in LoginService class execute()");
         LOG.info("Admin {} has successfully logged in", user.getLogin());
@@ -93,14 +96,15 @@ public class LoginCommand implements Command {
         menuItems.put("btn.trainList", "trains");
         menuItems.put("btn.userList", "users");
         menuItems.put("btn.logout", "logout");
-        request.getSession().setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
                 menuItems);
     }
 
     private void processUser(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
+        HttpSession session = request.getSession();
 
-        request.getSession(true).setAttribute(attributeManager.getString(AttributeSources.ROLE_USER_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.ROLE_USER_ATTR),
                 user.getLogin());
         addUserToServletContext(request, user);
 
@@ -110,7 +114,7 @@ public class LoginCommand implements Command {
         menuItems.put("btn.purchaseTicket", "tickets");
         menuItems.put("btn.logout", "logout");
 
-        request.getSession().setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
+        session.setAttribute(attributeManager.getString(AttributeSources.USERBAR_ATTR),
                 menuItems);
     }
 
