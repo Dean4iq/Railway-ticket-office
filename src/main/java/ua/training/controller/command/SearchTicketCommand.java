@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 import ua.training.model.entity.Train;
 import ua.training.model.service.MethodProvider;
 import ua.training.model.service.SearchTicketService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,13 +17,19 @@ import java.util.*;
 public class SearchTicketCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(SearchTicketCommand.class);
     private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     public SearchTicketCommand() {
-        COMMANDS.putIfAbsent("ticketSearchSubmit", this::ticketSearchSubmit);
-        COMMANDS.putIfAbsent("sortTrainNumAsc", this::sortByTrainNumber);
-        COMMANDS.putIfAbsent("sortTrainNumDesc", this::sortByTrainNumber);
-        COMMANDS.putIfAbsent("sortTimeAsc", this::sortByTime);
-        COMMANDS.putIfAbsent("sortTimeDesc", this::sortByTime);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.TICKET_SEARCH_SUBMIT_PARAM),
+                this::ticketSearchSubmit);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.TICKET_SORT_BY_TRAIN_NUM_PARAM_ASC),
+                this::sortByTrainNumber);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.TICKET_SORT_BY_TRAIN_NUM_PARAM_DESC),
+                this::sortByTrainNumber);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.TICKET_SORT_BY_TRAIN_DEPART_PARAM_ASC),
+                this::sortByTime);
+        COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.TICKET_SORT_BY_TRAIN_DEPART_PARAM_DESC),
+                this::sortByTime);
     }
 
     @Override
@@ -52,7 +60,8 @@ public class SearchTicketCommand implements Command {
     }
 
     private boolean checkExistedTickets(HttpServletRequest request) {
-        return (request.getSession().getAttribute("Ticket") != null);
+        return (request.getSession().getAttribute(attrManager
+                .getString(AttributeSources.TICKET_PURCHASE)) != null);
     }
 
     private void ticketSearchSubmit(HttpServletRequest request) {
@@ -60,27 +69,30 @@ public class SearchTicketCommand implements Command {
 
         setForRouteLocaleTime(trainList, request);
 
-        request.setAttribute("trainList", trainList);
-        request.getSession().setAttribute("tripDateSubmitted", request.getParameter("tripStartDate"));
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trainList);
+        request.getSession().setAttribute(attrManager.getString(AttributeSources.DATE_TRIP_PURCHASE),
+                request.getParameter(attrManager.getString(AttributeSources.TRIP_START_DATE_PARAM)));
     }
 
     private void sortByTrainNumber(HttpServletRequest request) {
         List<Train> trainList = SearchTicketService.findTrainByRoute(request);
 
-        if (request.getParameter("sortTrainNumAsc") != null) {
+        if (request.getParameter(attrManager
+                .getString(AttributeSources.TICKET_SORT_BY_TRAIN_NUM_PARAM_ASC)) != null) {
             trainList.sort(Comparator.comparingInt(Train::getId));
         } else {
             trainList.sort(Comparator.comparingInt(Train::getId).reversed());
         }
 
         setForRouteLocaleTime(trainList, request);
-        request.setAttribute("trainList", trainList);
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trainList);
     }
 
     private void sortByTime(HttpServletRequest request) {
         List<Train> trainList = SearchTicketService.findTrainByRoute(request);
 
-        if (request.getParameter("sortTimeAsc") != null) {
+        if (request.getParameter(attrManager
+                .getString(AttributeSources.TICKET_SORT_BY_TRAIN_DEPART_PARAM_ASC)) != null) {
             trainList.sort((o1, o2) -> {
                 Date date1 = o1.getDepartureRoute().getDepartureTime();
                 Date date2 = o2.getDepartureRoute().getDepartureTime();
@@ -95,7 +107,7 @@ public class SearchTicketCommand implements Command {
         }
 
         setForRouteLocaleTime(trainList, request);
-        request.setAttribute("trainList", trainList);
+        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trainList);
     }
 
     private void setCalendar(HttpServletRequest request) {
@@ -107,8 +119,8 @@ public class SearchTicketCommand implements Command {
 
         String maxCalendarDate = getFormattedDate(calendar);
 
-        request.setAttribute("minCalendarDate", minCalendarDate);
-        request.setAttribute("maxCalendarDate", maxCalendarDate);
+        request.setAttribute(attrManager.getString(AttributeSources.MIN_DATE_SEARCH), minCalendarDate);
+        request.setAttribute(attrManager.getString(AttributeSources.MAX_DATE_SEARCH), maxCalendarDate);
     }
 
     private String getFormattedDate(Calendar calendar) {
@@ -131,8 +143,9 @@ public class SearchTicketCommand implements Command {
         Enumeration<String> parameters = request.getParameterNames();
         while (parameters.hasMoreElements()) {
             String parameter = parameters.nextElement();
-            if (parameter.contains("wagonInTrain")) {
-                request.getSession().setAttribute("searchTicketParameter", parameter);
+            if (parameter.contains(attrManager.getString(AttributeSources.WAGON_PURCHASE))) {
+                request.getSession().setAttribute(attrManager
+                        .getString(AttributeSources.TICKET_PARAMETERS), parameter);
                 return true;
             }
         }
@@ -140,7 +153,8 @@ public class SearchTicketCommand implements Command {
     }
 
     private void setForRouteLocaleTime(List<Train> trains, HttpServletRequest request) {
-        String lang = (String) request.getSession().getAttribute("language");
+        String lang = (String) request.getSession()
+                .getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
         Locale locale = new Locale(lang);
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, locale);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
@@ -158,12 +172,7 @@ public class SearchTicketCommand implements Command {
     private String setFormattedDateTime(Timestamp dateTime, DateFormat dateFormat,
                                         DateFormat timeFormat) {
         Date date = new Date(dateTime.getTime());
-        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(dateFormat.format(date))
-                .append("*")
-                .append(timeFormat.format(date));
-
-        return stringBuilder.toString();
+        return dateFormat.format(date) + "*" + timeFormat.format(date);
     }
 }

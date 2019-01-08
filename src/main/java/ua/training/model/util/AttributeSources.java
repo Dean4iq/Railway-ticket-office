@@ -13,6 +13,12 @@ public final class AttributeSources {
     public static final String PURCHASE_SEAT_PARAM = "parameter.purchase.purchaseSeat";
     public static final String DEPARTURE_STATION_PARAM = "parameter.search.departure";
     public static final String DESTINATION_STATION_PARAM = "parameter.search.destination";
+    public static final String TICKET_SEARCH_SUBMIT_PARAM = "parameter.ticket.searchSubmit";
+    public static final String TICKET_SORT_BY_TRAIN_NUM_PARAM_ASC = "parameter.ticket.sortByTrainNumberASC";
+    public static final String TICKET_SORT_BY_TRAIN_NUM_PARAM_DESC = "parameter.ticket.sortByTrainNumberDESC";
+    public static final String TICKET_SORT_BY_TRAIN_DEPART_PARAM_ASC = "parameter.ticket.sortByTrainDepartTimeASC";
+    public static final String TICKET_SORT_BY_TRAIN_DEPART_PARAM_DESC = "parameter.ticket.sortByTrainDepartTimeDESC";
+    public static final String TRIP_START_DATE_PARAM = "parameter.search.tripStartDate";
     public static final String LOGIN_NOT_EXISTED = "attribute.login.loginNotExisted";
     public static final String INVALID_LOGIN = "attribute.login.invalidLogin";
     public static final String ALREADY_LOGGED_IN = "attribute.login.alreadyLoggedIn";
@@ -38,6 +44,8 @@ public final class AttributeSources {
     public static final String SEARCH_ALL_TRAIN = "attribute.search.allTrain";
     public static final String SEARCH_PAGE = "attribute.search.page";
     public static final String SEARCH_TRAIN_LIST = "attribute.search.trainList";
+    public static final String MIN_DATE_SEARCH = "attribute.search.minCalendarDate";
+    public static final String MAX_DATE_SEARCH = "attribute.search.maxCalendarDate";
     public static final String PAGINATE_CURRENT_PAGE = "attribute.paginate.currentPage";
     public static final String PAGINATE_PAGE_NUM = "attribute.paginate.pageNumber";
     public static final String TRAIN_NUMBER = "attribute.train.number";
