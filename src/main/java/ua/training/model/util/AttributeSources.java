@@ -27,6 +27,7 @@ public final class AttributeSources {
     public static final String ROLE_ADMIN = "attribute.role.admin";
     public static final String ROLE_USER = "attribute.role.user";
     public static final String USERBAR = "attribute.userbar";
+    public static final String USER_USERNAME = "attribute.user.name";
     public static final String SEAT_PURCHASE = "attribute.purchase.seat";
     public static final String DATE_TRIP_PURCHASE = "attribute.purchase.tripDate";
     public static final String TICKET_PURCHASE = "attribute.purchase.ticket";
