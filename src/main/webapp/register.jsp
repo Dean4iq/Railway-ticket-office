@@ -23,7 +23,7 @@
             <form class="needs-validation" method="post">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="nameEN">Name</label>
+                        <label for="nameEN">${localeValues['text.register.nameEN']}</label>
                         <input type="text" class="form-control" id="nameEN" name="name" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
@@ -35,7 +35,7 @@
                         </c:if>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="lastnameEN">Last name</label>
+                        <label for="lastnameEN">${localeValues['text.register.lastNameEN']}</label>
                         <input type="text" class="form-control" id="lastnameEN" name="lastName" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
@@ -49,7 +49,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="nameUA">Ім`я</label>
+                        <label for="nameUA">${localeValues['text.register.nameUA']}</label>
                         <input type="text" class="form-control" id="nameUA" name="nameUA" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
@@ -61,7 +61,7 @@
                         </c:if>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="lastnameUA">Прізвище</label>
+                        <label for="lastnameUA">${localeValues['text.register.lastNameUA']}</label>
                         <input type="text" class="form-control" id="lastnameUA" name="lastNameUA" placeholder value required>
                         <div class="invalid-feedback">
                             ${localeValues['hint.required']}
