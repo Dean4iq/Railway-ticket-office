@@ -64,6 +64,7 @@ public class SearchTicketService {
                 for (int j = i + 1; j < trainRoute.size(); j++) {
                     if (trainRoute.get(j).getStation().getNameEN().equals(to)
                             || trainRoute.get(j).getStation().getNameUA().equals(to)) {
+                        train.setUserRouteList(trainRoute.subList(i, j + 1));
                         return true;
                     }
                 }
@@ -72,7 +73,6 @@ public class SearchTicketService {
         }
         return false;
     }
-
 
 
     private static void setTravelDate(HttpServletRequest request, List<Train> trains) {
@@ -122,7 +122,7 @@ public class SearchTicketService {
     public static void setStationList(HttpServletRequest request) {
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
 
-        try(StationDao stationDao = daoFactory.createStationDao()){
+        try (StationDao stationDao = daoFactory.createStationDao()) {
             List<Station> stationList = stationDao.findAll();
             request.setAttribute("stationList", stationList);
         } catch (Exception e) {

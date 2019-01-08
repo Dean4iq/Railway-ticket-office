@@ -17,6 +17,8 @@ public class Ticket implements Serializable {
     private int arrivalStationId;
 
     private int wagonId;
+    private String formattedTravelDate;
+    private String localeCost;
 
     private transient Seat seat;
     private transient Train train;
@@ -125,6 +127,22 @@ public class Ticket implements Serializable {
 
     public void setArrivalStation(Station arrivalStation) {
         this.arrivalStation = arrivalStation;
+    }
+
+    public String getFormattedTravelDate() {
+        return formattedTravelDate;
+    }
+
+    public void setFormattedTravelDate(String formattedTravelDate) {
+        this.formattedTravelDate = formattedTravelDate;
+    }
+
+    public String getLocaleCost() {
+        return localeCost;
+    }
+
+    public void setLocaleCost(String localeCost) {
+        this.localeCost = localeCost;
     }
 
     @Override

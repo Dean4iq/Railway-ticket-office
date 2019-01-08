@@ -7,7 +7,8 @@ import java.util.Objects;
 public class Wagon {
     private int id;
     private int trainId;
-    private String type;
+    private String typeUA;
+    private String typeEN;
 
     private Train train;
     private List<Seat> seatList = new ArrayList<>();
@@ -28,12 +29,20 @@ public class Wagon {
         this.trainId = trainId;
     }
 
-    public String getType() {
-        return type;
+    public String getTypeUA() {
+        return typeUA;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeUA(String typeUA) {
+        this.typeUA = typeUA;
+    }
+
+    public String getTypeEN() {
+        return typeEN;
+    }
+
+    public void setTypeEN(String typeEN) {
+        this.typeEN = typeEN;
     }
 
     public Train getTrain() {
@@ -68,12 +77,12 @@ public class Wagon {
         Wagon wagon = (Wagon) object;
         return getId() == wagon.getId()
                 && getTrainId() == wagon.getTrainId()
-                && getType().equals(wagon.getType());
+                && getTypeUA().equals(wagon.getTypeUA());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTrainId(), getType());
+        return Objects.hash(getId(), getTrainId(), getTypeUA());
     }
 
     @Override
@@ -81,7 +90,8 @@ public class Wagon {
         return "Wagon{" +
                 "id=" + id +
                 ", trainId=" + trainId +
-                ", type='" + type + '\'' +
+                ", typeUA='" + typeUA + '\'' +
+                ", typeEN='" + typeEN + '\'' +
                 '}';
     }
 }

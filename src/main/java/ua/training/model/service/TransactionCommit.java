@@ -14,6 +14,8 @@ class TransactionCommit {
             if (!connection.isClosed()) {
                 connection.commit();
                 connection.close();
+
+                LOG.debug("Commit and close");
             }
         } catch (SQLException exception) {
             LOG.error("Transaction commit problem occurred: ", exception);
@@ -26,6 +28,8 @@ class TransactionCommit {
             if (!connection.isClosed()) {
                 connection.rollback();
                 connection.close();
+
+                LOG.debug("Rollback and close");
             }
         } catch (SQLException exception) {
             LOG.error("Transaction problem occurred during rollback: ", exception);

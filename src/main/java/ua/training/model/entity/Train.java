@@ -8,7 +8,10 @@ public class Train {
     private int id;
     private int cost;
 
+    private String localeCost;
+
     private List<Route> routeList = new ArrayList<>();
+    private List<Route> userRouteList = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -44,6 +47,34 @@ public class Train {
 
     public List<Route> getRouteList() {
         return routeList;
+    }
+
+    public List<Route> getUserRouteList() {
+        return userRouteList;
+    }
+
+    public void setUserRouteList(List<Route> userRouteList) {
+        this.userRouteList = userRouteList;
+    }
+
+    public Route getUserDepartureRoute() {
+        return (userRouteList.isEmpty()) ? null : userRouteList.get(0);
+    }
+
+    public Route getUserArrivalRoute() {
+        return (userRouteList.isEmpty()) ? null : userRouteList.get(userRouteList.size() - 1);
+    }
+
+    public String getLocaleCost() {
+        return localeCost;
+    }
+
+    public void setLocaleCost(String localeCost) {
+        this.localeCost = localeCost;
+    }
+
+    public void setRouteList(List<Route> routeList) {
+        this.routeList = routeList;
     }
 
     @Override

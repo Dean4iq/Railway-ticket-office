@@ -2,6 +2,7 @@ package ua.training.controller.command;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.training.controller.util.Pagination;
 import ua.training.model.entity.Route;
 import ua.training.model.entity.Train;
 import ua.training.model.service.MethodProvider;
@@ -158,5 +159,13 @@ public class SearchCommand implements Command {
                 .append(timeFormat.format(date));
 
         return stringBuilder.toString();
+    }
+
+    private int countPages(List<Train> trains){
+        return new Pagination<Train>().getPageNumber(trains);
+    }
+
+    private List<Train> paginateList(List<Train> trains, int page) {
+        return new Pagination<Train>().getPageList(trains, page);
     }
 }

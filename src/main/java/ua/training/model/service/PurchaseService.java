@@ -7,7 +7,9 @@ import ua.training.model.dao.*;
 import ua.training.model.dao.implementation.JDBCDaoFactory;
 import ua.training.model.entity.*;
 
+import javax.jms.Session;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,17 +99,20 @@ public class PurchaseService {
     }
 
     public static void startPurchaseTransaction(Ticket ticket, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         DaoFactory daoFactory = JDBCDaoFactory.getInstance();
+
         try (TicketDao ticketDao = daoFactory.createTicketDao()) {
             Connection connection = ticketDao.createWithoutCommit(ticket);
-            request.getSession().setAttribute("ticketConnection", connection);
+            session.setAttribute("ticketConnection", connection);
 
             new Thread(() -> {
                 try {
                     Thread.sleep(600_000); //Wait 10 minutes for purchasing
                     new TransactionCommit().rollbackAndClose(connection);
 
-                    request.getSession().removeAttribute("Ticket");
+                    session.removeAttribute("Ticket");
+                    LOG.debug("10 minutes have passed, Transaction rollback and Connection closed");
                 } catch (InterruptedException e) {
                     LOG.error("Interrupted thread: {}", Arrays.toString(e.getStackTrace()));
                 }
