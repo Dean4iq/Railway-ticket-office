@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class RegisterCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(RegisterCommand.class);
-    AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
