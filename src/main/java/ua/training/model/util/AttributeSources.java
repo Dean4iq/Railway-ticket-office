@@ -65,4 +65,6 @@ public final class AttributeSources {
     public static final String PAGINATE_CURRENT_PAGE = "attribute.paginate.currentPage";
     public static final String PAGINATE_PAGE_NUM = "attribute.paginate.pageNumber";
     public static final String TRAIN_NUMBER = "attribute.train.number";
+    public static final String TRAIN_INFO = "attribute.train.info";
+    public static final String WAGON_LIST = "attribute.wagon.list";
 }

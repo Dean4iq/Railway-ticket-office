@@ -7,9 +7,12 @@ import ua.training.model.entity.Ticket;
 import ua.training.model.entity.Train;
 import ua.training.model.entity.Wagon;
 import ua.training.model.service.WagonReviewingService;
+import ua.training.model.util.AttributeResourceManager;
+import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -20,20 +23,26 @@ import java.util.stream.Collectors;
 
 public class WagonReviewingCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(WagonReviewingCommand.class);
+    private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("WagonReviewingService execute()");
+
+        HttpSession session = request.getSession();
 
         if (checkPurchaseSubmit(request)) {
             LOG.debug("A ticket exists, redirecting");
             return "redirect: /purchase";
         }
 
-        String tripDate = (String) request.getSession().getAttribute("tripDateSubmitted");
-        String parameter = (String) request.getSession().getAttribute("searchTicketParameter");
+        String tripDate = (String) session
+                .getAttribute(attrManager.getString(AttributeSources.DATE_TRIP_PURCHASE));
+        String parameter = (String) session
+                .getAttribute(attrManager.getString(AttributeSources.TICKET_PARAMETERS));
 
-        int trainNumber = Integer.parseInt(parameter.substring("wagonInTrain".length()));
+        int trainNumber = Integer.parseInt(parameter
+                .substring(attrManager.getString(AttributeSources.WAGON_PURCHASE).length()));
         List<Ticket> ticketList = WagonReviewingService.getTickets(trainNumber);
         List<Wagon> wagonList = WagonReviewingService.getTrainWagons(trainNumber);
 
@@ -42,8 +51,9 @@ public class WagonReviewingCommand implements Command {
         checkSeatsStatus(wagonList, ticketList);
         setLocaleCurrency(wagonList, request);
 
-        request.setAttribute("wagonList", wagonList);
-        request.setAttribute("trainInfo", getTrainInfo(request, trainNumber));
+        request.setAttribute(attrManager.getString(AttributeSources.WAGON_LIST), wagonList);
+        request.setAttribute(attrManager.getString(AttributeSources.TRAIN_INFO),
+                getTrainInfo(request, trainNumber));
 
         return "/WEB-INF/user/wagons.jsp";
     }
@@ -53,13 +63,15 @@ public class WagonReviewingCommand implements Command {
 
         while (parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
-            if (parameter.contains("PurchaseSeat")) {
-                request.getSession().setAttribute("seatToPurchase", parameter);
+            if (parameter.contains(attrManager.getString(AttributeSources.PURCHASE_SEAT_PARAM))) {
+                request.getSession().setAttribute(attrManager.getString(AttributeSources.SEAT_PURCHASE)
+                        , parameter);
                 return true;
             }
         }
 
-        return (request.getSession().getAttribute("Ticket") != null);
+        return (request.getSession()
+                .getAttribute(attrManager.getString(AttributeSources.TICKET_PURCHASE)) != null);
     }
 
     private List<Ticket> filterTicketsByDate(List<Ticket> tickets, String date) {
@@ -98,10 +110,15 @@ public class WagonReviewingCommand implements Command {
     }
 
     private Train getTrainInfo(HttpServletRequest request, int trainNumber) {
-        String tripDate = (String) request.getSession().getAttribute("tripDateSubmitted");
-        String stationFrom = (String) request.getSession().getAttribute("departureStation");
-        String stationTo = (String) request.getSession().getAttribute("arrivalStation");
-        String language = (String) request.getSession().getAttribute("language");
+        HttpSession session = request.getSession();
+
+        String tripDate = (String) session
+                .getAttribute(attrManager.getString(AttributeSources.DATE_TRIP_PURCHASE));
+        String stationFrom = (String) session
+                .getAttribute(attrManager.getString(AttributeSources.STATION_DEPARTURE));
+        String stationTo = (String) session
+                .getAttribute(attrManager.getString(AttributeSources.STATION_ARRIVAL));
+        String language = (String) session.getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
         Train train = WagonReviewingService.getTrainInfo(trainNumber);
 
         setTravelDateTime(train, tripDate, language);
@@ -153,13 +170,8 @@ public class WagonReviewingCommand implements Command {
     private String setFormattedDateTime(Timestamp dateTime, DateFormat dateFormat,
                                         DateFormat timeFormat) {
         Date date = new Date(dateTime.getTime());
-        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(dateFormat.format(date))
-                .append("*")
-                .append(timeFormat.format(date));
-
-        return stringBuilder.toString();
+        return dateFormat.format(date) + "*" + timeFormat.format(date);
     }
 
     private Calendar setUpCalendar(String date, Timestamp trainTime) {
@@ -176,7 +188,9 @@ public class WagonReviewingCommand implements Command {
     }
 
     private void setLocaleCurrency(List<Wagon> wagons, HttpServletRequest request) {
-        final String language = (String) request.getSession().getAttribute("language");
+        final String language = (String) request.getSession()
+                .getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
+
         wagons.forEach(wagon -> {
             Train train = wagon.getTrain();
             train.setLocaleCost(moneyFormatter(language, train.getCost()));
