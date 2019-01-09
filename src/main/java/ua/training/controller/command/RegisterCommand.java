@@ -16,10 +16,24 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Class {@code RegisterCommand} provides methods to sign up a new user in the
+ * system
+ *
+ * @author Dean4iq
+ * @version 1.0
+ */
 public class RegisterCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(RegisterCommand.class);
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
+    /**
+     * Gets all registration info strings and validates them
+     *
+     * @param request provides user data to process and link to session and context
+     * @return link to register page or user page if registration process is
+     *          successfully accomplished
+     */
     @Override
     public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
@@ -64,6 +78,12 @@ public class RegisterCommand implements Command {
         return "/register.jsp";
     }
 
+    /**
+     * Puts all gained user info from register page to User object
+     *
+     * @param userDataMap map with values from register page
+     * @return object User with completed fields with info from register page
+     */
     private User setUserData(Map<String, String> userDataMap) {
         User user = new User();
 
@@ -77,6 +97,13 @@ public class RegisterCommand implements Command {
         return user;
     }
 
+    /**
+     * If user has successfully signed up he should be signed in the system
+     * For new user, there should be another menu bar
+     *
+     * @param request provides links to session and context
+     * @param user signed up user
+     */
     private void setUserSession(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
         HttpSession session = request.getSession();
@@ -93,6 +120,14 @@ public class RegisterCommand implements Command {
         request.getSession().setAttribute(attrManager.getString(AttributeSources.USERBAR), menuItems);
     }
 
+    /**
+     * Validates all user register data fields on regular expressions
+     *
+     * @param fields map with the user register data values
+     * @param request if some fields are invalid, the warning should occur
+     *               on the register page
+     * @return true if all fields are valid, otherwise false
+     */
     private boolean checkAllFields(Map<String, String> fields, HttpServletRequest request) {
         Map<String, String> resultedMap = fields.entrySet().stream().filter(elem -> {
             String regexKey = Arrays.stream(RegExSources.values()).filter(source ->
@@ -107,6 +142,13 @@ public class RegisterCommand implements Command {
         return resultedMap.isEmpty();
     }
 
+    /**
+     * Gets regular expression for the regex key and validates field on regex
+     *
+     * @param field string that should be validated
+     * @param regexKey key to regex string in property file
+     * @return true if field is valid, otherwise false
+     */
     private boolean checkFieldRegEx(String field, String regexKey) {
         String regexString = new RegExStringsGetter().getRegExString(regexKey);
         return (field.matches(regexString));
