@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Class {@code LoginCommand} exists to authenticate user or admin.
+ * Class {@code LoginCommand} provide methods to authenticate user or admin in
+ * the system.
  * Class includes multiple methods for validating inputted strings.
  *
  * @author Dean4iq

@@ -11,7 +11,8 @@ import javax.servlet.http.HttpSession;
 import java.util.Set;
 
 /**
- * Class {@code LogoutCommand} exists to invalidate user session by their will.
+ * Class {@code LogoutCommand} provides methods to invalidate user session by
+ * their will.
  * Also, the session should be crossed out from the user set in a context.
  *
  * @author Dean4iq

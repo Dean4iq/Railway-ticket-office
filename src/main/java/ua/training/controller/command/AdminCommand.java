@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Class {@code AdminCommand} exists to provide page link to admin page
+ * Class {@code AdminCommand} provide method to provide page link to admin page
  *
  * @author Dean4iq
  * @version 1.0

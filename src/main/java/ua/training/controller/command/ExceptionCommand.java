@@ -6,7 +6,8 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Class {@code ExceptionCommand} exists to provide link to the error page
+ * Class {@code ExceptionCommand} provide method to provide link to the error
+ * page
  *
  * @author Dean4iq
  * @version 1.0

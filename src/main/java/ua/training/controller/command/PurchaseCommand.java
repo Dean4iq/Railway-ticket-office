@@ -19,8 +19,8 @@ import java.text.NumberFormat;
 import java.util.*;
 
 /**
- * Class {@code PurchaseCommand} exists to provide to the user purchasing
- * information and set the transaction to purchase a ticket.
+ * Class {@code PurchaseCommand} provides methods to provide to the user
+ * purchasing information and set the transaction to purchase a ticket.
  * Purchasing info should be available after redirecting to other pages and
  * return to purchase page
  *
