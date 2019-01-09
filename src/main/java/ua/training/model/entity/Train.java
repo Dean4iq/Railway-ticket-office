@@ -37,10 +37,6 @@ public class Train {
         return (routeList.isEmpty()) ? null : routeList.get(routeList.size() - 1);
     }
 
-    public List<Route> getStations() {
-        return routeList;
-    }
-
     public void addRoute(Route route) {
         routeList.add(route);
     }

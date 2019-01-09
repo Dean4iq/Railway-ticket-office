@@ -116,7 +116,7 @@ public class SearchTicketService {
             calendar.set(Calendar.SECOND, departureCalendar.get(Calendar.SECOND));
             calendar.set(Calendar.MILLISECOND, departureCalendar.get(Calendar.MILLISECOND));
 
-            train.getStations().forEach(route -> {
+            train.getRouteList().forEach(route -> {
                 Calendar arrivalTime = Calendar.getInstance();
                 Calendar departureTime = Calendar.getInstance();
 
