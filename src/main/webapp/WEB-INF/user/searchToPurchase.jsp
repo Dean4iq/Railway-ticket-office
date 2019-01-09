@@ -51,6 +51,11 @@
         </form>
         <p style="border-bottom:1px solid;"></p>
 
+        <c:if test="${noTrainInList}">
+            <div class="alert alert-warning" role="alert">
+                ${localeValues['text.search.noSuchTrain']}
+            </div>
+        </c:if>
         <c:if test="${not empty trainList}">
             <h3 align="center">${localeValues['head.trainList']}</h3>
             <table align="center" border="1">

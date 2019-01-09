@@ -24,8 +24,8 @@
                     <th>${localeValues['text.train.number']}</th>
                     <th>${localeValues['text.station.from']}</th>
                     <th>${localeValues['text.station.to']}</th>
-                    <th>${localeValues['table.column.date']}</th>
-                    <th>${localeValues['table.column.time']}</th>
+                    <th>${localeValues['table.column.departure']}</th>
+                    <th>${localeValues['table.column.arrival']}</th>
                 </tr>
             </thead>
             </tbody>
@@ -52,8 +52,8 @@
                         ${trainInfo.userDepartureRoute.formattedDepartureTime}
                     </td>
                     <td>
-                        ${trainInfo.userArrivalRoute.formattedDepartureDate}
-                        ${trainInfo.userArrivalRoute.formattedDepartureTime}
+                        ${trainInfo.userArrivalRoute.formattedArrivalDate}
+                        ${trainInfo.userArrivalRoute.formattedArrivalTime}
                     </td>
                 </tr>
             </tbody>

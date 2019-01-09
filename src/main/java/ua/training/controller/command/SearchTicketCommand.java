@@ -66,11 +66,15 @@ public class SearchTicketCommand implements Command {
     private void ticketSearchSubmit(HttpServletRequest request) {
         List<Train> trainList = SearchTicketService.findTrainByRoute(request);
 
-        setForRouteLocaleTime(trainList, request);
+        if (!trainList.isEmpty()) {
+            setForRouteLocaleTime(trainList, request);
 
-        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trainList);
-        request.getSession().setAttribute(attrManager.getString(AttributeSources.DATE_TRIP_PURCHASE),
-                request.getParameter(attrManager.getString(AttributeSources.TRIP_START_DATE_PARAM)));
+            request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trainList);
+            request.getSession().setAttribute(attrManager.getString(AttributeSources.DATE_TRIP_PURCHASE),
+                    request.getParameter(attrManager.getString(AttributeSources.TRIP_START_DATE_PARAM)));
+        } else {
+            request.setAttribute(attrManager.getString(AttributeSources.NO_TRAIN_IN_LIST), true);
+        }
     }
 
     private void sortByTrainNumber(HttpServletRequest request) {
