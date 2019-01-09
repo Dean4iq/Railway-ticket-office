@@ -14,10 +14,24 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Class {@code UserListCommand} provides methods to operate with users in
+ * the system.
+ * Only delete and update operations are available.
+ *
+ * @author Dean4iq
+ * @version 1.0
+ */
 public class UserListCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(UserListCommand.class);
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
+    /**
+     * Listens for requests and provides methods to process them
+     *
+     * @param request provides user data to process and link to session and context
+     * @return link to the user list processing page
+     */
     @Override
     public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
@@ -30,6 +44,11 @@ public class UserListCommand implements Command {
         return "/WEB-INF/admin/userList.jsp";
     }
 
+    /**
+     * Checks if there are some actions requested
+     *
+     * @param request provides the parameter list
+     */
     private void checkActions(HttpServletRequest request) {
         LOG.debug("checkActions()");
 
@@ -41,6 +60,12 @@ public class UserListCommand implements Command {
         }
     }
 
+    /**
+     * Method where actions on some user are processing
+     *
+     * @param request provides name of action with user login and stores in
+     *                session user login on update
+     */
     private void processActions(HttpServletRequest request) {
         LOG.debug("processActions()");
         String parameter = request.getParameter(attrManager.getString(AttributeSources.USER_CHANGE_PARAM));
@@ -64,6 +89,11 @@ public class UserListCommand implements Command {
         }
     }
 
+    /**
+     * Receives user attributes fields and validates them
+     *
+     * @param request provides parameters to operate them
+     */
     private void changeUserData(HttpServletRequest request) {
         LOG.debug("changeUserData()");
         Map<String, String> userAttributes = new HashMap<>();
@@ -95,6 +125,12 @@ public class UserListCommand implements Command {
         }
     }
 
+    /**
+     * Creates new User object with fields from userDataMap
+     *
+     * @param userDataMap provides user attributes fields
+     * @return new User instance with attributes received from the page
+     */
     private User setUserData(Map<String, String> userDataMap) {
         User user = new User();
 
@@ -108,6 +144,13 @@ public class UserListCommand implements Command {
         return user;
     }
 
+    /**
+     * Calls method to validate all user fields on regex
+     *
+     * @param fields  attributes list to validate
+     * @param request allows to warn about invalid inputs
+     * @return true if every attribute is valid, otherwise false
+     */
     private boolean checkAllFields(Map<String, String> fields, HttpServletRequest request) {
         Map<String, String> resultedMap = fields.entrySet().stream().filter(elem -> {
             String regexKey = Arrays.stream(RegExSources.values()).filter(source ->
@@ -122,11 +165,24 @@ public class UserListCommand implements Command {
         return resultedMap.isEmpty();
     }
 
+    /**
+     * Validates field by defined regular expression
+     *
+     * @param field    field to validate
+     * @param regexKey key to regex value in properties
+     * @return true if field is valid, otherwise false
+     */
     private boolean checkFieldRegEx(String field, String regexKey) {
         String regexString = new RegExStringsGetter().getRegExString(regexKey);
         return (field.matches(regexString));
     }
 
+    /**
+     * After changing user attributes, his session should be ended
+     *
+     * @param request provides links to the session
+     * @param login   name of the user, which session should be invalidated
+     */
     private void endUserSession(HttpServletRequest request, String login) {
         Set<HttpSession> sessions = (Set<HttpSession>) request
                 .getServletContext().getAttribute(attrManager.getString(AttributeSources.ACTIVE_SESSIONS));

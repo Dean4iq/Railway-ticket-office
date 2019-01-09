@@ -16,11 +16,25 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Class {@code SearchCommand} provides methods to search trains in the system
+ * to a user who specifying data in the form on the search page.
+ * The search could be submitted by train number, route or user can get all
+ * trains list.
+ * The search page also provides pagination for train list.
+ *
+ * @author Dean4iq
+ * @version 1.0
+ */
 public class SearchCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(SearchCommand.class);
     private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
+    /**
+     * On exemplar creating there should be a map of methods for corresponding
+     * requests
+     */
     public SearchCommand() {
         COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.SEARCH_BY_TRAIN_NUM),
                 this::findByTrainId);
@@ -31,6 +45,12 @@ public class SearchCommand implements Command {
         COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.SEARCH_PAGE), this::pagingElements);
     }
 
+    /**
+     * Listens for requests and provides methods to process them
+     *
+     * @param request provides user data to process and link to session and context
+     * @return link to the search page
+     */
     @Override
     public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
@@ -55,6 +75,14 @@ public class SearchCommand implements Command {
         return "/searchTrains.jsp";
     }
 
+    /**
+     * The method to find a train by a number, specified by a user on the
+     * search page
+     * If there are not such trains, writes a warning to the page
+     *
+     * @param request provides methods to write attributes to display on the
+     *                page
+     */
     private void findByTrainId(HttpServletRequest request) {
         int trainNumber = Integer.parseInt(request.getParameter(attrManager
                 .getString(AttributeSources.TRAIN_NUMBER)));
@@ -74,6 +102,14 @@ public class SearchCommand implements Command {
         LOG.debug("Search trains by id");
     }
 
+    /**
+     * The method to find a train by a route between stations, specified by a
+     * user on the search page
+     * If there are not such trains, writes a warning to the page
+     *
+     * @param request provides methods to write attributes to display on the
+     *                page
+     */
     private void findTrainByRoute(HttpServletRequest request) {
         Pagination<Train> pagination = new Pagination<>();
         String stationFrom = request.getParameter(attrManager
@@ -103,6 +139,13 @@ public class SearchCommand implements Command {
         LOG.debug("Search trains by route");
     }
 
+    /**
+     * The method to find all trains in the system.
+     * If there are not any trains, writes a warning to the page.
+     *
+     * @param request provides methods to write attributes to display on the
+     *                page
+     */
     private void findAllTrains(HttpServletRequest request) {
         Pagination<Train> pagination = new Pagination<>();
         List<Train> trains = SearchTrainService.findAllTrains();
@@ -123,6 +166,13 @@ public class SearchCommand implements Command {
         LOG.debug("Search all trains");
     }
 
+    /**
+     * The method to split trains list by pages and provide the page that user
+     * desired.
+     *
+     * @param request provides methods to write attributes to the page and
+     *                contains value of selected page in a list
+     */
     private void pagingElements(HttpServletRequest request) {
         Pagination<Train> pagination = new Pagination<>();
         List<Train> trains = SearchTrainService.findAllTrains();
@@ -152,7 +202,16 @@ public class SearchCommand implements Command {
         LOG.debug("Paging list");
     }
 
-    private static boolean checkTrainRoute(Train train, String from, String to) {
+    /**
+     * Checks if train route passes between stations selected by a user
+     *
+     * @param train train with the route to check
+     * @param from  station that should be included in the route
+     * @param to    The station that should be included in the route and being
+     *              after station from
+     * @return true if train route passes between selected stations, otherwise false
+     */
+    private boolean checkTrainRoute(Train train, String from, String to) {
         LOG.debug("Check trains by route");
 
         List<Route> trainRoute = train.getRouteList();
@@ -172,6 +231,12 @@ public class SearchCommand implements Command {
         return false;
     }
 
+    /**
+     * Sets train departure and arrival time for the each station on the whole
+     * route for the current date
+     *
+     * @param trains trains list with route to set up
+     */
     private void setTravelDate(List<Train> trains) {
         Calendar calendar = Calendar.getInstance();
 
@@ -204,6 +269,13 @@ public class SearchCommand implements Command {
         LOG.debug("Set travel date");
     }
 
+    /**
+     * Set locale variation on date time for trains arrival and departure
+     * routes
+     *
+     * @param trains  trains list with routes to set up
+     * @param request contains session language settings
+     */
     private void setForRouteLocaleTime(List<Train> trains, HttpServletRequest request) {
         String lang = (String) request.getSession()
                 .getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
@@ -221,6 +293,14 @@ public class SearchCommand implements Command {
         );
     }
 
+    /**
+     * Formats date and time in Timestamp to String
+     *
+     * @param dateTime   provided date and time
+     * @param dateFormat format rule to convert date
+     * @param timeFormat format rule to convert time
+     * @return string with formatted date and time, separated by *
+     */
     private String setFormattedDateTime(Timestamp dateTime, DateFormat dateFormat,
                                         DateFormat timeFormat) {
         Date date = new Date(dateTime.getTime());

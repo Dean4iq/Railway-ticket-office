@@ -13,11 +13,26 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.*;
 
+/**
+ * Class {@code SearchTicketCommand} provides methods to search trains in the
+ * system for a further ticket purchasing to a user who specifying data in the
+ * form on the search page.
+ * The search could be submitted only by train route.
+ * The class also provides sorting for train list by train number or departure
+ * time.
+ *
+ * @author Dean4iq
+ * @version 1.0
+ */
 public class SearchTicketCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(SearchTicketCommand.class);
     private static final Map<String, MethodProvider> COMMANDS = new HashMap<>();
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
+    /**
+     * On exemplar creating there should be a map of methods for corresponding
+     * requests
+     */
     public SearchTicketCommand() {
         COMMANDS.putIfAbsent(attrManager.getString(AttributeSources.TICKET_SEARCH_SUBMIT_PARAM),
                 this::ticketSearchSubmit);
@@ -31,6 +46,14 @@ public class SearchTicketCommand implements Command {
                 this::sortByTime);
     }
 
+    /**
+     * Listens for requests and provides methods to process them
+     *
+     * @param request provides user data to process and link to session and
+     *                context
+     * @return link to the search page or to purchase page if transaction is
+     * exists or to the wagon list page if a train is selected
+     */
     @Override
     public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
@@ -58,11 +81,44 @@ public class SearchTicketCommand implements Command {
         return "/WEB-INF/user/searchToPurchase.jsp";
     }
 
+    /**
+     * Checks if there is opened purchasing transaction
+     *
+     * @param request provides link to session
+     * @return true if purchasing transaction exists, otherwise false
+     */
     private boolean checkExistedTickets(HttpServletRequest request) {
         return (request.getSession().getAttribute(attrManager
                 .getString(AttributeSources.TICKET_PURCHASE)) != null);
     }
 
+    /**
+     * Checks if user has select some train
+     *
+     * @param request provides parameters from search page
+     * @return true if train is selected, otherwise false
+     */
+    private boolean checkSubmittedTrain(HttpServletRequest request) {
+        Enumeration<String> parameters = request.getParameterNames();
+        while (parameters.hasMoreElements()) {
+            String parameter = parameters.nextElement();
+            if (parameter.contains(attrManager.getString(AttributeSources.WAGON_PURCHASE))) {
+                request.getSession().setAttribute(attrManager
+                        .getString(AttributeSources.TICKET_PARAMETERS), parameter);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Searches trains for route between stations, selected by a user.
+     * Also for a route sets locale date time value.
+     * If trains list by route is absent then the warning occur on the page.
+     *
+     * @param request contains methods to access attributes and link to the
+     *                session and selected language
+     */
     private void ticketSearchSubmit(HttpServletRequest request) {
         List<Train> trainList = SearchTicketService.findTrainByRoute(request);
 
@@ -77,6 +133,14 @@ public class SearchTicketCommand implements Command {
         }
     }
 
+    /**
+     * Sort train by a number (id) ascending or descending, depends on users
+     * choice
+     * Also for a trains route sets locale date time value.
+     *
+     * @param request contains methods to access attributes and link to the
+     *                session and selected language
+     */
     private void sortByTrainNumber(HttpServletRequest request) {
         List<Train> trainList = SearchTicketService.findTrainByRoute(request);
 
@@ -91,6 +155,14 @@ public class SearchTicketCommand implements Command {
         request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trainList);
     }
 
+    /**
+     * Sort train by a departure time (id) ascending or descending, depends on
+     * users choice
+     * Also for a trains route sets locale date time value.
+     *
+     * @param request contains methods to access attributes and link to the
+     *                session and selected language
+     */
     private void sortByTime(HttpServletRequest request) {
         List<Train> trainList = SearchTicketService.findTrainByRoute(request);
 
@@ -113,6 +185,11 @@ public class SearchTicketCommand implements Command {
         request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trainList);
     }
 
+    /**
+     * Sets available min and max calendar days for date picker on the page
+     *
+     * @param request provides methods to write attributes for the page
+     */
     private void setCalendar(HttpServletRequest request) {
         Calendar calendar = Calendar.getInstance();
         String minCalendarDate = getFormattedDate(calendar);
@@ -126,6 +203,12 @@ public class SearchTicketCommand implements Command {
         request.setAttribute(attrManager.getString(AttributeSources.MAX_DATE_SEARCH), maxCalendarDate);
     }
 
+    /**
+     * Formats Calendar value to String
+     *
+     * @param calendar calendar instance to format
+     * @return string date value as yyyy-MM-dd
+     */
     private String getFormattedDate(Calendar calendar) {
         return new StringBuilder()
                 .append(calendar.get(Calendar.YEAR))
@@ -135,6 +218,13 @@ public class SearchTicketCommand implements Command {
                 .append(setDateZeroCharacter(calendar.get(Calendar.DATE))).toString();
     }
 
+    /**
+     * Formats int value to String
+     * If int value less than 10 in String writes 0 before int value
+     *
+     * @param date int value of a date
+     * @return int value formatted to string
+     */
     private String setDateZeroCharacter(int date) {
         if (date < 10) {
             return "0" + date;
@@ -142,19 +232,13 @@ public class SearchTicketCommand implements Command {
         return Integer.toString(date);
     }
 
-    private boolean checkSubmittedTrain(HttpServletRequest request) {
-        Enumeration<String> parameters = request.getParameterNames();
-        while (parameters.hasMoreElements()) {
-            String parameter = parameters.nextElement();
-            if (parameter.contains(attrManager.getString(AttributeSources.WAGON_PURCHASE))) {
-                request.getSession().setAttribute(attrManager
-                        .getString(AttributeSources.TICKET_PARAMETERS), parameter);
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Set locale variation on date time for trains arrival and departure
+     * routes
+     *
+     * @param trains  trains list with routes to set up
+     * @param request contains session language settings
+     */
     private void setForRouteLocaleTime(List<Train> trains, HttpServletRequest request) {
         String lang = (String) request.getSession()
                 .getAttribute(attrManager.getString(AttributeSources.LANGUAGE));
@@ -172,6 +256,14 @@ public class SearchTicketCommand implements Command {
         );
     }
 
+    /**
+     * Formats date and time in Timestamp to String
+     *
+     * @param dateTime   provided date and time
+     * @param dateFormat format rule to convert date
+     * @param timeFormat format rule to convert time
+     * @return string with formatted date and time, separated by *
+     */
     private String setFormattedDateTime(Timestamp dateTime, DateFormat dateFormat,
                                         DateFormat timeFormat) {
         Date date = new Date(dateTime.getTime());
