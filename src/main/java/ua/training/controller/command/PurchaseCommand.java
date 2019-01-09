@@ -35,7 +35,7 @@ public class PurchaseCommand implements Command {
      * Initializes ticket info for purchasing and listens for user decision and
      * redirects to other pages depending on conditions.
      *
-     * @param request provides user date to process and link to session and context
+     * @param request provides user data to process and link to session and context
      * @return link to homepage after accepting or declining purchasing by user
      *         or link to purchasing page after initializing ticket info (or on
      *         return, refresh, etc.) or to ticket search page if the time for

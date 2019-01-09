@@ -18,7 +18,7 @@ public class ExceptionCommand implements Command {
     /**
      * Returns link to the error page
      *
-     * @param request provides user date to process and link to session and context
+     * @param request provides user data to process and link to session and context
      * @return link to the page
      */
     @Override

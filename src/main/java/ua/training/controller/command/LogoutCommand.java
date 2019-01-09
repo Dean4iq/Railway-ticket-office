@@ -26,7 +26,7 @@ public class LogoutCommand implements Command {
      * Process user request for logout.
      * Logout should include process of session invalidating in context.
      *
-     * @param request provides user date to process and link to session and context
+     * @param request provides user data to process and link to session and context
      * @return link to homepage after successful logout
      */
     @Override

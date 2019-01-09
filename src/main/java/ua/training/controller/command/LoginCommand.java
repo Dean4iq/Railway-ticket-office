@@ -33,7 +33,7 @@ public class LoginCommand implements Command {
     /**
      * Process user request for login
      *
-     * @param request provides user date to process and link to session and context
+     * @param request provides user data to process and link to session and context
      * @return link to users page according to the role or link to the login page
      */
     @Override

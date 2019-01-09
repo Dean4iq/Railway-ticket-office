@@ -12,7 +12,7 @@ public interface Command {
     /**
      * Process user request and returns corresponding link to the page
      *
-     * @param request provides user date to process and link to session and context
+     * @param request provides user data to process and link to session and context
      * @return page link
      */
     String execute(HttpServletRequest request);
