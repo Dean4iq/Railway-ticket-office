@@ -26,9 +26,7 @@ public class JDBCUserDao implements UserDao {
 
     @Override
     public void create(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("Argument 'user' is null");
-        }
+        checkNotNull(user);
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
@@ -142,5 +140,11 @@ public class JDBCUserDao implements UserDao {
     public void close() throws Exception {
         log.debug("JDBCUserDao close()");
         connection.close();
+    }
+
+    private void checkNotNull(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("Argument 'user' is null");
+        }
     }
 }
