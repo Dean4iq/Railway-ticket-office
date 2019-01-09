@@ -6,7 +6,7 @@
 
     <groupId>ua.training</groupId>
     <artifactId>FinalProject</artifactId>
-    <version>0.8</version>
+    <version>1.0</version>
     <packaging>war</packaging>
 
     <name>Railway ticket office Maven Webapp</name>
