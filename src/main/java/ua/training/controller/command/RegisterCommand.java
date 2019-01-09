@@ -12,7 +12,6 @@ import ua.training.model.util.RegExStringsGetter;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class RegisterCommand implements Command {
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
         Map<String, String> userAttributes = new HashMap<>();
 

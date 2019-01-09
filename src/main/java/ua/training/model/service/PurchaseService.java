@@ -115,6 +115,7 @@ public class PurchaseService {
 
                     session.removeAttribute(attrManag.getString(AttributeSources.TICKET_PURCHASE));
                     session.removeAttribute(attrManag.getString(AttributeSources.TICKET_CONNECTION));
+                    session.removeAttribute(attrManag.getString(AttributeSources.SEAT_PURCHASE));
 
                     LOG.debug("10 minutes have passed, Transaction rollback and Connection closed");
                 } catch (InterruptedException e) {

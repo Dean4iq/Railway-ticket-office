@@ -10,7 +10,6 @@ import ua.training.model.util.RegExSources;
 import ua.training.model.util.RegExStringsGetter;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,7 +19,7 @@ public class UserListCommand implements Command {
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
 
         checkActions(request);

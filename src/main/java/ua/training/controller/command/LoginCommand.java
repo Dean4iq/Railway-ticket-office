@@ -12,18 +12,31 @@ import ua.training.model.util.AttributeSources;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Class {@code LoginCommand} exists to authenticate user or admin.
+ * Class includes multiple methods for validating inputted strings.
+ *
+ * @author Dean4iq
+ * @version 1.0
+ * @see LoginService
+ */
 public class LoginCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(LoginCommand.class);
     private AttributeResourceManager attributeManager = AttributeResourceManager.INSTANCE;
 
+    /**
+     * Process user request for login
+     *
+     * @param request provides user date to process and link to session and context
+     * @return link to users page according to the role or link to the login page
+     */
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
 
         User user = new User();
@@ -68,6 +81,15 @@ public class LoginCommand implements Command {
         return "/login.jsp";
     }
 
+    /**
+     * Checks if user is in system now.
+     * Method uses the user set, stored in a servlet context.
+     *
+     * @param request provides link to context
+     * @param user A user who want to log in the system
+     * @return true if the user is not in the system yet
+     * @throws LoggedInLoginException if user already logged in system.
+     */
     private boolean checkUserSession(HttpServletRequest request, User user)
             throws LoggedInLoginException {
         ServletContext context = request.getServletContext();
@@ -80,6 +102,14 @@ public class LoginCommand implements Command {
         throw new LoggedInLoginException(user.getLogin());
     }
 
+    /**
+     * If the user is an admin then he should be signed in as admin.
+     * An authorized user is written to the user set in a servlet context and in the user session.
+     * Admin has endless inactive interval.
+     *
+     * @param request provides link to session and context
+     * @param user entity to log
+     */
     private void processAdmin(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
         HttpSession session = request.getSession();
@@ -100,6 +130,13 @@ public class LoginCommand implements Command {
                 menuItems);
     }
 
+    /**
+     * If the user is some common user then he should be signed in as user.
+     * An authorized user is written to the user set in a servlet context and in the user session.
+     *
+     * @param request provides link to session and context
+     * @param user entity to log
+     */
     private void processUser(HttpServletRequest request, User user) {
         Map<String, String> menuItems = new LinkedHashMap<>();
         HttpSession session = request.getSession();
@@ -118,6 +155,13 @@ public class LoginCommand implements Command {
                 menuItems);
     }
 
+    /**
+     * Every active user session should be written in context to avoid multiple
+     * sessions for the same username.
+     *
+     * @param request provides link to context
+     * @param user entity for being written in the context
+     */
     private void addUserToServletContext(HttpServletRequest request, User user) {
         Set<String> users = (Set<String>) request.getServletContext()
                 .getAttribute(attributeManager.getString(AttributeSources.LOGGED_USERS_CONTEXT));

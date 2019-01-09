@@ -70,6 +70,7 @@ public final class AttributeSources {
     public static final String PAGINATE_PAGE_NUM = "attribute.paginate.pageNumber";
     public static final String TRAIN_NUMBER = "attribute.train.number";
     public static final String TRAIN_INFO = "attribute.train.info";
+    public static final String NO_TRAIN_IN_LIST = "attribute.train.noTrainInList";
     public static final String WAGON_LIST = "attribute.wagon.list";
     public static final String FILTER_LOCALE_VALUES = "attribute.filter.localeValues";
     public static final String FILET_MAP_VALUES = "attribute.filter.mapValues";

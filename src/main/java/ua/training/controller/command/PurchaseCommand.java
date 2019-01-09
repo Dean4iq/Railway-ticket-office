@@ -8,7 +8,6 @@ import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.Date;
@@ -19,12 +18,31 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
 
+/**
+ * Class {@code PurchaseCommand} exists to provide to the user purchasing
+ * information and set the transaction to purchase a ticket.
+ * Purchasing info should be available after redirecting to other pages and
+ * return to purchase page
+ *
+ * @author Dean4iq
+ * @version 1.0
+ */
 public class PurchaseCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(PurchaseCommand.class);
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
+    /**
+     * Initializes ticket info for purchasing and listens for user decision and
+     * redirects to other pages depending on conditions.
+     *
+     * @param request provides user date to process and link to session and context
+     * @return link to homepage after accepting or declining purchasing by user
+     *         or link to purchasing page after initializing ticket info (or on
+     *         return, refresh, etc.) or to ticket search page if the time for
+     *         purchasing is out.
+     */
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
 
         if (request.getParameter(attrManager
@@ -44,6 +62,11 @@ public class PurchaseCommand implements Command {
         return "redirect: /tickets";
     }
 
+    /**
+     * Checks if seat data for purchasing and ticket data are already exists
+     * @param request
+     * @return
+     */
     private String setTicketData(HttpServletRequest request) {
         LOG.debug("Setting up ticket");
         HttpSession session = request.getSession();

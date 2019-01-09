@@ -11,7 +11,6 @@ import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.*;
@@ -33,7 +32,7 @@ public class SearchCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
 
         Enumeration<String> params = request.getParameterNames();
@@ -62,13 +61,16 @@ public class SearchCommand implements Command {
 
         List<Train> trains = SearchTrainService.findTrainById(trainNumber);
 
-        setTravelDate(trains);
-        setForRouteLocaleTime(trains, request);
+        if (!trains.isEmpty() && (trains.get(0).getId() != 0)) {
+            setTravelDate(trains);
+            setForRouteLocaleTime(trains, request);
 
-        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
-        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
-        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), 1);
-
+            request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
+            request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
+            request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), 1);
+        } else {
+            request.setAttribute(attrManager.getString(AttributeSources.NO_TRAIN_IN_LIST), true);
+        }
         LOG.debug("Search trains by id");
     }
 
@@ -85,15 +87,19 @@ public class SearchCommand implements Command {
                 checkTrainRoute(train, stationFrom, stationTo))
                 .collect(Collectors.toList());
 
-        setTravelDate(trains);
-        setForRouteLocaleTime(trains, request);
+        if (!trains.isEmpty() && (trains.get(0).getId() != 0)) {
+            setTravelDate(trains);
+            setForRouteLocaleTime(trains, request);
 
-        int pageNumber = pagination.getPageNumber(trains);
-        trains = pagination.getPageList(trains, 1);
+            int pageNumber = pagination.getPageNumber(trains);
+            trains = pagination.getPageList(trains, 1);
 
-        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
-        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
-        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), pageNumber);
+            request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
+            request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
+            request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), pageNumber);
+        } else {
+            request.setAttribute(attrManager.getString(AttributeSources.NO_TRAIN_IN_LIST), true);
+        }
         LOG.debug("Search trains by route");
     }
 
@@ -101,15 +107,19 @@ public class SearchCommand implements Command {
         Pagination<Train> pagination = new Pagination<>();
         List<Train> trains = SearchTrainService.findAllTrains();
 
-        setTravelDate(trains);
-        setForRouteLocaleTime(trains, request);
+        if (!trains.isEmpty() && (trains.get(0).getId() != 0)) {
+            setTravelDate(trains);
+            setForRouteLocaleTime(trains, request);
 
-        int pageNumber = pagination.getPageNumber(trains);
-        trains = pagination.getPageList(trains, 1);
+            int pageNumber = pagination.getPageNumber(trains);
+            trains = pagination.getPageList(trains, 1);
 
-        request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
-        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
-        request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), pageNumber);
+            request.setAttribute(attrManager.getString(AttributeSources.SEARCH_TRAIN_LIST), trains);
+            request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_CURRENT_PAGE), 1);
+            request.setAttribute(attrManager.getString(AttributeSources.PAGINATE_PAGE_NUM), pageNumber);
+        } else {
+            request.setAttribute(attrManager.getString(AttributeSources.NO_TRAIN_IN_LIST), true);
+        }
         LOG.debug("Search all trains");
     }
 

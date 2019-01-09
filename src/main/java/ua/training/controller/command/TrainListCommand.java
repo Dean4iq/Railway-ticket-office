@@ -8,7 +8,6 @@ import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +17,7 @@ public class TrainListCommand implements Command {
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("TrainListManagingService execute()");
 
         checkActions(request);

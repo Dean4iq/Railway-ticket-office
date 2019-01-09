@@ -9,7 +9,6 @@ import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.*;
@@ -33,7 +32,7 @@ public class SearchTicketCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("execute()");
 
         if (checkExistedTickets(request)) {

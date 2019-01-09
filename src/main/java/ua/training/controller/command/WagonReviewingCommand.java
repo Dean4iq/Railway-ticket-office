@@ -11,7 +11,6 @@ import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -26,7 +25,7 @@ public class WagonReviewingCommand implements Command {
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         LOG.debug("WagonReviewingService execute()");
 
         HttpSession session = request.getSession();

@@ -6,14 +6,13 @@ import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class UserCommand implements Command {
     private static final Logger LOG = LogManager.getLogger(UserCommand.class);
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request) {
         request.setAttribute(attrManager.getString(AttributeSources.USER_USERNAME),
                 request.getSession().getAttribute(attrManager.getString(AttributeSources.ROLE_USER)));
         LOG.debug("execute()");
