@@ -35,7 +35,7 @@ public class JDBCWagonDao implements WagonDao {
             preparedStatement.setString(2, wagon.getTypeUA());
             preparedStatement.setString(3, wagon.getTypeEN());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             LOG.debug("JDBCWagonDao create()");
         } catch (SQLException e) {
             LOG.debug("JDBCWagonDao create() failed: " + wagon.toString());
@@ -162,7 +162,7 @@ public class JDBCWagonDao implements WagonDao {
                 (QueryStringGetter.getQuery(QueryType.DELETE, TABLE_NAME))) {
             preparedStatement.setInt(1, wagon.getId());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             LOG.debug("JDBCWagonDao delete()");
         } catch (SQLException e) {
             LOG.debug("JDBCWagonDao delete() error");

@@ -38,7 +38,7 @@ public class JDBCUserDao implements UserDao {
             preparedStatement.setString(6, user.getLastNameUA());
             preparedStatement.setBoolean(7, user.isAdmin());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             log.debug("JDBCUserDao create()");
         } catch (SQLException e) {
             log.debug("JDBCUserDao create() failed: " + user.toString());
@@ -128,7 +128,7 @@ public class JDBCUserDao implements UserDao {
                 (QueryStringGetter.getQuery(QueryType.DELETE, tableName))) {
             preparedStatement.setString(1, user.getLogin());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             log.debug("JDBCUserDao delete()");
         } catch (SQLException e) {
             log.debug("JDBCUserDao delete() error");

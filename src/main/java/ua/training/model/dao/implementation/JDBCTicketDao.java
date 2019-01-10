@@ -68,7 +68,7 @@ public class JDBCTicketDao implements TicketDao {
             preparedStatement.setInt(6, ticket.getArrivalStationId());
             preparedStatement.setInt(7, ticket.getTrainId());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             connection.commit();
             LOG.debug("JDBCTicketDao create()");
         } catch (SQLException e) {
@@ -197,7 +197,7 @@ public class JDBCTicketDao implements TicketDao {
             preparedStatement.setInt(1, ticket.getId());
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             LOG.debug("JDBCTicketDao delete()");
         } catch (SQLException e) {
             LOG.debug("JDBCTicketDao delete() error");

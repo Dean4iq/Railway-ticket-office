@@ -29,7 +29,7 @@ public class JDBCStationDao implements StationDao {
         try (PreparedStatement ps = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
             ps.setString(1, station.getNameEN());
-            ps.execute();
+            ps.executeUpdate();
 
             log.debug("JDBCStationDao create()");
         } catch (SQLException e) {
@@ -112,7 +112,7 @@ public class JDBCStationDao implements StationDao {
                 (QueryStringGetter.getQuery(QueryType.DELETE, tableName))) {
             preparedStatement.setInt(1, station.getId());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             log.debug("JDBCStationDao delete()");
         } catch (SQLException e) {
             log.debug("JDBCStationDao delete() error");

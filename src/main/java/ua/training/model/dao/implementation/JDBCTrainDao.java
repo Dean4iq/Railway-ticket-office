@@ -32,7 +32,7 @@ public class JDBCTrainDao implements TrainDao {
         try (PreparedStatement ps = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
             ps.setInt(1, train.getCost());
-            ps.execute();
+            ps.executeUpdate();
 
             log.debug("JDBCTrainDao create()");
         } catch (SQLException e) {
@@ -171,7 +171,7 @@ public class JDBCTrainDao implements TrainDao {
                 (QueryStringGetter.getQuery(QueryType.DELETE, tableName))) {
             preparedStatement.setInt(1, train.getId());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             log.debug("JDBCTrainDao delete()");
         } catch (SQLException e) {
             log.debug("JDBCTrainDao delete() error");

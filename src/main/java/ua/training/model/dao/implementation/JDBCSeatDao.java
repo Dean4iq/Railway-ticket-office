@@ -32,7 +32,7 @@ public class JDBCSeatDao implements SeatDao {
         try (PreparedStatement ps = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, TABLE_NAME))) {
             ps.setInt(1, seat.getWagonId());
-            ps.execute();
+            ps.executeUpdate();
 
             LOG.debug("JDBCSeatDao create()");
         } catch (SQLException e) {
@@ -48,7 +48,6 @@ public class JDBCSeatDao implements SeatDao {
 
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(QueryStringGetter.getQuery(QueryType.FIND, TABLE_NAME))) {
-            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             preparedStatement.setInt(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -118,7 +117,6 @@ public class JDBCSeatDao implements SeatDao {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.SELECT, TABLE_NAME))) {
-            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -137,12 +135,10 @@ public class JDBCSeatDao implements SeatDao {
     public void update(Seat seat) {
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(QueryStringGetter.getQuery(QueryType.UPDATE, TABLE_NAME))) {
-            connection.setAutoCommit(false);
-            connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             preparedStatement.setInt(1, seat.getWagonId());
             preparedStatement.setInt(2, seat.getId());
+
             preparedStatement.executeUpdate();
-            connection.commit();
             LOG.debug("JDBCSeatDao update()");
         } catch (SQLException e) {
             LOG.debug("JDBCSeatDao update() error");
@@ -155,7 +151,7 @@ public class JDBCSeatDao implements SeatDao {
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement(QueryStringGetter.getQuery(QueryType.DELETE, TABLE_NAME))) {
             preparedStatement.setInt(1, seat.getId());
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             LOG.debug("JDBCSeatDao delete()");
         } catch (SQLException e) {
             LOG.debug("JDBCSeatDao delete() error");

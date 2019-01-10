@@ -33,7 +33,7 @@ public class JDBCRouteDao implements RouteDao {
             ps.setInt(2, route.getStationId());
             ps.setTimestamp(3, route.getArrivalTime());
             ps.setTimestamp(4, route.getDepartureTime());
-            ps.execute();
+            ps.executeUpdate();
 
             log.debug("JDBCRouteDao create()");
         } catch (SQLException e) {
@@ -148,7 +148,7 @@ public class JDBCRouteDao implements RouteDao {
             preparedStatement.setInt(1, route.getTrainId());
             preparedStatement.setInt(2, route.getStationId());
 
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             log.debug("JDBCRouteDao delete()");
         } catch (SQLException e) {
             log.debug("JDBCRouteDao delete() failed");
