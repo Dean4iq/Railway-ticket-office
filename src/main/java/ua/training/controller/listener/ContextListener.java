@@ -1,5 +1,7 @@
 package ua.training.controller.listener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
@@ -10,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ContextListener implements ServletContextListener {
+    public static final Logger LOG = LogManager.getLogger(ContextListener.class);
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
@@ -21,6 +24,8 @@ public class ContextListener implements ServletContextListener {
                 .setAttribute(attrManager.getString(AttributeSources.LOGGED_USERS_CONTEXT), activeUsers);
         servletContextEvent.getServletContext()
                 .setAttribute(attrManager.getString(AttributeSources.ACTIVE_SESSIONS), activeSessions);
+
+        LOG.debug("Initialized");
     }
 
     @Override
@@ -29,6 +34,8 @@ public class ContextListener implements ServletContextListener {
                 .removeAttribute(attrManager.getString(AttributeSources.LOGGED_USERS_CONTEXT));
         servletContextEvent.getServletContext()
                 .removeAttribute(attrManager.getString(AttributeSources.ACTIVE_SESSIONS));
+
+        LOG.debug("Destroyed");
     }
 
 }
