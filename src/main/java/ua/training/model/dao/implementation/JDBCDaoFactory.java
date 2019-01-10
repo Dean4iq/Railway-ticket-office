@@ -42,12 +42,9 @@ public class JDBCDaoFactory extends DaoFactory {
         return new JDBCWagonDao(getConnection());
     }
 
-    private Connection getConnection(){
+    private Connection getConnection() {
         try {
-            return DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/finalproject",
-                    "user" ,
-                    "pass" );
+            return ConnectorDB.getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
