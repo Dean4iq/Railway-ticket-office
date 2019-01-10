@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class GuestFilter implements Filter {
-    private static final Logger LOG = LogManager.getLogger(UserFilter.class);
+    private static final Logger LOG = LogManager.getLogger(GuestFilter.class);
     private AttributeResourceManager attrManager = AttributeResourceManager.INSTANCE;
 
     @Override
