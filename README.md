@@ -21,7 +21,7 @@
 	6.	For convenience, you should use the integrated development tool (IDE), for example, Intellij Idea, with which you can manage the project.
 
 ### Mandatory
-Install the DBMS ** MySQL Server 5.7 ** and load the sql dump script (** __ finalproject_database_dump.sql __ **) into the database.
+Install the DBMS **MySQL Server 5.7** and load the sql dump script (**__finalproject_database_dump.sql__**) into the database.
 	
 ### Starting project
 **Startup option 1**
@@ -32,7 +32,7 @@ Install the DBMS ** MySQL Server 5.7 ** and load the sql dump script (** __ fina
 	4.	In the right part of the window, set the following parameters:
 		•	The Name can be any;
 		•	In the Working directory, the absolute location of the project should be specified;
-		•	In the command line, enter “tomcat7: run”.
+		•	In the command line, enter “tomcat7:run”.
 	5.	At the bottom, in the Before launch section, click on + and select Run Maven Goal.
 	6.	In the window that opens, enter “clean” in the “Command line” field. Click OK in all dialog boxes.
 	7.	Run the project using the Shift + F10 key combination or click on the green triangle from the top right
@@ -41,7 +41,7 @@ Install the DBMS ** MySQL Server 5.7 ** and load the sql dump script (** __ fina
 **Startup option 2**
 
 	1.	Run the command line and go to the project root folder in it.
-	2.	Enter the command “mvn clean tomcat7: run”.
+	2.	Enter the command “mvn clean tomcat7:run”.
 	3.	If the mvn command is not detected, then the path to the installed Maven should be specified in Path environment variables, then try to start the project again.
 
 
