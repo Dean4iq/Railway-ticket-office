@@ -21,7 +21,7 @@
 	6.	For convenience, you should use the integrated development tool (IDE), for example, Intellij Idea, with which you can manage the project.
 
 ### Mandatory
-Install the DBMS ** MySQL Server 5.7 ** and load the sql dump script (** __ finalproject_database_dump.sql __ **) into the database.
+Install the DBMS **MySQL Server 5.7** and load the sql dump script (**__finalproject_database_dump.sql__**) into the database.
 	
 ### Starting project
 **Startup option 1**
