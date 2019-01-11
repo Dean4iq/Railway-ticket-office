@@ -3,7 +3,6 @@ package ua.training.model.dao.implementation;
 import ua.training.model.dao.*;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JDBCDaoFactory extends DaoFactory {
