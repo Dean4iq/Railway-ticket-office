@@ -79,10 +79,12 @@
                         </td>
                     </tr>
                 </table>
-                <c:forEach items="${wagon.seatList}" var="seat">
+                <c:forEach items="${wagon.seatList}" var="seat" varStatus="place">
                     <ul style="list-style-type: none;border-bottom:1px solid;">
                         <li>
                             ${localeValues['text.seatNumber']}:
+                            ${place.count}
+                            Id:
                             ${seat.id}
                             ${localeValues['text.cost']}:
                             ${wagon.train.localeCost}
