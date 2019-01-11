@@ -76,6 +76,7 @@ public class UserListCommand implements Command {
             User user = UserListManagingService.getUser(userLogin);
             if (user.checkLogin() && !user.isAdmin()) {
                 UserListManagingService.deleteUser(user);
+                endUserSession(request, userLogin);
             }
         } else if (parameter.contains(attrManager.getString(AttributeSources.USER_UPDATE_PARAM))) {
             String userLogin = parameter.substring(attrManager
