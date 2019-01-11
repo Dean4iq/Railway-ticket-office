@@ -18,8 +18,8 @@
         <jsp:include page="/styles/page_parts/navbar.jsp"/>
 
         <h1>${localeValues['head.trainlist']}</h1>
-        <table border="1">
-            <tr>
+        <table align="center" border="1">
+            <tr align="center">
                 <th>${localeValues['table.column.trainNumber']}</th>
                 <th>${localeValues['table.column.route']}</th>
                 <th>${localeValues['table.column.departure']}</th>
@@ -28,7 +28,7 @@
             </tr>
             <form method="post">
                 <c:forEach items="${trainList}" var="train">
-                  <tr>
+                  <tr align="center">
                     <td><c:out value="${train.id}"/></td>
                     <td>
                         <c:if test="${langVariable=='en'}">
@@ -42,11 +42,11 @@
                             <c:out default="null" value="${train.arrivalRoute.station.nameUA}"/>
                         </c:if>
                     </td>
-                    <td>
-                        <c:out default="null" value="${train.departureRoute.formattedDepartureTime}"/>
+                    <td style="padding: 10px;">
+                        <c:out default="null" value="${train.departureRoute.departureTime}"/>
                     </td>
-                    <td>
-                        <c:out default="null" value="${train.arrivalRoute.formattedArrivalTime}"/>
+                    <td style="padding: 10px;">
+                        <c:out default="null" value="${train.arrivalRoute.arrivalTime}"/>
                     </td>
                     <td>
                         <input type="submit" name="del${train.id}" value="${localeValues['action.delete']}"/>
