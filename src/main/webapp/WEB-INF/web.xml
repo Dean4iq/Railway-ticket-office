@@ -85,10 +85,6 @@
         <url-pattern>/users</url-pattern>
     </filter-mapping>
 
-    <listener>
-        <listener-class>ua.training.controller.listener.SessionListener</listener-class>
-    </listener>
-
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
