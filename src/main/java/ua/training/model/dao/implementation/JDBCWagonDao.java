@@ -171,8 +171,8 @@ public class JDBCWagonDao implements WagonDao {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         LOG.debug("JDBCWagonDao close()");
-        connection.close();
+        ConnectorDB.INSTANCE.returnConnectionToPool(connection);
     }
 }

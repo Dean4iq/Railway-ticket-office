@@ -2,6 +2,7 @@ package ua.training.model.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.training.model.dao.implementation.ConnectorDB;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ class TransactionCommit {
         try {
             if (!connection.isClosed()) {
                 connection.commit();
-                connection.close();
+                ConnectorDB.INSTANCE.returnConnectionToPool(connection);
 
                 LOG.debug("Commit and close");
             }
@@ -27,7 +28,7 @@ class TransactionCommit {
         try {
             if (!connection.isClosed()) {
                 connection.rollback();
-                connection.close();
+                ConnectorDB.INSTANCE.returnConnectionToPool(connection);
 
                 LOG.debug("Rollback and close");
             }

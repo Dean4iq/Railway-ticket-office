@@ -180,8 +180,8 @@ public class JDBCTrainDao implements TrainDao {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         log.debug("JDBCTrainDao close()");
-        connection.close();
+        ConnectorDB.INSTANCE.returnConnectionToPool(connection);
     }
 }

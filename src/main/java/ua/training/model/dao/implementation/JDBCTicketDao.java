@@ -29,6 +29,7 @@ public class JDBCTicketDao implements TicketDao {
 
     public Connection createWithoutCommit(Ticket ticket){
         LOG.debug("Creating ticket without commit");
+
         try (PreparedStatement preparedStatement = connection.prepareStatement
                 (QueryStringGetter.getQuery(QueryType.INSERT, tableName))) {
             connection.setAutoCommit(false);
@@ -206,11 +207,11 @@ public class JDBCTicketDao implements TicketDao {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         LOG.debug("JDBCTicketDao close()");
 
         if (permissionToClose) {
-            connection.close();
+            ConnectorDB.INSTANCE.returnConnectionToPool(connection);
         }
     }
 

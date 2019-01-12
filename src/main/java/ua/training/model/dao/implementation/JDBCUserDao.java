@@ -59,7 +59,7 @@ public class JDBCUserDao implements UserDao {
                 user = extractFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            log.error(Arrays.toString(e.getStackTrace()));
+            log.error("Error occurred by: {}", e);
             log.debug("JDBCUserDao findById() error");
         }
 
@@ -137,9 +137,9 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         log.debug("JDBCUserDao close()");
-        connection.close();
+        ConnectorDB.INSTANCE.returnConnectionToPool(connection);
     }
 
     private void checkNotNull(User user) {

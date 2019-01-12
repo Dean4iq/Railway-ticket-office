@@ -3,7 +3,6 @@ package ua.training.model.dao.implementation;
 import ua.training.model.dao.*;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class JDBCDaoFactory extends DaoFactory {
     @Override
@@ -42,10 +41,6 @@ public class JDBCDaoFactory extends DaoFactory {
     }
 
     private Connection getConnection() {
-        try {
-            return ConnectorDB.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return ConnectorDB.INSTANCE.getConnection();
     }
 }

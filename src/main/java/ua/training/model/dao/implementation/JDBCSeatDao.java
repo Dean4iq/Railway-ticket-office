@@ -160,13 +160,8 @@ public class JDBCSeatDao implements SeatDao {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         LOG.debug("JDBCSeatDao close()");
-        connection.close();
-    }
-
-    public Connection getConnection() {
-        LOG.debug("JDBCSeatDao getConnection()");
-        return connection;
+        ConnectorDB.INSTANCE.returnConnectionToPool(connection);
     }
 }

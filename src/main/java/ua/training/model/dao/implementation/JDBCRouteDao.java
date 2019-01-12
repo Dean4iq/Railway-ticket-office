@@ -157,8 +157,8 @@ public class JDBCRouteDao implements RouteDao {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
+        ConnectorDB.INSTANCE.returnConnectionToPool(connection);
         log.debug("JDBCRouteDao close()");
-        connection.close();
     }
 }

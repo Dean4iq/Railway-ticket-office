@@ -121,8 +121,8 @@ public class JDBCStationDao implements StationDao {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         log.debug("JDBCStationDao close()");
-        connection.close();
+        ConnectorDB.INSTANCE.returnConnectionToPool(connection);
     }
 }

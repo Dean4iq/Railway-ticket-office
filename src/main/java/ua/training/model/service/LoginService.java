@@ -36,12 +36,12 @@ public class LoginService {
         try (UserDao userDao = daoFactory.createUserDao()) {
             User userFromDB = userDao.findById(user.getLogin());
 
-            if (userFromDB.getLogin().equals(user.getLogin())
+            if (userFromDB.getLogin() != null && userFromDB.getLogin().equals(user.getLogin())
                     && userFromDB.getPassword().equals(user.getPassword())) {
                 return userFromDB;
             }
         } catch (Exception e) {
-            LOG.error("Error occurred: {}", Arrays.toString(e.getStackTrace()));
+            LOG.error("Error occurred: {}", e);
         }
 
         throw new InvalidLoginOrPasswordException(user.getLogin());
