@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -16,9 +17,11 @@ public enum ConnectorDB {
     private final Logger log = LogManager.getLogger(ConnectorDB.class);
     private final int poolSize = 10;
     private List<Connection> connectionPool;
+    private List<Connection> connectionsInUse;
 
     ConnectorDB() {
         connectionPool = new Vector<>(poolSize);
+        connectionsInUse = new ArrayList<>();
 
         try {
             for (int i = 0; i < poolSize; i++) {
@@ -30,7 +33,7 @@ public enum ConnectorDB {
     }
 
     public synchronized Connection getConnection() {
-        while (connectionPool.isEmpty()){
+        while (connectionPool.isEmpty()) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -38,12 +41,39 @@ public enum ConnectorDB {
             }
         }
 
-        return connectionPool.remove(connectionPool.size() - 1);
+        Connection connection = connectionPool.remove(connectionPool.size() - 1);
+        connectionsInUse.add(connection);
+
+        return connection;
     }
 
-    public synchronized void returnConnectionToPool(Connection connection) {
+    public synchronized boolean returnConnectionToPool(Connection connection) {
         connectionPool.add(connection);
         notifyAll();
+
+        return connectionsInUse.remove(connection);
+    }
+
+    public void shutDown() {
+        connectionPool.forEach(conn -> {
+            try {
+                if (!conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                log.error("Exception while closing connection in pool: {}", e);
+            }
+        });
+
+        connectionsInUse.forEach(conn -> {
+            try {
+                if (!conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                log.error("Exception while closing connection in use: {}", e);
+            }
+        });
     }
 
     private Connection createConnection() throws SQLException {
@@ -56,4 +86,6 @@ public enum ConnectorDB {
         return DriverManager.getConnection(url, user, pass);
 
     }
+
+
 }

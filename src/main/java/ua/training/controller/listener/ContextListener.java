@@ -2,6 +2,7 @@ package ua.training.controller.listener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.training.model.dao.implementation.ConnectorDB;
 import ua.training.model.util.AttributeResourceManager;
 import ua.training.model.util.AttributeSources;
 
@@ -34,6 +35,8 @@ public class ContextListener implements ServletContextListener {
                 .removeAttribute(attrManager.getString(AttributeSources.LOGGED_USERS_CONTEXT));
         servletContextEvent.getServletContext()
                 .removeAttribute(attrManager.getString(AttributeSources.ACTIVE_SESSIONS));
+
+        ConnectorDB.INSTANCE.shutDown();
 
         LOG.debug("Destroyed");
     }
