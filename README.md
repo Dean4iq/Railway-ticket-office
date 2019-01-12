@@ -36,7 +36,7 @@ Install the DBMS **MySQL Server 5.7** and load the sql dump script (**__finalpro
 	5.	At the bottom, in the Before launch section, click on + and select Run Maven Goal.
 	6.	In the window that opens, enter “clean” in the “Command line” field. Click OK in all dialog boxes.
 	7.	Run the project using the Shift + F10 key combination or click on the green triangle from the top right
-	8.	After downloading, go to the web browser at http://localhost:19999/zhd.ua
+	8.	After running, go to the web browser at http://localhost:19999/zhd.ua
 	
 **Startup option 2**
 
